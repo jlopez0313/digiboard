@@ -5,12 +5,14 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-use App\Http\Controllers\ClientesController;
-use App\Http\Controllers\ProveedoresController;
-use App\Http\Controllers\RecaudosController;
-use App\Http\Controllers\TiposClientesController;
-use App\Http\Controllers\BancosController;
-use App\Http\Controllers\ConceptosController;
+use App\Http\Controllers\DepartamentosController;
+use App\Http\Controllers\CiudadesController;
+use App\Http\Controllers\EmpresasController;
+
+use App\Http\Controllers\AreasController;
+use App\Http\Controllers\PantallasController;
+use App\Http\Controllers\CartelerasController;
+
 use App\Http\Controllers\MedidasController;
 use App\Http\Controllers\ColoresController;
 use App\Http\Controllers\FacturasController;
@@ -48,69 +50,40 @@ Route::prefix('parametros')->group( function() {
         return Inertia::render('Parametros/Index');
     })->name('parametros');
 
-    Route::prefix('tipos_clientes')->group( function() {
-        Route::get('/', [TiposClientesController::class, 'index'])->name('parametros.tipos');
+    Route::prefix('departamentos')->group( function() {
+        Route::get('/', [DepartamentosController::class, 'index'])->name('parametros.departamentos');
     });
 
-    Route::prefix('conceptos')->group( function() {
-        Route::get('/', [ConceptosController::class, 'index'])->name('parametros.conceptos');
+    Route::prefix('ciudades')->group( function() {
+        Route::get('/', [CiudadesController::class, 'index'])->name('parametros.ciudades');
     });
 
-    Route::prefix('bancos')->group( function() {
-        Route::get('/', [BancosController::class, 'index'])->name('parametros.bancos');
-    });
-
-    Route::prefix('medidas')->group( function() {
-        Route::get('/', [MedidasController::class, 'index'])->name('parametros.medidas');
-    });
-
-    Route::prefix('colores')->group( function() {
-        Route::get('/', [ColoresController::class, 'index'])->name('parametros.colores');
-    });
-
-
 })->middleware(['auth', 'verified']);
 
 
-Route::prefix('clientes')->group( function() {
-    Route::get('/', [ClientesController::class, 'index'])->name('clientes');   
+Route::prefix('empresas')->group( function() {
+    Route::get('/', [EmpresasController::class, 'index'])->name('empresas');
 })->middleware(['auth', 'verified']);
 
 
-Route::prefix('proveedores')->group( function() {
-    Route::get('/', [ProveedoresController::class, 'index'])->name('proveedores');    
+Route::prefix('areas')->group( function() {
+    Route::get('/', [AreasController::class, 'index'])->name('areas');    
 })->middleware(['auth', 'verified']);
 
 
-Route::prefix('remisiones')->group( function() {
-    Route::get('/', [FacturasController::class, 'index'])->name('remisiones');
-    Route::get('/edit/{id}', [FacturasController::class, 'edit'])->name('remisiones.edit');
-    
+Route::prefix('pantallas')->group( function() {
+    Route::get('/', [PantallasController::class, 'index'])->name('pantallas');
 })->middleware(['auth', 'verified']);
 
 
-Route::prefix('inventario')->group( function() {
-    Route::get('/', [InventarioController::class, 'index'])->name('inventario');
-    Route::get('edit/{id}', [InventarioController::class, 'edit'])->name('inventario.edit');
-})->middleware(['auth', 'verified'])->name('inventario');
-
-
-Route::prefix('/gastos')->group( function() {
-    Route::get('/', [GastosController::class, 'index'])->name('gastos');
+Route::prefix('carteleras')->group( function() {
+    Route::get('/', [CartelerasController::class, 'index'])->name('carteleras');
 })->middleware(['auth', 'verified']);
 
-Route::get('/creditos', function () {
-    return Inertia::render('Creditos');
-})->middleware(['auth', 'verified'])->name('creditos');
 
-Route::prefix('/recaudos')->group( function() {
-    Route::get('/', [RecaudosController::class, 'index'])->name('recaudos');
-    Route::get('/edit/{id}', [RecaudosController::class, 'edit'])->name('recaudos.edit');
+Route::prefix('usuarios')->group( function() {
+    Route::get('/', [CartelerasController::class, 'index'])->name('usuarios');
 })->middleware(['auth', 'verified']);
-
-Route::get('/reportes', function () {
-    return Inertia::render('Reportes');
-})->middleware(['auth', 'verified'])->name('reportes');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

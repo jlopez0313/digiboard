@@ -33,56 +33,35 @@ export default function Authenticated({ user, header, children }) {
                             </div>
 
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink href={route('clientes')} active={route().current('clientes')}>
-                                    Clientes
+                                <NavLink href={route('empresas')} active={route().current('empresas')}>
+                                    Empresas
                                 </NavLink>
                             </div>
 
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink href={route('inventario')} active={route().current('inventario')}>
-                                    Inventario
+                                <NavLink href={route('usuarios')} active={route().current('usuarios')}>
+                                    Usuarios
                                 </NavLink>
                             </div>
 
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink href={route('remisiones')} active={route().current('remisiones')}>
-                                    Ord. de Compra
+                                <NavLink href={route('areas')} active={route().current('areas')}>
+                                    Areas
                                 </NavLink>
                             </div>
 
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink href={route('gastos')} active={route().current('gastos')}>
-                                    Gastos
-                                </NavLink>
-                            </div>
-
-                            {/*
-
-                            <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink href={route('creditos')} active={route().current('creditos')}>
-                                    Créditos
-                                </NavLink>
-                            </div>
-                            
-                            */}
-                            
-                            <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink href={route('recaudos')} active={route().current('recaudos')}>
-                                    Recaudos
+                                <NavLink href={route('pantallas')} active={route().current('pantallas')}>
+                                    Pantallas
                                 </NavLink>
                             </div>
 
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink href={route('proveedores')} active={route().current('proveedores')}>
-                                    Proveedores
+                                <NavLink href={route('carteleras')} active={route().current('carteleras')}>
+                                    Carteleras
                                 </NavLink>
                             </div>
 
-                            <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink href={route('reportes')} active={route().current('reportes')}>
-                                    Reportes
-                                </NavLink>
-                            </div>
                         </div>
 
                         <div className="hidden sm:flex sm:items-center sm:ms-6">

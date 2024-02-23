@@ -12,33 +12,15 @@ export default function Dashboard({ auth }) {
     const list = [
         {
             id: 1,
-            parametro: 'Tipos de Cliente',   
-            descripcion: 'Gestionar Tipos de Cliente',
-            ruta: 'parametros/tipos_clientes'
+            parametro: 'Departamentos',
+            descripcion: 'Gestionar Departamentos',
+            ruta: 'parametros/departamentos'
         },
         {
             id: 2,
-            parametro: 'Conceptos',   
-            descripcion: 'Gestionar Conceptos',
-            ruta: 'parametros/conceptos'
-        },
-        {
-            id: 3,
-            parametro: 'Bancos',   
-            descripcion: 'Gestionar Bancos',
-            ruta: 'parametros/bancos'
-        },
-        {
-            id: 4,
-            parametro: 'Medidas',   
-            descripcion: 'Gestionar Medidas',
-            ruta: 'parametros/medidas'
-        },
-        {
-            id: 5,
-            parametro: 'Colores',   
-            descripcion: 'Gestionar Colores',
-            ruta: 'parametros/colores'
+            parametro: 'Ciudades',   
+            descripcion: 'Gestionar Ciudades',
+            ruta: 'parametros/ciudades'
         },
     ]
 
