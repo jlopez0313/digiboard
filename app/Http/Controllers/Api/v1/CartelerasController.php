@@ -17,7 +17,8 @@ class CartelerasController extends Controller
      */
     public function store(Request $request)
     {
-        $cartelera = Carteleras::create( $request->all() );
+        $data = $request->except('empresas_id', 'areas_id');
+        $cartelera = Carteleras::create( $data );
         return new CartelerasResource( $cartelera );
     }
 
@@ -26,6 +27,7 @@ class CartelerasController extends Controller
      */
     public function show(Carteleras $cartelera)
     {
+        $cartelera->load('pantalla.area.empresa');
         return new CartelerasResource( $cartelera );
     }
 
@@ -34,7 +36,8 @@ class CartelerasController extends Controller
      */
     public function update(Request $request, Carteleras $cartelera)
     {
-        $cartelera->update( $request->all() );
+        $data = $request->except('empresas_id', 'areas_id');
+        $cartelera->update( $data );
         return new CartelerasResource( $cartelera );
     }
 

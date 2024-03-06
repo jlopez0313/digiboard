@@ -42,8 +42,17 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('/{depto}', [CiudadesController::class, 'byDepto']);
     });
 */  
+
+    Route::prefix('areas')->group( function() {
+        Route::get('/empresa/{empresa}', [AreasController::class, 'byEmpresa']);
+    });
     Route::apiResource('areas', AreasController::class);
+
+    Route::prefix('pantallas')->group( function() {
+        Route::get('/area/{area}', [PantallasController::class, 'byArea']);
+    });
     Route::apiResource('pantallas', PantallasController::class);
+
     Route::apiResource('carteleras', CartelerasController::class);
 
 })->middleware(['auth:sanctum', 'verified']);

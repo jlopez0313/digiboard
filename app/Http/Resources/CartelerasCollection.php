@@ -19,7 +19,7 @@ class CartelerasCollection extends ResourceCollection
         }
         
         return $this->collection->map->only(
-            'id', 'cartelera'
+            'id', 'diseno', 'empresa', 'area', 'pantalla', 'fecha_inicial', 'fecha_final', 'marquesina'
         );
     }
 }

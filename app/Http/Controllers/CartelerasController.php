@@ -6,7 +6,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Request as Peticion;
 use App\Http\Resources\CartelerasCollection;
+use App\Http\Resources\EmpresasCollection;
 use App\Models\Carteleras;
+use App\Models\Empresas;
 use Inertia\Inertia;
 
 class CartelerasController extends Controller
@@ -19,8 +21,12 @@ class CartelerasController extends Controller
         return Inertia::render('Carteleras/Index', [
             'filters' => Peticion::all('search', 'trashed'),
             'contacts' => new CartelerasCollection(
-                Carteleras::with('area')
+                Carteleras::with('pantalla.area.empresa', 'diseno')
                 ->paginate()
+            ),
+            'empresas' => new EmpresasCollection(
+                Empresas::orderBy('empresa')
+                ->get()
             ),
         ]);
     }

@@ -17,7 +17,8 @@ class PantallasController extends Controller
      */
     public function store(Request $request)
     {
-        $pantalla = Pantallas::create( $request->all() );
+        $data = $request->except('empresas_id') ;
+        $pantalla = Pantallas::create( $data );
         return new PantallasResource( $pantalla );
     }
 
@@ -26,6 +27,7 @@ class PantallasController extends Controller
      */
     public function show(Pantallas $pantalla)
     {
+        $pantalla->load('area.empresa');
         return new PantallasResource( $pantalla );
     }
 
@@ -34,7 +36,8 @@ class PantallasController extends Controller
      */
     public function update(Request $request, Pantallas $pantalla)
     {
-        $pantalla->update( $request->all() );
+        $data = $request->except('empresas_id') ;
+        $pantalla->update( $data );
         return new PantallasResource( $pantalla );
     }
 
@@ -45,5 +48,16 @@ class PantallasController extends Controller
     {
         $pantalla->delete();
         return new PantallasResource( $pantalla );
+    }
+
+    
+
+    public function byArea($area)
+    {
+        return PantallasResource::collection(
+            Pantallas::where('areas_id', $area)
+            ->orderBy('pantalla')
+            ->get()
+        );
     }
 }

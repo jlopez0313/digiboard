@@ -21,8 +21,8 @@ return new class extends Migration
             $table->foreign('disenos_id')->references('id')->on('disenos');
 
             $table->string('marquesina');
-            $table->timestamp('fecha_inicial')->nullable();
-            $table->timestamp('fecha_final')->nullable();
+            $table->date('fecha_inicial')->nullable();
+            $table->date('fecha_final')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

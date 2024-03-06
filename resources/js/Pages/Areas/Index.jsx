@@ -33,12 +33,12 @@ export default ({ auth, contacts, empresas, departamentos }) => {
     const onSetList = () => {
         const _list = data.map( item => {
             return {
-                'id': item.id,
-                'departamento': item.ciudad.departamento.departamento,
-                'ciudad': item.ciudad.ciudad,
-                'empresa': item.empresa.empresa,
-                'area': item.area,
-                'direccion': item.direccion,
+                id: item.id,
+                departamento: item.ciudad?.departamento?.departamento || '',
+                ciudad: item.ciudad?.ciudad || '',
+                empresa: item.empresa?.empresa || '',
+                area: item.area,
+                direccion: item.direccion,
             }
         })
 
@@ -48,6 +48,13 @@ export default ({ auth, contacts, empresas, departamentos }) => {
     const onSetItem = (_id) => {
         setId(_id)
         onToggleModal(true)
+    }
+
+    const onTrash = async (_id) => {
+        if ( data ) {
+            await axios.delete(`/api/v1/areas/${_id}`);
+            onReload()
+        }
     }
 
     const onToggleModal = (isShown) => {
@@ -93,6 +100,7 @@ export default ({ auth, contacts, empresas, departamentos }) => {
                             data={list}
                             links={links}
                             onEdit={ onSetItem }
+                            onTrash={ onTrash }
                             titles={titles}
                             actions={['edit', 'trash']}
                         />

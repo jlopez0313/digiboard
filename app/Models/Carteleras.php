@@ -13,5 +13,12 @@ class Carteleras extends Model
 
     protected $table = 'carteleras';
     protected $guarded = [];
-    
+
+    public function diseno() {
+        return $this->hasOne(Disenos::class, 'id', 'disenos_id');
+    }
+
+    public function pantalla() {
+        return $this->hasOne(Pantallas::class, 'id', 'pantallas_id');
+    }
 }

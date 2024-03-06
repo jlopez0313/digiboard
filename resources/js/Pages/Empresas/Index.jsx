@@ -50,6 +50,13 @@ export default ({ auth, contacts, tipoEmpresas, departamentos }) => {
         onToggleModal(true)
     }
 
+    const onTrash = async (_id) => {
+        if ( data ) {
+            await axios.delete(`/api/v1/empresas/${_id}`);
+            onReload()
+        }
+    }
+
     const onToggleModal = (isShown) => {
         if ( !isShown ) {
             setId(null)
@@ -94,6 +101,7 @@ export default ({ auth, contacts, tipoEmpresas, departamentos }) => {
                             data={list}
                             links={links}
                             onEdit={ onSetItem }
+                            onTrash={ onTrash }
                             titles={titles}
                             actions={["edit", "trash"]}
                         />

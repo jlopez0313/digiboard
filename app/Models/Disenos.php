@@ -6,15 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Pantallas extends Model
+class Disenos extends Model
 {
     use HasFactory;
     use softDeletes;
 
-    protected $table = 'pantallas';
+    protected $table = 'disenos';
     protected $guarded = [];
-
-    public function area() {
-        return $this->hasOne(Areas::class, 'id', 'areas_id');
-    }
 }

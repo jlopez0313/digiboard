@@ -38,7 +38,7 @@ class AreasController extends Controller
             'departamentos' => new DepartamentosCollection(
                 Departamentos::orderBy(
                     'departamento'
-                )->paginate()
+                )->get()
             ),
         ]);
     }

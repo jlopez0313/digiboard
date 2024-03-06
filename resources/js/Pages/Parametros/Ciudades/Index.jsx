@@ -36,7 +36,7 @@ export default ({ auth, contacts, dataDeptos }) => {
         const _list = data.map( item => {
             return {
                 'id': item.id,
-                'departamento': item.departamento.departamento,
+                'departamento': item.departamento?.departamento || '',
                 'ciudad': item.ciudad,
             }
         })
@@ -47,6 +47,13 @@ export default ({ auth, contacts, dataDeptos }) => {
     const onSetItem = (_id) => {
         setId(_id)
         onToggleModal(true)
+    }
+
+    const onTrash = async (_id) => {
+        if ( data ) {
+            await axios.delete(`/api/v1/ciudades/${_id}`);
+            onReload()
+        }
     }
 
     const onToggleModal = (isShown) => {
@@ -92,6 +99,7 @@ export default ({ auth, contacts, dataDeptos }) => {
                             data={list}
                             links={links}
                             onEdit={ onSetItem }
+                            onTrash={ onTrash }
                             titles={titles}
                             actions={['edit', 'trash']}
                         />

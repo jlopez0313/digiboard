@@ -46,13 +46,13 @@ export const Form = ({ id, empresas, departamentos, setIsOpen, onReload }) => {
         const { data } = await axios.get(`/api/v1/areas/${id}`);
         const item = { ...data.data }
 
-        await onGetCities( item.ciudad.departamentos_id );
+        await onGetCities( item.ciudad?.departamentos_id || 0 );
 
         setData(
             {
-                departamentos_id: item.ciudad.departamentos_id,
-                ciudades_id: item.ciudad.id,
-                empresas_id: item.empresa.id,
+                departamentos_id: item.ciudad?.departamentos_id || '',
+                ciudades_id: item.ciudad?.id || '',
+                empresas_id: item.empresa?.id || '',
                 direccion: item.direccion,
                 area: item.area,
             }

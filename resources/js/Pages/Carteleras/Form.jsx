@@ -4,35 +4,38 @@ import PrimaryButton from "@/Components/Buttons/PrimaryButton";
 import SecondaryButton from "@/Components/Buttons/SecondaryButton";
 import TextInput from "@/Components/Form/TextInput";
 import { useForm } from "@inertiajs/react";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Select from "@/Components/Form/Select";
+import TextArea from "@/Components/Form/TextArea";
 
-export const Form = ({ id, clientes, conceptos, origenes, setIsOpen, onReload }) => {
+export const Form = ({ id, empresas, setIsOpen, onReload }) => {
 
     const { data, setData, processing, errors, reset } = useForm({
-        clientes_id: '',
-        conceptos_id: '',
-        valor: '',
-        origen: '',
+        disenos_id: 1,
+        empresas_id: '',
+        areas_id: '',
+        pantallas_id: '',
+        marquesina: '',
+        fecha_inicial: '',
+        fecha_final: '',
     });
 
     const {
-        data: listaClientes,
-    } = clientes;
+        data: listaEmpresas,
+    } = empresas;
 
-    const {
-        data: listaConceptos,
-    } = conceptos;
+    const [areas, setAreas] = useState([]);
+    const [pantallas, setPantallas] = useState([]);
 
     const submit = async (e) => {
         e.preventDefault();
 
         
         if ( id ) {
-            await axios.put(`/api/v1/gastos/${id}`, data);
+            await axios.put(`/api/v1/carteleras/${id}`, data);
         } else {
-            await axios.post(`/api/v1/gastos`, data);
+            await axios.post(`/api/v1/carteleras`, data);
         }
 
         onReload();
@@ -40,19 +43,55 @@ export const Form = ({ id, clientes, conceptos, origenes, setIsOpen, onReload })
 
     const onGetItem = async () => {
 
-        const { data } = await axios.get(`/api/v1/gastos/${id}`);
+        const { data } = await axios.get(`/api/v1/carteleras/${id}`);
         const item = { ...data.data }
 
         setData(
             {                
-                color: item.color,
+                disenos_id: item.disenos_id,
+                empresas_id: item.pantalla?.area?.empresas_id || '',
+                areas_id: item.pantalla?.areas_id || '',
+                pantallas_id: item.pantalla?.id || '',
+                marquesina: item.marquesina,
+                fecha_inicial: item.fecha_inicial,
+                fecha_final: item.fecha_final,
             }
         )
+    }
+
+    const onGetAreas = async ( empresa ) => {
+        if ( empresa ) {
+            const { data } = await axios.get(`/api/v1/areas/empresa/${empresa}`);
+            const lista = [ ...data.data ]
+    
+            setAreas( lista )
+        } else {
+            setAreas( [] )
+        }
+    }
+
+    const onGetPantallas = async ( area ) => {
+        if ( area ) {
+            const { data } = await axios.get(`/api/v1/pantallas/area/${area}`);
+            const lista = [ ...data.data ]
+    
+            setPantallas( lista )
+        } else {
+            setPantallas( [] )
+        }
     }
 
     useEffect( () => {
         id && onGetItem()
     }, [])
+    
+    useEffect( () => {
+        data.empresas_id && onGetAreas( data.empresas_id )
+    }, [data.empresas_id])
+    
+    useEffect( () => {
+        data.areas_id && onGetPantallas( data.areas_id )
+    }, [data.areas_id])
 
     return (
         <div className="pb-12 pt-6">
@@ -61,105 +100,152 @@ export const Form = ({ id, clientes, conceptos, origenes, setIsOpen, onReload })
                     <div className="grid grid-cols-2 gap-4">
                         <div>
                             <InputLabel
-                                htmlFor="clientes_id"
-                                value="Cliente"
+                                htmlFor="empresas_id"
+                                value="Empresa"
                             />
 
                             <Select
-                                id="clientes_id"
-                                name="clientes_id"
+                                id="empresas_id"
+                                name="empresas_id"
                                 className="mt-1 block w-full"
-                                value={data.clientes_id}
+                                value={data.empresas_id}
                                 onChange={(e) =>
-                                    setData("clientes_id", e.target.value)
+                                    setData("empresas_id", e.target.value)
                                 }
                             >
                                 {
-                                    listaClientes.map( (tipo, key) => {
-                                        return <option value={ tipo.id } key={key}> { tipo.nombre} </option>
+                                    listaEmpresas.map( (tipo, key) => {
+                                        return <option value={ tipo.id } key={key}> { tipo.empresa} </option>
                                     })
                                 }
                             </Select>
 
                             <InputError
-                                message={errors.clientes_id}
+                                message={errors.empresas_id}
                                 className="mt-2"
                             />
                         </div>
 
+                        
                         <div>
                             <InputLabel
-                                htmlFor="conceptos_id"
-                                value="Concepto"
+                                htmlFor="areas_id"
+                                value="Area"
                             />
 
                             <Select
-                                id="conceptos_id"
-                                name="conceptos_id"
+                                id="areas_id"
+                                name="areas_id"
                                 className="mt-1 block w-full"
-                                value={data.conceptos_id}
+                                value={data.areas_id}
                                 onChange={(e) =>
-                                    setData("conceptos_id", e.target.value)
+                                    setData("areas_id", e.target.value)
                                 }
                             >
                                 {                                    
-                                    listaConceptos.map( (tipo, key) => {
-                                        return <option value={ tipo.id } key={key}> { tipo.concepto} </option>
+                                    areas.map( (tipo, key) => {
+                                        return <option value={ tipo.id } key={key}> { tipo.area} </option>
                                     })
                                 }
                             </Select>
 
                             <InputError
-                                message={errors.conceptos_id}
+                                message={errors.areas_id}
                                 className="mt-2"
                             />
                         </div>
-
+                        
                         <div>
                             <InputLabel
-                                htmlFor="origen"
-                                value="Origen"
+                                htmlFor="pantallas_id"
+                                value="Pantalla"
                             />
 
                             <Select
-                                id="origen"
-                                name="origen"
+                                id="pantallas_id"
+                                name="pantallas_id"
                                 className="mt-1 block w-full"
-                                value={data.origen}
+                                value={data.pantallas_id}
                                 onChange={(e) =>
-                                    setData("origen", e.target.value)
+                                    setData("pantallas_id", e.target.value)
                                 }
                             >
-                                {
-                                    origenes.map( (tipo, key) => {
-                                        return <option value={ tipo.key } key={key}> { tipo.valor } </option>
+                                {                                    
+                                    pantallas.map( (tipo, key) => {
+                                        return <option value={ tipo.id } key={key}> { tipo.pantalla} </option>
                                     })
                                 }
                             </Select>
 
                             <InputError
-                                message={errors.origen}
+                                message={errors.pantallas_id}
+                                className="mt-2"
+                            />
+                        </div>
+
+                        
+
+
+                        <div>
+                            <InputLabel htmlFor="fecha_inicial" value="Fecha inicial" />
+
+                            <TextInput
+                                id="fecha_inicial"
+                                name="fecha_inicial"
+                                type='date'
+                                value={data.fecha_inicial}
+                                className="mt-1 block w-full"
+                                autoComplete="fecha_inicial"
+                                onChange={(e) =>
+                                    setData("fecha_inicial", e.target.value)
+                                }
+                            />
+
+                            <InputError
+                                message={errors.fecha_inicial}
+                                className="mt-2"
+                            />
+                        </div>
+
+                        
+                        <div>
+                            <InputLabel htmlFor="fecha_final" value="Fecha final" />
+
+                            <TextInput
+                                id="fecha_final"
+                                name="fecha_final"
+                                type='date'
+                                value={data.fecha_final}
+                                min={data.fecha_inicial}
+                                className="mt-1 block w-full"
+                                autoComplete="fecha_final"
+                                onChange={(e) =>
+                                    setData("fecha_final", e.target.value)
+                                }
+                            />
+
+                            <InputError
+                                message={errors.fecha_final}
                                 className="mt-2"
                             />
                         </div>
 
                         <div>
-                            <InputLabel htmlFor="valor" value="Valor" />
+                            <InputLabel htmlFor="marquesina" value="Marquesina" />
 
-                            <TextInput
-                                id="valor"
-                                type="number"
-                                name="valor"
-                                value={data.valor}
+                            <TextArea
+                                id="marquesina"
+                                name="marquesina"
+                                value={data.marquesina}
                                 className="mt-1 block w-full"
-                                autoComplete="valor"
+                                autoComplete="marquesina"
                                 onChange={(e) =>
-                                    setData("valor", e.target.value)
+                                    setData("marquesina", e.target.value)
                                 }
                             />
 
                             <InputError
-                                message={errors.valor}
+                                message={errors.marquesina}
                                 className="mt-2"
                             />
                         </div>

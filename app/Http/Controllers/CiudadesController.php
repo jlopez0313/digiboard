@@ -21,7 +21,8 @@ class CiudadesController extends Controller
         return Inertia::render('Parametros/Ciudades/Index', [
             'filters' => Peticion::all('search', 'trashed'),
             'contacts' => new CiudadesCollection(
-                Ciudades::with('departamento')->paginate()
+                Ciudades::with('departamento')
+                ->paginate()
             ),
             'dataDeptos' => new DepartamentosCollection(
                 Departamentos::orderBy('departamento')->get()

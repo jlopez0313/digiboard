@@ -11,7 +11,7 @@ import PrimaryButton from "@/Components/Buttons/PrimaryButton";
 import Modal from "@/Components/Modal";
 import { Form } from "./Form";
 
-export default ({ auth, contacts, clientes, conceptos, origenes }) => {
+export default ({ auth, contacts, empresas }) => {
 
     const {
         data,
@@ -19,11 +19,12 @@ export default ({ auth, contacts, clientes, conceptos, origenes }) => {
     } = contacts;
 
     const titles= [
-        'Fecha',
-        'Recibo',
-        'Cliente',
-        'Concepto',
-        'Valor',
+        'Empresa',
+        'Area',
+        'Pantalla',
+        'Diseño',
+        'Fecha Inicial',
+        'Fecha Final',
     ]
 
     const [list, setList] = useState([]);
@@ -34,11 +35,12 @@ export default ({ auth, contacts, clientes, conceptos, origenes }) => {
         const _list = data.map( item => {
             return {
                 'id': item.id,
-                'fecha': item.created_at,
-                'recibo': item.id,
-                'cliente': item.cliente?.nombre || '',
-                'concepto': item.concepto?.concepto || '',
-                'valor': item.valor || '',
+                'empresa': item.pantalla?.area?.empresa?.empresa || '',
+                'area': item.pantalla?.area?.area || '',
+                'pantalla': item.pantalla?.pantalla || '',
+                'diseno': item.diseno?.diseno || '',
+                'fecha_inicial': item.fecha_inicial,
+                'fecha_final': item.fecha_final,
             }
         })
 
@@ -48,6 +50,13 @@ export default ({ auth, contacts, clientes, conceptos, origenes }) => {
     const onSetItem = (_id) => {
         setId(_id)
         onToggleModal(true)
+    }
+
+    const onTrash = async (_id) => {
+        if ( data ) {
+            await axios.delete(`/api/v1/carteleras/${_id}`);
+            onReload()
+        }
     }
 
     const onToggleModal = (isShown) => {
@@ -71,11 +80,11 @@ export default ({ auth, contacts, clientes, conceptos, origenes }) => {
             user={auth.user}
             header={
                 <h2 className="font-semibold text-xl text-gray-800 leading-tight">
-                    Gastos
+                    Carteleras
                 </h2>
             }
         >
-            <Head title="Gastos" />
+            <Head title="Carteleras" />
 
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -93,6 +102,7 @@ export default ({ auth, contacts, clientes, conceptos, origenes }) => {
                             data={list}
                             links={links}
                             onEdit={ onSetItem }
+                            onTrash={ onTrash }
                             titles={titles}
                             actions={['edit', 'trash']}
                         />
@@ -101,11 +111,9 @@ export default ({ auth, contacts, clientes, conceptos, origenes }) => {
                     <Pagination links={links} />
                 </div>
             </div>
-            <Modal show={show} closeable={true} title="Crear Gastos">
+            <Modal show={show} closeable={true} title="Crear Carteleras">
                 <Form
-                    clientes={clientes}
-                    conceptos={conceptos}
-                    origenes={origenes}
+                    empresas={empresas}
                     setIsOpen={onToggleModal}        
                     onReload={onReload}
                     id={id}
