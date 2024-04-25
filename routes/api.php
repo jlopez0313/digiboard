@@ -10,6 +10,8 @@ use App\Http\Controllers\Api\v1\EmpresasController;
 use App\Http\Controllers\Api\v1\AreasController;
 use App\Http\Controllers\Api\v1\PantallasController;
 use App\Http\Controllers\Api\v1\CartelerasController;
+use App\Http\Controllers\Api\v1\MultimediasController;
+use App\Http\Controllers\Api\v1\UsuariosController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,11 +50,28 @@ Route::group(['prefix' => 'v1'], function () {
     });
     Route::apiResource('areas', AreasController::class);
 
+
     Route::prefix('pantallas')->group( function() {
         Route::get('/area/{area}', [PantallasController::class, 'byArea']);
     });
     Route::apiResource('pantallas', PantallasController::class);
 
+
+    Route::prefix('carteleras')->group( function() {
+        Route::put('/asignar', [CartelerasController::class, 'asignar']);
+        Route::delete('/desasignar/{pantalla_cartelera}', [CartelerasController::class, 'desasignar']);
+        Route::post('/codigo/{pantalla_cartelera}', [CartelerasController::class, 'codigo']);
+    });
     Route::apiResource('carteleras', CartelerasController::class);
+    
+
+    Route::prefix('usuarios')->group( function() {
+        Route::put('/asignar', [UsuariosController::class, 'asignar']);
+        Route::delete('/desasignar/{usuario_area}', [UsuariosController::class, 'desasignar']);
+    });
+    Route::apiResource('usuarios', UsuariosController::class);
+
+
+    Route::apiResource('multimedias', MultimediasController::class);
 
 })->middleware(['auth:sanctum', 'verified']);

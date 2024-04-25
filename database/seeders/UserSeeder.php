@@ -13,6 +13,7 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         \DB::table('users')->insert([
+            'is_admin' => 'Y',
             'perfiles_id' => '1',
             'name' => 'SuperAdmin',
             'email' => 'admin@correo.com',

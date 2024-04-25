@@ -63,6 +63,22 @@ export default ( {action, ...props} ) => {
                     />
                 </a>
         }
+
+        {
+            action === 'cog' && 
+                <a                
+                    tabIndex="-1"
+                    {...props}
+                    className="px-4 focus:outline-none inline-block"
+                    role="button"
+                    title="Configurar"
+                >
+                    <Icon
+                        name="cog"
+                        className="block w-6 h-6 text-gray-400 fill-current"
+                    />
+                </a>
+        }
         </>
     );
 }

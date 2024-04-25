@@ -17,4 +17,8 @@ class Pantallas extends Model
     public function area() {
         return $this->hasOne(Areas::class, 'id', 'areas_id');
     }
+    
+    public function carteleras() {
+        return $this->hasMany(PantallasCarteleras::class, 'pantallas_id');
+    }
 }

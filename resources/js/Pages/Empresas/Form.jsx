@@ -10,6 +10,8 @@ import axios from "axios";
 
 export const Form = ({ id, setIsOpen, onReload }) => {
 
+    const [preview, setPreview] = useState([]);
+
     const { data, setData, processing, errors, reset } = useForm({
         nit: '',
         empresa: '',
@@ -21,10 +23,15 @@ export const Form = ({ id, setIsOpen, onReload }) => {
     const submit = async (e) => {
         e.preventDefault();
 
+        const formData = new FormData();
+        Object.keys( data ).forEach( key => {
+            formData.append( key, data[key] )
+        })
+
         if ( id ) {
-            await axios.put(`/api/v1/empresas/${id}`, data);
+            await axios.put(`/api/v1/empresas/${id}`, formData);
         } else {
-            await axios.post(`/api/v1/empresas`, data);
+            await axios.post(`/api/v1/empresas`, formData);
         }
         onReload();
     };
@@ -43,6 +50,18 @@ export const Form = ({ id, setIsOpen, onReload }) => {
                 celular: item.celular,
             }
         )
+    }
+
+    const onAddLogo = async ( file ) => {
+        setData(
+            {                
+                ...data, 
+                logo: file,
+            }
+        )
+        
+        const preview = URL.createObjectURL( file )
+        setPreview(  { src: preview } )
     }
 
     useEffect( () => {
@@ -99,30 +118,6 @@ export const Form = ({ id, setIsOpen, onReload }) => {
 
                         <div>
                             <InputLabel
-                                htmlFor="logo"
-                                value="Logo"
-                            />
-
-                            <TextInput
-                                id="logo"
-                                type="text"
-                                name="logo"
-                                value={data.logo}
-                                className="mt-1 block w-full"
-                                autoComplete="logo"
-                                onChange={(e) =>
-                                    setData("logo", e.target.value)
-                                }
-                            />
-
-                            <InputError
-                                message={errors.logo}
-                                className="mt-2"
-                            />
-                        </div>
-
-                        <div>
-                            <InputLabel
                                 htmlFor="correo"
                                 value="Correo"
                             />
@@ -165,6 +160,32 @@ export const Form = ({ id, setIsOpen, onReload }) => {
                                 message={errors.celular}
                                 className="mt-2"
                             />
+                        </div>
+
+                        <div>
+                            <InputLabel
+                                htmlFor="logo"
+                                value="Logo"
+                            />
+
+                            <TextInput
+                                id="logo"
+                                type="file"
+                                name="logo"
+                                accept='image/*'
+                                className="mt-1 block w-full"
+                                autoComplete="logo"
+                                onChange={e => onAddLogo(e.target.files[0])}
+                            />
+
+                            <InputError
+                                message={errors.logo}
+                                className="mt-2"
+                            />
+                        </div>
+
+                        <div>
+                            <img className='media preview' src={preview.src} alt=''/>
                         </div>
 
                     </div>

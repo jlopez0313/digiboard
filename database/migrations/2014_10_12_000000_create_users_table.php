@@ -20,6 +20,7 @@ return new class extends Migration
             $table->unsignedBigInteger('empresas_id')->nullable();
             $table->foreign('empresas_id')->references('id')->on('empresas');
 
+            $table->boolean('is_admin');
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();

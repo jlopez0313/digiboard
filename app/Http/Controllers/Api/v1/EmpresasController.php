@@ -17,7 +17,8 @@ class EmpresasController extends Controller
      */
     public function store(Request $request)
     {
-        $empresa = Empresas::create( $request->all() );
+        $filename = $request->logo->store('files/logos');
+        $empresa = Empresas::create( [...$request->all(), 'logo' => $filename] );
         return new EmpresasResource( $empresa );
     }
 

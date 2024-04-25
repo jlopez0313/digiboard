@@ -36,7 +36,7 @@ export default ({ auth, contacts, tipoEmpresas, departamentos }) => {
                 id: item.id,
                 nit: item.nit,
                 empresa: item.empresa,
-                logo: item.logo,
+                logo: <img width={'40px'} src={item.logo} />,
                 correo: item.correo,
                 celular: item.celular,
             };

@@ -11,7 +11,7 @@ import PrimaryButton from "@/Components/Buttons/PrimaryButton";
 import Modal from "@/Components/Modal";
 import { Form } from "./Form";
 
-export default ({ auth, contacts, empresas }) => {
+export default ({ auth, contacts }) => {
 
     const {
         data,
@@ -19,9 +19,6 @@ export default ({ auth, contacts, empresas }) => {
     } = contacts;
 
     const titles= [
-        'Empresa',
-        'Area',
-        'Pantalla',
         'Diseño',
         'Fecha Inicial',
         'Fecha Final',
@@ -35,9 +32,6 @@ export default ({ auth, contacts, empresas }) => {
         const _list = data.map( item => {
             return {
                 'id': item.id,
-                'empresa': item.pantalla?.area?.empresa?.empresa || '',
-                'area': item.pantalla?.area?.area || '',
-                'pantalla': item.pantalla?.pantalla || '',
                 'diseno': item.diseno?.diseno || '',
                 'fecha_inicial': item.fecha_inicial,
                 'fecha_final': item.fecha_final,
@@ -45,6 +39,10 @@ export default ({ auth, contacts, empresas }) => {
         })
 
         setList( _list );
+    }
+
+    const onSearch = (id) => {
+        router.get( 'carteleras/' + id )
     }
 
     const onSetItem = (_id) => {
@@ -57,6 +55,11 @@ export default ({ auth, contacts, empresas }) => {
             await axios.delete(`/api/v1/carteleras/${_id}`);
             onReload()
         }
+    }
+
+    const onConfig = async (_id) => {
+        onToggleModal(false);
+        router.get( 'carteleras/config/' + _id )
     }
 
     const onToggleModal = (isShown) => {
@@ -101,10 +104,12 @@ export default ({ auth, contacts, empresas }) => {
                         <Table 
                             data={list}
                             links={links}
+                            onSearch={onSearch}
                             onEdit={ onSetItem }
                             onTrash={ onTrash }
+                            onConfig={ onConfig }
                             titles={titles}
-                            actions={['edit', 'trash']}
+                            actions={['search', 'cog', 'edit', 'trash']}
                         />
                     </div>
 
@@ -113,7 +118,6 @@ export default ({ auth, contacts, empresas }) => {
             </div>
             <Modal show={show} closeable={true} title="Crear Carteleras">
                 <Form
-                    empresas={empresas}
                     setIsOpen={onToggleModal}        
                     onReload={onReload}
                     id={id}

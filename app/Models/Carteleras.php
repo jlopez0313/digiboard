@@ -18,7 +18,7 @@ class Carteleras extends Model
         return $this->hasOne(Disenos::class, 'id', 'disenos_id');
     }
 
-    public function pantalla() {
-        return $this->hasOne(Pantallas::class, 'id', 'pantallas_id');
+    public function multimedias() {
+        return $this->hasMany(Multimedias::class, 'carteleras_id');
     }
 }

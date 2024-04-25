@@ -7,8 +7,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Request as Peticion;
 use App\Http\Resources\CartelerasCollection;
 use App\Http\Resources\EmpresasCollection;
+use App\Http\Resources\PantallasCollection;
+use App\Http\Resources\PantallasCartelerasCollection;
 use App\Models\Carteleras;
 use App\Models\Empresas;
+use App\Models\Pantallas;
+use App\Models\PantallasCarteleras;
 use Inertia\Inertia;
 
 class CartelerasController extends Controller
@@ -21,13 +25,9 @@ class CartelerasController extends Controller
         return Inertia::render('Carteleras/Index', [
             'filters' => Peticion::all('search', 'trashed'),
             'contacts' => new CartelerasCollection(
-                Carteleras::with('pantalla.area.empresa', 'diseno')
+                Carteleras::with('diseno')
                 ->paginate()
-            ),
-            'empresas' => new EmpresasCollection(
-                Empresas::orderBy('empresa')
-                ->get()
-            ),
+            )
         ]);
     }
 
@@ -52,7 +52,10 @@ class CartelerasController extends Controller
      */
     public function show(string $id)
     {
-        //
+        return Inertia::render('Carteleras/Show', [
+            'cartelera' => Carteleras::with('multimedias')
+                ->find( $id )
+        ]);
     }
 
     /**
@@ -77,5 +80,21 @@ class CartelerasController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function config(string $id)
+    {
+        return Inertia::render('Carteleras/Config', [
+            'id' => $id,
+            'contacts' => new PantallasCartelerasCollection(
+                PantallasCarteleras::with('cartelera', 'pantalla.area.empresa')
+                ->where('carteleras_id', $id)
+                ->paginate()
+            ),
+            'empresas' => new EmpresasCollection(
+                Empresas::orderBy('empresa')
+                ->get()
+            )
+        ]);
     }
 }

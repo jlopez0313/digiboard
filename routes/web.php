@@ -18,6 +18,7 @@ use App\Http\Controllers\ColoresController;
 use App\Http\Controllers\FacturasController;
 use App\Http\Controllers\GastosController;
 use App\Http\Controllers\InventarioController;
+use App\Http\Controllers\UsuariosController;
 
 
 /*
@@ -78,11 +79,14 @@ Route::prefix('pantallas')->group( function() {
 
 Route::prefix('carteleras')->group( function() {
     Route::get('/', [CartelerasController::class, 'index'])->name('carteleras');
+    Route::get('/config/{id}', [CartelerasController::class, 'config'])->name('carteleras.config');
+    Route::get('/{id}', [CartelerasController::class, 'show'])->name('carteleras.show');
 })->middleware(['auth', 'verified']);
 
 
 Route::prefix('usuarios')->group( function() {
-    Route::get('/', [CartelerasController::class, 'index'])->name('usuarios');
+    Route::get('/', [UsuariosController::class, 'index'])->name('usuarios');
+    Route::get('/config/{id}', [UsuariosController::class, 'config'])->name('usuarios.config');
 })->middleware(['auth', 'verified']);
 
 Route::middleware('auth')->group(function () {

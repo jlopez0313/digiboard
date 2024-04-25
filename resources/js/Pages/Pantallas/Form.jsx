@@ -67,7 +67,7 @@ export const Form = ({ id, empresas, setIsOpen, onReload }) => {
     }, [])
 
     useEffect( () => {
-        data.empresas_id && onGetAreas( data.empresas_id )
+        onGetAreas( data.empresas_id )
     }, [data.empresas_id])
 
     return (

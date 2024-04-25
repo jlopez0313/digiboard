@@ -6,36 +6,41 @@ import TextInput from "@/Components/Form/TextInput";
 import { useForm } from "@inertiajs/react";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import Select from "@/Components/Form/Select";
 import TextArea from "@/Components/Form/TextArea";
+import Icon from "@/Components/Icon";
 
-export const Form = ({ id, empresas, setIsOpen, onReload }) => {
+export const Form = ({ id, setIsOpen, onReload }) => {
+
+    const [previews, setPreviews] = useState([]);
 
     const { data, setData, processing, errors, reset } = useForm({
         disenos_id: 1,
-        empresas_id: '',
-        areas_id: '',
-        pantallas_id: '',
         marquesina: '',
         fecha_inicial: '',
         fecha_final: '',
+        multimedias: [],
     });
 
-    const {
-        data: listaEmpresas,
-    } = empresas;
-
-    const [areas, setAreas] = useState([]);
-    const [pantallas, setPantallas] = useState([]);
-
     const submit = async (e) => {
+
         e.preventDefault();
 
+        const formData = new FormData();
+        Object.keys( data ).forEach( key => {
+            if ( key === 'multimedias' ) {
+                for (const file of data[key]) {
+                    formData.append('multimedias[]', file) // appending every file to formdata
+                }
+            } else {
+                formData.append( key, data[key] )
+            }
+        })
         
         if ( id ) {
-            await axios.put(`/api/v1/carteleras/${id}`, data);
+            formData.append('_method', 'PUT')
+            await axios.post(`/api/v1/carteleras/${id}`, formData);
         } else {
-            await axios.post(`/api/v1/carteleras`, data);
+            await axios.post(`/api/v1/carteleras`, formData);
         }
 
         onReload();
@@ -48,15 +53,15 @@ export const Form = ({ id, empresas, setIsOpen, onReload }) => {
 
         setData(
             {                
-                disenos_id: item.disenos_id,
-                empresas_id: item.pantalla?.area?.empresas_id || '',
-                areas_id: item.pantalla?.areas_id || '',
-                pantallas_id: item.pantalla?.id || '',
+                disenos_id: item.diseno?.id,
                 marquesina: item.marquesina,
                 fecha_inicial: item.fecha_inicial,
                 fecha_final: item.fecha_final,
+                multimedias: []
             }
         )
+
+        setPreviews( item.multimedias )
     }
 
     const onGetAreas = async ( empresa ) => {
@@ -81,6 +86,46 @@ export const Form = ({ id, empresas, setIsOpen, onReload }) => {
         }
     }
 
+    const onAddFiles = async ( evt ) => {
+        const files = await Array.from( evt.target.files )
+
+        setData(
+            {                
+                ...data, 
+                multimedias: [...data.multimedias, ...files ],
+            }
+        )
+        
+        Object.keys(files).forEach( key => {
+            const preview = URL.createObjectURL( files[key] )
+            setPreviews( list => [
+                ...list, 
+                { src: preview, mimetype: files[key].type } 
+            ])
+      
+        })
+
+    }
+
+    const onRemoveMedia = async ( key, id ) => {
+        const files = [...data.multimedias]
+        files.splice(key, 1)
+        setData(
+            {                
+                ...data, 
+                multimedias: [...files],
+            }
+        )
+    
+        const prevs = [...previews]
+        const prev = prevs.splice(key, 1)
+        setPreviews([...prevs])
+
+        if ( id ) {
+            const { data: file  } = await axios.delete(`/api/v1/multimedias/${id}`);
+        }
+    }
+
     useEffect( () => {
         id && onGetItem()
     }, [])
@@ -98,93 +143,6 @@ export const Form = ({ id, empresas, setIsOpen, onReload }) => {
             <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <form onSubmit={submit}>
                     <div className="grid grid-cols-2 gap-4">
-                        <div>
-                            <InputLabel
-                                htmlFor="empresas_id"
-                                value="Empresa"
-                            />
-
-                            <Select
-                                id="empresas_id"
-                                name="empresas_id"
-                                className="mt-1 block w-full"
-                                value={data.empresas_id}
-                                onChange={(e) =>
-                                    setData("empresas_id", e.target.value)
-                                }
-                            >
-                                {
-                                    listaEmpresas.map( (tipo, key) => {
-                                        return <option value={ tipo.id } key={key}> { tipo.empresa} </option>
-                                    })
-                                }
-                            </Select>
-
-                            <InputError
-                                message={errors.empresas_id}
-                                className="mt-2"
-                            />
-                        </div>
-
-                        
-                        <div>
-                            <InputLabel
-                                htmlFor="areas_id"
-                                value="Area"
-                            />
-
-                            <Select
-                                id="areas_id"
-                                name="areas_id"
-                                className="mt-1 block w-full"
-                                value={data.areas_id}
-                                onChange={(e) =>
-                                    setData("areas_id", e.target.value)
-                                }
-                            >
-                                {                                    
-                                    areas.map( (tipo, key) => {
-                                        return <option value={ tipo.id } key={key}> { tipo.area} </option>
-                                    })
-                                }
-                            </Select>
-
-                            <InputError
-                                message={errors.areas_id}
-                                className="mt-2"
-                            />
-                        </div>
-                        
-                        <div>
-                            <InputLabel
-                                htmlFor="pantallas_id"
-                                value="Pantalla"
-                            />
-
-                            <Select
-                                id="pantallas_id"
-                                name="pantallas_id"
-                                className="mt-1 block w-full"
-                                value={data.pantallas_id}
-                                onChange={(e) =>
-                                    setData("pantallas_id", e.target.value)
-                                }
-                            >
-                                {                                    
-                                    pantallas.map( (tipo, key) => {
-                                        return <option value={ tipo.id } key={key}> { tipo.pantalla} </option>
-                                    })
-                                }
-                            </Select>
-
-                            <InputError
-                                message={errors.pantallas_id}
-                                className="mt-2"
-                            />
-                        </div>
-
-                        
-
 
                         <div>
                             <InputLabel htmlFor="fecha_inicial" value="Fecha inicial" />
@@ -206,7 +164,6 @@ export const Form = ({ id, empresas, setIsOpen, onReload }) => {
                                 className="mt-2"
                             />
                         </div>
-
                         
                         <div>
                             <InputLabel htmlFor="fecha_final" value="Fecha final" />
@@ -226,6 +183,28 @@ export const Form = ({ id, empresas, setIsOpen, onReload }) => {
 
                             <InputError
                                 message={errors.fecha_final}
+                                className="mt-2"
+                            />
+                        </div>
+                        
+                        <div>
+                            <InputLabel htmlFor="fecha_final" value="Fecha final" />
+
+                            <TextInput
+                                accept="image/*, video/*"
+                                multiple
+                                id="arhcivos"
+                                name="arhcivos"
+                                type='file'
+                                value={data.arhcivos}
+                                min={data.arhcivos}
+                                className="mt-1 block w-full"
+                                autoComplete="arhcivos"
+                                onChange={onAddFiles}
+                            />
+
+                            <InputError
+                                message={errors.arhcivos}
                                 className="mt-2"
                             />
                         </div>
@@ -269,6 +248,28 @@ export const Form = ({ id, empresas, setIsOpen, onReload }) => {
                         </SecondaryButton>
                     </div>
                 </form>
+
+                <div className="grid grid-cols-4 gap-4 mt-2">
+                    {
+                        previews.map( (media, key) => {
+                            return <div className='grid-item border rounded shadow p-2' key={key}>
+                                <Icon
+                                    name="trash"
+                                    className="cursor-pointer h-4 text-red-400 fill-current"
+                                    onClick={ () => onRemoveMedia( key, media.id ) }
+                                />
+                                {
+                                    media.mimetype.includes('image') ? 
+                                    <img className='media preview' src={media.src} alt=''/>
+                                    : 
+                                    <video className='media preview' alt='' controls>
+                                        <source src={media.src}></source>
+                                    </video>
+                                }
+                            </div>
+                        })
+                    }
+                </div>
             </div>
         </div>
     );

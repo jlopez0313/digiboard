@@ -4,7 +4,7 @@ import Icon from "../Icon";
 import ActionsTable from "./ActionsTable";
 
 
-export default ({ data = [], routes = {}, titles = [], actions = [], onTrash, onEdit, onSearch }) => {
+export default ({ data = [], routes = {}, titles = [], actions = [], onTrash, onEdit, onSearch, onConfig }) => {
 
     return (
         <table className="w-full whitespace-nowrap">
@@ -57,6 +57,8 @@ export default ({ data = [], routes = {}, titles = [], actions = [], onTrash, on
                                         return <ActionsTable key={key} action={action} onClick={() => onEdit(item.id)}/>                                    
                                     } else if( action === 'search' ) {
                                         return <ActionsTable key={key} action={action} onClick={() => onSearch(item.id)}/>                                    
+                                    } else if( action === 'cog' ) {
+                                        return <ActionsTable key={key} action={action} onClick={() => onConfig(item.id)}/>                                    
                                     }
                                 })
                             }

@@ -50,8 +50,6 @@ class PantallasController extends Controller
         return new PantallasResource( $pantalla );
     }
 
-    
-
     public function byArea($area)
     {
         return PantallasResource::collection(

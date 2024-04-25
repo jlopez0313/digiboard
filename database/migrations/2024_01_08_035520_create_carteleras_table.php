@@ -14,9 +14,6 @@ return new class extends Migration
         Schema::create('carteleras', function (Blueprint $table) {
             $table->id();
 
-            $table->unsignedBigInteger('pantallas_id');
-            $table->foreign('pantallas_id')->references('id')->on('pantallas');
-
             $table->unsignedBigInteger('disenos_id');
             $table->foreign('disenos_id')->references('id')->on('disenos');
 
