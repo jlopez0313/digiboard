@@ -1,3 +1,110 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+html {
+    scroll-behavior: smooth;
+}
+
+.logo {
+    padding: 25px;
+    background: url('../img/bg-logo.png');
+    background-repeat: no-repeat;
+    background-position: 100% 100%;
+}
+
+.menu {
+    border-color: #00639F;
+    border-bottom-width: 6px;
+}
+
+.big-title {
+    font-size: 64px;
+    font-weight: bold;
+}
+
+.digiboard {
+    color: #00639F;
+}
+
+.pro{
+    color: #0097B2;
+}
+
+p.pro {
+    font-size: 24px;
+}
+
+.primary-button {
+    background: #00639F;
+}
+
+.secondary-button {
+    background: #0097B2;
+}
+
+.card-2 {
+    min-width: 270px;
+}
+
+.card-2 span {
+    font-size: 13px;
+}
+
+.card-2 .price {
+    font-size: 40px;
+}
+
+.card-2 ul {
+    list-style: disc;
+    padding-left: 30px;
+}
+
+.card {
+    /*max-width: 270px;*/
+}
+
+.card span {
+    font-weight: bold;
+    font-size: 24px;
+    color: #00639F;
+}
+
+.card p {
+    color: #828282;
+}
+
+.title-black {
+    font-size: 24px;
+}
+
+footer {
+    background: url('../img/footer.png');
+    background-size: 100% 100%;
+    min-height: 160px;
+    color: #fff
+}
+
+footer span {
+    font-size: 11px;
+}
+
+
+@media screen and (max-width: 500px) {
+    .header {
+        border-bottom: 4px solid #00639F;
+    }
+    
+    .logo {
+        padding: 5px;
+        background: none;
+    }
+
+    .logo img{
+        max-width: 80px;
+    }
+
+    .big-title {
+        font-size: 48px;
+    }    
+}
