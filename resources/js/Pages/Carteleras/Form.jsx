@@ -4,7 +4,7 @@ import PrimaryButton from "@/Components/Buttons/PrimaryButton";
 import SecondaryButton from "@/Components/Buttons/SecondaryButton";
 import TextInput from "@/Components/Form/TextInput";
 import { useForm } from "@inertiajs/react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import TextArea from "@/Components/Form/TextArea";
 import Icon from "@/Components/Icon";
@@ -12,6 +12,7 @@ import Icon from "@/Components/Icon";
 export const Form = ({ id, setIsOpen, onReload }) => {
 
     const [previews, setPreviews] = useState([]);
+    const filesRef = useRef(null);
 
     const { data, setData, processing, errors, reset } = useForm({
         disenos_id: 1,
@@ -188,7 +189,7 @@ export const Form = ({ id, setIsOpen, onReload }) => {
                         </div>
                         
                         <div>
-                            <InputLabel htmlFor="fecha_final" value="Fecha final" />
+                            <InputLabel htmlFor="arhcivos" value="Arhcivos" />
 
                             <TextInput
                                 accept="image/*, video/*"
@@ -198,10 +199,20 @@ export const Form = ({ id, setIsOpen, onReload }) => {
                                 type='file'
                                 value={data.arhcivos}
                                 min={data.arhcivos}
-                                className="mt-1 block w-full"
+                                className="hidden mt-1 block w-full"
                                 autoComplete="arhcivos"
+                                ref={filesRef}
                                 onChange={onAddFiles}
                             />
+                            
+                            <SecondaryButton
+                                className="w-full text"
+                                disabled={processing}
+                                onClick={ () => {filesRef.current.click()} }
+                            >
+                                {" "}
+                                Elegir Archivos{" "}
+                            </SecondaryButton>
 
                             <InputError
                                 message={errors.arhcivos}

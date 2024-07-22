@@ -19,6 +19,7 @@ export default ({ auth, contacts, empresas, departamentos }) => {
     } = contacts;
 
     const titles= [
+        'ID',
         'Departamento',
         'Ciudad',
         'Empresa',

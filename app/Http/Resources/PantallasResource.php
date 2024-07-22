@@ -20,9 +20,13 @@ class PantallasResource extends JsonResource
         
         return [
             'id' => $this->id,
-            'pantalla' => $this->pantalla,
             'area' => $this->area,
-            'url' => $this->url,
+            'cartelera' => $this->cartelera,
+            'pantalla' => $this->pantalla,
+            'code' => $this->code,
+            'estado' => $this->area,
+            'estado_label' => $this->estado_label,
+            'updated_at' => $this->updated_at,
         ];
     }
 }

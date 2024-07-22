@@ -17,11 +17,12 @@ export default ({ auth, id, contacts, empresas }) => {
     } = contacts;
 
     const titles= [
+        'ID',
         'Empresa',
         'Area',
         'Pantalla',
         'Cartelera',
-        'Código',
+        'URL',
         'Estado',
     ]
 
@@ -37,7 +38,7 @@ export default ({ auth, id, contacts, empresas }) => {
                 'area': item.pantalla?.area?.area,
                 'pantalla': item.pantalla?.pantalla,
                 'cartelera': item.cartelera?.id || '',
-                'code': item.code || '',
+                'url': item.pantalla ? `${window.location.protocol}//${window.location.host}/asignacion/${item.pantalla.id}` : '',
                 'estado': item.estado_label,
             }
         })
@@ -61,8 +62,12 @@ export default ({ auth, id, contacts, empresas }) => {
         router.visit(window.location.pathname);
     }
 
+    const onSearch = (_id) => {
+        router.get( '/asignacion/' + _id )
+    }
+
     const onBack = () => {
-        router.get('/usuarios');
+        router.get('/carteleras');
     }
 
     useEffect(()=> {
@@ -74,7 +79,7 @@ export default ({ auth, id, contacts, empresas }) => {
             user={auth.user}
             header={
                 <h2 className="font-semibold text-xl text-gray-800 leading-tight">
-                    Pantallas con Carteleras
+                    Pantallas con Cartelera #{ id }
                 </h2>
             }
         >
@@ -102,16 +107,18 @@ export default ({ auth, id, contacts, empresas }) => {
                         <Table 
                             data={list}
                             links={links}
+                            onEdit={() => {}}
+                            onSearch={onSearch}
                             onTrash={ onTrash }
                             titles={titles}
-                            actions={['trash']}
+                            actions={['search', 'trash']}
                         />
                     </div>
 
                     <Pagination links={links} />
                 </div>
             </div>
-            <Modal show={show} closeable={true} title="Asignar Carteleras">
+            <Modal show={show} closeable={true} title={`Asignar Cartelera #${id}`}>
                 <Assign
                     empresas={empresas}
                     setIsOpen={onToggleModal}        

@@ -53,8 +53,7 @@ class CartelerasController extends Controller
     public function show(string $id)
     {
         return Inertia::render('Carteleras/Show', [
-            'cartelera' => Carteleras::with('multimedias')
-                ->find( $id )
+            'pantalla' => Carteleras::find( $id )
         ]);
     }
 

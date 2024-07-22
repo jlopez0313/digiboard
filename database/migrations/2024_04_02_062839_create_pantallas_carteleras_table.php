@@ -21,10 +21,11 @@ return new class extends Migration
             $table->foreign('carteleras_id')->references('id')->on('carteleras');
 
             $table->char('estado');
-            $table->string('code');
             
             $table->timestamps();
             $table->softDeletes();
+
+            $table->unique(['pantallas_id', 'carteleras_id']);
         });
     }
 

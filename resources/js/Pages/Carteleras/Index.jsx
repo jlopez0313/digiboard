@@ -19,6 +19,7 @@ export default ({ auth, contacts }) => {
     } = contacts;
 
     const titles= [
+        'ID',
         'Diseño',
         'Fecha Inicial',
         'Fecha Final',
@@ -39,10 +40,6 @@ export default ({ auth, contacts }) => {
         })
 
         setList( _list );
-    }
-
-    const onSearch = (id) => {
-        router.get( 'carteleras/' + id )
     }
 
     const onSetItem = (_id) => {
@@ -104,19 +101,18 @@ export default ({ auth, contacts }) => {
                         <Table 
                             data={list}
                             links={links}
-                            onSearch={onSearch}
                             onEdit={ onSetItem }
                             onTrash={ onTrash }
                             onConfig={ onConfig }
                             titles={titles}
-                            actions={['search', 'cog', 'edit', 'trash']}
+                            actions={['cog', 'edit', 'trash']}
                         />
                     </div>
 
                     <Pagination links={links} />
                 </div>
             </div>
-            <Modal show={show} closeable={true} title="Crear Carteleras">
+            <Modal show={show} closeable={true} title="Gestionar Cartelera">
                 <Form
                     setIsOpen={onToggleModal}        
                     onReload={onReload}

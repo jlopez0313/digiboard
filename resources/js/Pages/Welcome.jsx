@@ -10,7 +10,7 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
             <Head title="Welcome" />
             <div className=" header flex flex-wrap items-center fixed top-0 w-full bg-white">
                 <div className="logo">
-                    <img src="img/logo.png" alt="" />
+                    <img className="logo-img" src="img/logo.png" alt="" />
                 </div>
 
                 <div className="md:hidden grow flex justify-end">

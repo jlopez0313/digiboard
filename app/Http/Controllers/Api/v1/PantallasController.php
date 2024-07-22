@@ -18,6 +18,7 @@ class PantallasController extends Controller
     public function store(Request $request)
     {
         $data = $request->except('empresas_id') ;
+        $data['estado'] = 'I';
         $pantalla = Pantallas::create( $data );
         return new PantallasResource( $pantalla );
     }
@@ -57,5 +58,14 @@ class PantallasController extends Controller
             ->orderBy('pantalla')
             ->get()
         );
+    }
+
+    public function codigo(Request $request, Pantallas $pantalla) {
+
+        if( $pantalla->code == $request->password ) {
+            return new PantallasResource( $pantalla );
+        } else {
+            return null;
+        }
     }
 }

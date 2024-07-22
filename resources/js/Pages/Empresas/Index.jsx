@@ -11,7 +11,7 @@ import PrimaryButton from "@/Components/Buttons/PrimaryButton";
 import Modal from "@/Components/Modal";
 import { Form } from "./Form";
 
-export default ({ auth, contacts, tipoEmpresas, departamentos }) => {
+export default ({ auth, contacts }) => {
 
     const {
         data,
@@ -19,6 +19,7 @@ export default ({ auth, contacts, tipoEmpresas, departamentos }) => {
     } = contacts;
 
     const titles = [
+        'ID',
         "Nit",
         "Nombre",
         "Logo",

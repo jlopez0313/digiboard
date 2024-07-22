@@ -15,7 +15,10 @@ export default ({ data = [], routes = {}, titles = [], actions = [], onTrash, on
                             return <th className="px-6 pt-5 pb-4" key={key} > {title} </th>
                         })
                     }
-                    <th className="px-6 pt-5 pb-4"> </th>
+
+                    {
+                        actions.length ? <th className="px-6 pt-5 pb-4"> Acciones </th> : ''
+                    }
                 </tr>
             </thead>
             <tbody>
@@ -27,7 +30,6 @@ export default ({ data = [], routes = {}, titles = [], actions = [], onTrash, on
                         {
                             Object.keys( item ).map((key, idx) => {
                                 if ( 
-                                    key == 'id' ||
                                     key == 'ruta'
                                 ) return;
                                 return <td className="border-t" key={ key }>
@@ -47,22 +49,26 @@ export default ({ data = [], routes = {}, titles = [], actions = [], onTrash, on
                                 </td>
                             })
                         }
-                        
-                        <td className="w-px border-t">
-                            {
-                                actions.map( (action, key) => {
-                                    if (action === 'trash') {
-                                        return <ActionsTable key={key} action={action} onClick={() => onTrash(item.id)}/>
-                                    } else if( action === 'edit' ) {
-                                        return <ActionsTable key={key} action={action} onClick={() => onEdit(item.id)}/>                                    
-                                    } else if( action === 'search' ) {
-                                        return <ActionsTable key={key} action={action} onClick={() => onSearch(item.id)}/>                                    
-                                    } else if( action === 'cog' ) {
-                                        return <ActionsTable key={key} action={action} onClick={() => onConfig(item.id)}/>                                    
+
+                        {
+                            actions.length ?
+                                <td className="w-px border-t">
+                                    {
+                                        actions.map( (action, key) => {
+                                            if (action === 'trash') {
+                                                return <ActionsTable key={key} action={action} onClick={() => onTrash(item.id)}/>
+                                            } else if( action === 'edit' ) {
+                                                return <ActionsTable key={key} action={action} onClick={() => onEdit(item.id)}/>                                    
+                                            } else if( action === 'search' ) {
+                                                return <ActionsTable key={key} action={action} onClick={() => onSearch(item.id)}/>                                    
+                                            } else if( action === 'cog' ) {
+                                                return <ActionsTable key={key} action={action} onClick={() => onConfig(item.id)}/>                                    
+                                            }
+                                        })
                                     }
-                                })
-                            }
-                        </td>
+                                </td> : ''
+                        }
+                        
                     </tr>
                 ))}
                 {data.length === 0 && (

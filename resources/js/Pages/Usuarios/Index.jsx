@@ -19,6 +19,7 @@ export default ({ auth, contacts, empresas }) => {
     } = contacts;
 
     const titles= [
+        'ID',
         'Empresa',
         'Usuario',
         'Email',
@@ -111,7 +112,7 @@ export default ({ auth, contacts, empresas }) => {
                     <Pagination links={links} />
                 </div>
             </div>
-            <Modal show={show} closeable={true} title="Crear Gastos">
+            <Modal show={show} closeable={true} title="Gestionar Usuarios">
                 <Form
                     empresas={empresas}
                     setIsOpen={onToggleModal}        

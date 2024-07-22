@@ -14,6 +14,12 @@ class PantallasCarteleras extends Model
     protected $table = 'pantallas_carteleras';
     protected $guarded = [];
 
+    public $timestamps = true;
+
+    protected $casts = [
+        'updated_at' => 'datetime:Y-m-d H:i A',
+    ];
+
     public function cartelera() {
         return $this->hasOne(Carteleras::class, 'id', 'carteleras_id');
     }
@@ -29,5 +35,13 @@ class PantallasCarteleras extends Model
         });
         
         return $origenObj['valor'] ?? 'N/A';
+    }
+
+    public function getUpdatedAtAttribute( $date ) {
+        return \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $date)->format('Y-m-d H:i:s');
+    }
+
+    protected function serializeDate($date): string {
+        return $date->format('Y-m-d H:i:s');
     }
 }

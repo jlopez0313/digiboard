@@ -5,6 +5,7 @@ import { Head, router } from '@inertiajs/react';
 export default function Dashboard({ auth }) {
 
     const titles = [
+        'Código',
         'Parámetro',
         'Descripción',
     ]

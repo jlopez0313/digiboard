@@ -12,6 +12,7 @@ use App\Http\Controllers\EmpresasController;
 use App\Http\Controllers\AreasController;
 use App\Http\Controllers\PantallasController;
 use App\Http\Controllers\CartelerasController;
+use App\Http\Controllers\AsignacionController;
 
 use App\Http\Controllers\MedidasController;
 use App\Http\Controllers\ColoresController;
@@ -19,6 +20,8 @@ use App\Http\Controllers\FacturasController;
 use App\Http\Controllers\GastosController;
 use App\Http\Controllers\InventarioController;
 use App\Http\Controllers\UsuariosController;
+
+use App\Http\Controllers\DashboardController;
 
 
 /*
@@ -41,8 +44,8 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
+Route::prefix('dashboard')->group( function() {
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::prefix('parametros')->group( function() {
@@ -76,13 +79,15 @@ Route::prefix('pantallas')->group( function() {
     Route::get('/', [PantallasController::class, 'index'])->name('pantallas');
 })->middleware(['auth', 'verified']);
 
+Route::prefix('asignacion')->group( function() {
+    Route::get('/{id}', [AsignacionController::class, 'show'])->name('asignacion.show');
+})->middleware(['auth', 'verified']);
 
 Route::prefix('carteleras')->group( function() {
     Route::get('/', [CartelerasController::class, 'index'])->name('carteleras');
     Route::get('/config/{id}', [CartelerasController::class, 'config'])->name('carteleras.config');
     Route::get('/{id}', [CartelerasController::class, 'show'])->name('carteleras.show');
 })->middleware(['auth', 'verified']);
-
 
 Route::prefix('usuarios')->group( function() {
     Route::get('/', [UsuariosController::class, 'index'])->name('usuarios');

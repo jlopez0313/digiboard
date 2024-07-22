@@ -23,7 +23,8 @@ class PantallasController extends Controller
             'contacts' => new PantallasCollection(
                 Pantallas::with(
                     'area',
-                    'area.empresa'
+                    'area.empresa',
+                    'cartelera'
                 )->paginate()
             ),
             'empresas' => new EmpresasCollection(

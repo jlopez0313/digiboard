@@ -19,10 +19,13 @@ export default ({ auth, contacts, empresas }) => {
     } = contacts;
 
     const titles= [
+        'ID',
         'Empresa',
         'Area',
         'Pantalla',
+        'Cartelera',
         'URL',
+        'Codigo'
     ]
 
     const [list, setList] = useState([]);
@@ -36,7 +39,9 @@ export default ({ auth, contacts, empresas }) => {
                 'empresa': item.area?.empresa?.empresa || '',
                 'area': item.area?.area || '',
                 'pantalla': item.pantalla,
-                'url': item.url,
+                'cartelera': item.cartelera?.id || '',
+                'url': `${window.location.protocol}//${window.location.host}/asignacion/${item.id}`,
+                'code': item.code || '',
             }
         })
 
@@ -107,7 +112,7 @@ export default ({ auth, contacts, empresas }) => {
                     <Pagination links={links} />
                 </div>
             </div>
-            <Modal show={show} closeable={true} title="Crear Gastos">
+            <Modal show={show} closeable={true} title="Gestionar Pantalla">
                 <Form
                     empresas={empresas}
                     setIsOpen={onToggleModal}        

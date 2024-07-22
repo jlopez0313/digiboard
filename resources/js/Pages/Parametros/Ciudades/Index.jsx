@@ -24,6 +24,7 @@ export default ({ auth, contacts, dataDeptos }) => {
 
 
     const titles= [
+        'ID',
         'Departamento',
         'Ciudad',
     ]

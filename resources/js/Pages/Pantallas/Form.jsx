@@ -14,7 +14,7 @@ export const Form = ({ id, empresas, setIsOpen, onReload }) => {
         empresas_id: '',
         areas_id: '',
         pantalla: '',
-        url: '',
+        code: '',
     });
 
     const {
@@ -46,7 +46,7 @@ export const Form = ({ id, empresas, setIsOpen, onReload }) => {
                 empresas_id: item.area?.empresas_id || '',
                 areas_id: item.area?.id || '',
                 pantalla: item.pantalla,
-                url: item.url,
+                code: item.code,
             }
         )
     }
@@ -151,27 +151,41 @@ export const Form = ({ id, empresas, setIsOpen, onReload }) => {
                                 className="mt-2"
                             />
                         </div>
+                        
+                        {
+                            id ?
+                            <>
+                                <div>
+                                    <InputLabel htmlFor="url" value="URL" />
 
-                        <div>
-                            <InputLabel htmlFor="url" value="URL" />
+                                    <TextInput
+                                        readOnly={true}
+                                        type="text"
+                                        value={`${window.location.protocol}//${window.location.host}/asignacion/${id}`}
+                                        className="mt-1 block w-full"
+                                        autoComplete="url"
+                                    />
+                                </div>
+                            </> : null
+                        }
 
-                            <TextInput
-                                id="url"
-                                type="url"
-                                name="url"
-                                value={data.url}
-                                className="mt-1 block w-full"
-                                autoComplete="url"
-                                onChange={(e) =>
-                                    setData("url", e.target.value)
-                                }
-                            />
+                        {
+                            data.code ?
+                                <div>
+                                    <InputLabel htmlFor="code" value="Codigo" />
 
-                            <InputError
-                                message={errors.url}
-                                className="mt-2"
-                            />
-                        </div>
+                                    <TextInput
+                                        readOnly={true}
+                                        type="text"
+                                        value={data.code}
+                                        className="mt-1 block w-full"
+                                        autoComplete="code"
+                                    />
+                                </div>
+                            : null
+                        }
+
+
                     </div>
 
                     <div className="flex items-center justify-end mt-4">

@@ -23,8 +23,8 @@ class PantallasCartelerasResource extends JsonResource
             'cartelera' => $this->cartelera,
             'pantalla' => $this->pantalla,
             'estado' => $this->estado,
-            'code' => $this->code,
             'estado_label' => $this->estado_label,
+            'updated_at' => $this->updated_at
         ];
     }
 }

@@ -65,24 +65,6 @@ export const Assign = ({ id, empresas, setIsOpen, onReload }) => {
         <div className="pb-12 pt-6">
             <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <form onSubmit={submit}>
-                    <div className="grid grid-cols-1 gap-4 mb-5">
-                        <div>
-                            <InputLabel
-                                htmlFor="empresas_id"
-                                value="Cartelera No."
-                            />
-
-                            <TextInput
-                                id="id"
-                                name="id"
-                                value={data.carteleras_id}
-                                className="mt-1 block w-full"
-                                autoComplete="id"
-                                readOnly={true}
-                            />
-                        </div>
-                    </div>
-
                     <div className="grid grid-cols-2 gap-4">
                         <div>
                             <InputLabel

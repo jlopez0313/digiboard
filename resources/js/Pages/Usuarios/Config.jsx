@@ -17,6 +17,7 @@ export default ({ auth, id, contacts, areas }) => {
     } = contacts;
 
     const titles= [
+        'ID',
         'Usuario',
         'Area',
     ]
@@ -109,6 +110,7 @@ export default ({ auth, id, contacts, areas }) => {
                     setIsOpen={onToggleModal}        
                     onReload={onReload}
                     id={id}
+                    usuario={list[0]?.usuario}
                 />
             </Modal>
         </AuthenticatedLayout>

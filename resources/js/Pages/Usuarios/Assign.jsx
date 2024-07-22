@@ -8,7 +8,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Select from "@/Components/Form/Select";
 
-export const Assign = ({ id, areas, setIsOpen, onReload }) => {
+export const Assign = ({ id, usuario, areas, setIsOpen, onReload }) => {
 
     const { data, setData, processing, errors, reset } = useForm({
         usuarios_id: id,
@@ -38,9 +38,7 @@ export const Assign = ({ id, areas, setIsOpen, onReload }) => {
                             />
 
                             <TextInput
-                                id="id"
-                                name="id"
-                                value={data.usuarios_id}
+                                value={usuario}
                                 className="mt-1 block w-full"
                                 autoComplete="id"
                                 readOnly={true}
@@ -50,7 +48,7 @@ export const Assign = ({ id, areas, setIsOpen, onReload }) => {
                         <div>
                             <InputLabel
                                 htmlFor="areas_id"
-                                value="Empresa"
+                                value="Area"
                             />
 
                             <Select

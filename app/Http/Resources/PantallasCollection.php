@@ -19,7 +19,7 @@ class PantallasCollection extends ResourceCollection
         }
         
         return $this->collection->map->only(
-            'id', 'area', 'url', 'pantalla'
+            'id', 'area', 'cartelera', 'pantalla', 'code', 'estado', 'estado_label', 'updated_at'
         );
     }
 }

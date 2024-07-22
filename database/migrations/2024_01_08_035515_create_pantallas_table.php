@@ -16,9 +16,14 @@ return new class extends Migration
             
             $table->unsignedBigInteger('areas_id');
             $table->foreign('areas_id')->references('id')->on('areas');
+
+            $table->unsignedBigInteger('carteleras_id')->nullable();
+            $table->foreign('carteleras_id')->references('id')->on('carteleras');
             
             $table->string('pantalla');
-            $table->string('url');
+            $table->string('code')->nullable();
+            $table->char('estado');
+
             $table->timestamps();
             $table->softDeletes();
         });

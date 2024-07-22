@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\v1\DepartamentosController;
 use App\Http\Controllers\Api\v1\CiudadesController;
 use App\Http\Controllers\Api\v1\EmpresasController;
+use App\Http\Controllers\Api\v1\AsignacionController;
 
 use App\Http\Controllers\Api\v1\AreasController;
 use App\Http\Controllers\Api\v1\PantallasController;
@@ -60,10 +61,15 @@ Route::group(['prefix' => 'v1'], function () {
     Route::prefix('carteleras')->group( function() {
         Route::put('/asignar', [CartelerasController::class, 'asignar']);
         Route::delete('/desasignar/{pantalla_cartelera}', [CartelerasController::class, 'desasignar']);
-        Route::post('/codigo/{pantalla_cartelera}', [CartelerasController::class, 'codigo']);
     });
     Route::apiResource('carteleras', CartelerasController::class);
     
+    
+    Route::prefix('asignacion')->group( function() {
+        Route::post('/codigo/{pantalla}', [PantallasController::class, 'codigo']);
+        Route::post('/activar/{pantalla}', [AsignacionController::class, 'activar'])->name('asignacion.activar');
+    })->middleware(['auth', 'verified']);
+
 
     Route::prefix('usuarios')->group( function() {
         Route::put('/asignar', [UsuariosController::class, 'asignar']);

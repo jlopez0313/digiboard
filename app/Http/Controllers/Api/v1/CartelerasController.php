@@ -10,6 +10,7 @@ use App\Http\Resources\PantallasCartelerasResource;
 use App\Models\Carteleras;
 use App\Models\PantallasCarteleras;
 use App\Models\Multimedias;
+use App\Models\Pantallas;
 use Inertia\Inertia;
 
 class CartelerasController extends Controller
@@ -85,9 +86,14 @@ class CartelerasController extends Controller
     {
         $data = $request->except(['empresas_id', 'areas_id']);
         $data['estado'] = 'I';
-        $data['code'] =  bin2hex( random_bytes(3) );
         $assign = PantallasCarteleras::create( $data );
         
+        $code =  bin2hex( random_bytes(3) );
+        $pantalla = Pantallas::find( $request->pantallas_id);
+        $pantalla->carteleras_id = $request->carteleras_id;
+        $pantalla->code = $code;
+        $pantalla->save();
+
         return new PantallasCartelerasResource( $assign );
     }
 
@@ -97,13 +103,4 @@ class CartelerasController extends Controller
         return new PantallasCartelerasResource( $pantalla_cartelera );
     }
 
-    public function codigo(Request $request, PantallasCarteleras $pantalla_cartelera) {
-
-        if( $pantalla_cartelera->code == $request->password ) {
-            return new PantallasCartelerasResource( $pantalla_cartelera );
-        } else {
-            return null;
-        }
-        
-    }
 }
