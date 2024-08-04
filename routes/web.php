@@ -12,6 +12,7 @@ use App\Http\Controllers\EmpresasController;
 use App\Http\Controllers\AreasController;
 use App\Http\Controllers\PantallasController;
 use App\Http\Controllers\CartelerasController;
+use App\Http\Controllers\CampañasController;
 use App\Http\Controllers\AsignacionController;
 
 use App\Http\Controllers\MedidasController;
@@ -44,60 +45,70 @@ Route::get('/', function () {
     ]);
 });
 
-Route::prefix('dashboard')->group( function() {
-    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::middleware(['auth', 'verified'])
+->group(function () {
 
-Route::prefix('parametros')->group( function() {
     
-    Route::get('/', function () {
-        return Inertia::render('Parametros/Index');
-    })->name('parametros');
-
-    Route::prefix('departamentos')->group( function() {
-        Route::get('/', [DepartamentosController::class, 'index'])->name('parametros.departamentos');
+    Route::prefix('dashboard')->group( function() {
+        Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    })->name('dashboard');
+    
+    Route::prefix('parametros')->group( function() {
+        
+        Route::get('/', function () {
+            return Inertia::render('Parametros/Index');
+        })->name('parametros');
+    
+        Route::prefix('departamentos')->group( function() {
+            Route::get('/', [DepartamentosController::class, 'index'])->name('parametros.departamentos');
+        });
+    
+        Route::prefix('ciudades')->group( function() {
+            Route::get('/', [CiudadesController::class, 'index'])->name('parametros.ciudades');
+        });
+    
+    });
+    
+    
+    Route::prefix('empresas')->group( function() {
+        Route::get('/', [EmpresasController::class, 'index'])->name('empresas');
+    });
+    
+    
+    Route::prefix('areas')->group( function() {
+        Route::get('/', [AreasController::class, 'index'])->name('areas');    
+    });
+    
+    
+    Route::prefix('pantallas')->group( function() {
+        Route::get('/', [PantallasController::class, 'index'])->name('pantallas');
+    });
+    
+    Route::prefix('asignacion')->group( function() {
+        Route::get('/{id}', [AsignacionController::class, 'show'])->name('asignacion.show');
+    });
+    
+    Route::prefix('carteleras')->group( function() {
+        Route::get('/', [CartelerasController::class, 'index'])->name('carteleras');
+        Route::get('/config/{id}', [CartelerasController::class, 'config'])->name('carteleras.config');
+        Route::get('/{id}', [CartelerasController::class, 'show'])->name('carteleras.show');
+    });
+    
+    Route::prefix('campañas')->group( function() {
+        Route::get('/', [CampañasController::class, 'index'])->name('campañas');
+        Route::get('/config/{id}', [CampañasController::class, 'config'])->name('campañas.config');
+        Route::get('/{id}', [CampañasController::class, 'show'])->name('campañas.show');
+    });
+    
+    Route::prefix('usuarios')->group( function() {
+        Route::get('/', [UsuariosController::class, 'index'])->name('usuarios');
+        Route::get('/config/{id}', [UsuariosController::class, 'config'])->name('usuarios.config');
     });
 
-    Route::prefix('ciudades')->group( function() {
-        Route::get('/', [CiudadesController::class, 'index'])->name('parametros.ciudades');
-    });
-
-})->middleware(['auth', 'verified']);
-
-
-Route::prefix('empresas')->group( function() {
-    Route::get('/', [EmpresasController::class, 'index'])->name('empresas');
-})->middleware(['auth', 'verified']);
-
-
-Route::prefix('areas')->group( function() {
-    Route::get('/', [AreasController::class, 'index'])->name('areas');    
-})->middleware(['auth', 'verified']);
-
-
-Route::prefix('pantallas')->group( function() {
-    Route::get('/', [PantallasController::class, 'index'])->name('pantallas');
-})->middleware(['auth', 'verified']);
-
-Route::prefix('asignacion')->group( function() {
-    Route::get('/{id}', [AsignacionController::class, 'show'])->name('asignacion.show');
-})->middleware(['auth', 'verified']);
-
-Route::prefix('carteleras')->group( function() {
-    Route::get('/', [CartelerasController::class, 'index'])->name('carteleras');
-    Route::get('/config/{id}', [CartelerasController::class, 'config'])->name('carteleras.config');
-    Route::get('/{id}', [CartelerasController::class, 'show'])->name('carteleras.show');
-})->middleware(['auth', 'verified']);
-
-Route::prefix('usuarios')->group( function() {
-    Route::get('/', [UsuariosController::class, 'index'])->name('usuarios');
-    Route::get('/config/{id}', [UsuariosController::class, 'config'])->name('usuarios.config');
-})->middleware(['auth', 'verified']);
-
-Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
 });
 
 require __DIR__.'/auth.php';

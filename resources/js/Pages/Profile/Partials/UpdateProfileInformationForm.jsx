@@ -25,7 +25,7 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
                 <h2 className="text-lg font-medium text-gray-900">Mi Perfil</h2>
 
                 <p className="mt-1 text-sm text-gray-600">
-                    Actualiza tu información de perfil y correo.
+                    Actualiza tu información de perfil.
                 </p>
             </header>
 
@@ -52,6 +52,7 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
                     <TextInput
                         id="email"
                         type="email"
+                        readOnly={true}
                         className="mt-1 block w-full"
                         value={data.email}
                         onChange={(e) => setData('email', e.target.value)}

@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+
 html, body {
     height: 100%;
 }
@@ -15,20 +16,23 @@ html {
     overflow: auto;
 }
 
+.slider {
+    background: url('img/bg-slider.png');
+    background-size: 100% 100%;
+    
+    
+}
+
 .logo-img {
     max-width: 88%;
 }
 
 .logo {
-    padding: 25px;
-    background: url('../img/bg-logo.png');
-    background-repeat: no-repeat;
-    background-position: 100% 100%;
+    
 }
 
 .menu {
-    border-color: #00639F;
-    border-bottom-width: 6px;
+    
 }
 
 .big-title {
@@ -36,11 +40,15 @@ html {
     font-weight: bold;
 }
 
+.hablarle {
+    background: url('img/bg-slider.png');
+}
+
 .digiboard {
     color: #00639F;
 }
 
-.pro{
+.slider .pro{
     color: #0097B2;
 }
 
@@ -91,8 +99,37 @@ p.pro {
     font-size: 24px;
 }
 
+.item {
+    background: url('img/bg-slider.png');
+}
+
+.item-1 {
+    background-position: 30% 60%;
+}
+
+.item-2 {
+    background-position: 100% 50%;
+}
+
+.item-3 {
+    background-position: 10% 70%;
+}
+
+.item-4 {
+    background-position: 10% 50%;
+}
+
+.item-5 {
+    background-position: 100% 50%;
+}
+
+.item-6 {
+    background-position: 0% 60%;
+}
+
+
 footer {
-    background: url('../img/footer.png');
+    background: url('img/bg-footer.png');
     background-size: 100% 100%;
     min-height: 160px;
     color: #fff
@@ -106,6 +143,59 @@ footer span {
     position: absolute;
     bottom: 0;
     background: rgba(0, 0, 0, .5);
+}
+
+.light {
+    background-color: #0097B2;
+}
+
+.light .title {
+    background-color: #0097B2;
+}
+
+.light .desc {
+    color: #0097B2;
+}
+
+.planes .pro {
+    background-color: #8952B6;
+}
+
+.planes .title {
+    color: #fff;
+    font-size: 24px;
+}
+
+.planes .desc {
+    font-size: 16px;
+}
+
+.planes ul {
+    font-size: .9rem;
+}
+
+.pro .title {
+    background-color: #8952B6;
+}
+
+.pro .desc {
+    color: #8952B6;
+}
+
+.business {
+    background-color: #00639F;
+}
+
+.business .title {
+    background-color: #00639F;
+}
+
+.business .desc {
+    color: #00639F;
+}
+
+.card-body {
+    background-color: #F3F3F3;
 }
 
 

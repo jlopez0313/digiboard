@@ -1,7 +1,4 @@
 import React, { useEffect, useState } from "react";
-// import Layout from '@/Components/Layout';
-import Icon from "@/Components/Icon";
-// import SearchFilter from '@/Shared/SearchFilter';
 
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, router } from "@inertiajs/react";
@@ -9,9 +6,10 @@ import Pagination from "@/Components/Table/Pagination";
 import Table from "@/Components/Table/Table";
 import PrimaryButton from "@/Components/Buttons/PrimaryButton";
 import Modal from "@/Components/Modal";
-import { Form } from "./Form";
+import { Assign } from "./Assign";
+import SecondaryButton from "@/Components/Buttons/SecondaryButton";
 
-export default ({ auth, contacts, empresas }) => {
+export default ({ auth, id, contacts, empresas }) => {
 
     const {
         data,
@@ -25,51 +23,51 @@ export default ({ auth, contacts, empresas }) => {
         'Pantalla',
         'Cartelera',
         'URL',
-        'Codigo'
+        'Estado',
     ]
 
     const [list, setList] = useState([]);
-    const [id, setId] = useState(null);
     const [show, setShow] = useState(false);
     
     const onSetList = () => {
+
         const _list = data.map( item => {
             return {
                 'id': item.id,
-                'empresa': item.area?.empresa?.empresa || '',
-                'area': item.area?.area || '',
-                'pantalla': item.pantalla || '-',
-                'cartelera': item.cartelera?.id || '-',
-                'url': `${window.location.protocol}//${window.location.host}/asignacion/${item.id}`,
-                'code': item.code || '-',
+                'empresa': item.pantalla?.area?.empresa?.empresa,
+                'area': item.pantalla?.area?.area,
+                'pantalla': item.pantalla?.pantalla,
+                'cartelera': item.cartelera?.id || '',
+                'url': item.pantalla ? `${window.location.protocol}//${window.location.host}/asignacion/${item.pantalla.id}` : '',
+                'estado': item.estado_label,
             }
         })
 
         setList( _list );
     }
 
-    const onSetItem = (_id) => {
-        setId(_id)
-        onToggleModal(true)
-    }
-
     const onTrash = async (_id) => {
         if ( data ) {
-            await axios.delete(`/api/v1/pantallas/${_id}`);
+            await axios.delete(`/api/v1/carteleras/desasignar/${_id}`);
             onReload()
         }
     }
 
     const onToggleModal = (isShown) => {
-        if ( !isShown ) {
-            setId(null)
-        }
         setShow(isShown);
     };
 
     const onReload = () => {
         onToggleModal(false);
         router.visit(window.location.pathname);
+    }
+
+    const onSearch = (_id) => {
+        router.get( '/asignacion/' + _id )
+    }
+
+    const onBack = () => {
+        router.get('/carteleras');
     }
 
     useEffect(()=> {
@@ -81,20 +79,27 @@ export default ({ auth, contacts, empresas }) => {
             user={auth.user}
             header={
                 <h2 className="font-semibold text-xl text-gray-800 leading-tight">
-                    Pantallas
+                    Pantallas con Cartelera #{ id }
                 </h2>
             }
         >
-            <Head title="Pantallas" />
+            <Head title="Pantallas con Carteleras" />
 
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="flex items-center justify-end mt-4 mb-4">
+                        <SecondaryButton
+                            className="ms-4"
+                            onClick={() => onBack()}
+                        >
+                            Atrás
+                        </SecondaryButton>
+
                         <PrimaryButton
                             className="ms-4"
                             onClick={() => onToggleModal(true)}
                         >
-                            Agregar
+                            Asignar
                         </PrimaryButton>
                     </div>
 
@@ -102,18 +107,19 @@ export default ({ auth, contacts, empresas }) => {
                         <Table 
                             data={list}
                             links={links}
+                            onEdit={() => {}}
+                            onSearch={onSearch}
                             onTrash={ onTrash }
-                            onEdit={ onSetItem }
                             titles={titles}
-                            actions={['edit', 'trash']}
+                            actions={['search', 'trash']}
                         />
                     </div>
 
                     <Pagination links={links} />
                 </div>
             </div>
-            <Modal show={show} closeable={true} title="Gestionar Pantalla">
-                <Form
+            <Modal show={show} closeable={true} title={`Asignar Cartelera #${id}`}>
+                <Assign
                     empresas={empresas}
                     setIsOpen={onToggleModal}        
                     onReload={onReload}

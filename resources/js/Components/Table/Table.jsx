@@ -73,7 +73,7 @@ export default ({ data = [], routes = {}, titles = [], actions = [], onTrash, on
                 ))}
                 {data.length === 0 && (
                     <tr>
-                        <td className="px-6 py-4 border-t" colSpan={titles.length}>
+                        <td className="px-6 py-4 border-t" colSpan={titles.length + 1}>
                             No data found.
                         </td>
                     </tr>

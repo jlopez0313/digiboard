@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class CartelerasCollection extends ResourceCollection
+class CampanasCollection extends ResourceCollection
 {
     /**
      * Transform the resource collection into an array.
@@ -19,7 +19,7 @@ class CartelerasCollection extends ResourceCollection
         }
         
         return $this->collection->map->only(
-            'id', 'campaña', 'diseno', 'fecha_inicial', 'fecha_final', 'marquesina', 'multimedias'
+            'id', 'carteleras', 'evaluador'
         );
     }
 }

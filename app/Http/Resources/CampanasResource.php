@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CartelerasResource extends JsonResource
+class CampanasResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -20,13 +20,8 @@ class CartelerasResource extends JsonResource
         
         return [
             'id' => $this->id,
-            'campaña' => $this->campaña,
-            'diseno' => $this->diseno,
-            'cartelera' => $this->cartelera,
-            'fecha_inicial' => $this->fecha_inicial,
-            'fecha_final' => $this->fecha_final,
-            'marquesina' => $this->marquesina,
-            'multimedias' => $this->multimedias ?? [],
+            'carteleras' => $this->carteleras,
+            'evaluador' =>  $this->evaluador,
         ];
     }
 }

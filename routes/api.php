@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\v1\AsignacionController;
 
 use App\Http\Controllers\Api\v1\AreasController;
 use App\Http\Controllers\Api\v1\PantallasController;
+use App\Http\Controllers\Api\v1\CampanasController;
 use App\Http\Controllers\Api\v1\CartelerasController;
 use App\Http\Controllers\Api\v1\MultimediasController;
 use App\Http\Controllers\Api\v1\UsuariosController;
@@ -39,6 +40,8 @@ Route::group(['prefix' => 'v1'], function () {
     Route::apiResource('ciudades', CiudadesController::class);
 
     Route::apiResource('empresas', EmpresasController::class);
+    Route::apiResource('campanas', CampanasController::class);
+    Route::apiResource('multimedias', MultimediasController::class);
 
 /*
     Route::prefix('ciudades')->group( function() {
@@ -76,8 +79,5 @@ Route::group(['prefix' => 'v1'], function () {
         Route::delete('/desasignar/{usuario_area}', [UsuariosController::class, 'desasignar']);
     });
     Route::apiResource('usuarios', UsuariosController::class);
-
-
-    Route::apiResource('multimedias', MultimediasController::class);
 
 })->middleware(['auth:sanctum', 'verified']);

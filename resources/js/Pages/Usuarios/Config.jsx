@@ -24,6 +24,8 @@ export default ({ auth, id, contacts, areas }) => {
 
     const [list, setList] = useState([]);
     const [show, setShow] = useState(false);
+
+    const [user, setUser] = useState({});
     
     const onSetList = () => {
 
@@ -58,20 +60,40 @@ export default ({ auth, id, contacts, areas }) => {
         router.get('/usuarios');
     }
 
+    const onGetUser = async () => {
+        const { data } = await axios.get(`/api/v1/usuarios/${id}`);
+        const item = { ...data.data }
+
+        setUser(
+            {
+                empresas_id: item.empresa?.id || '',
+                name: item.name,
+                email: item.email,
+                documento: item.documento,
+                celular: item.celular,
+                is_admin: item.is_admin,
+            }
+        )
+    }
+
     useEffect(()=> {
         onSetList()
     }, [])
+
+    useEffect(()=> {
+        id && onGetUser()
+    }, [id])
 
     return (
         <AuthenticatedLayout
             user={auth.user}
             header={
                 <h2 className="font-semibold text-xl text-gray-800 leading-tight">
-                    Usuarios con Areas
+                    Areas del usuario { user.name }
                 </h2>
             }
         >
-            <Head title="Usuarios con Areas" />
+            <Head title={`Areas del usuario ${ user.name }`} />
 
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -110,7 +132,7 @@ export default ({ auth, id, contacts, areas }) => {
                     setIsOpen={onToggleModal}        
                     onReload={onReload}
                     id={id}
-                    usuario={list[0]?.usuario}
+                    usuario={user.name}
                 />
             </Modal>
         </AuthenticatedLayout>
