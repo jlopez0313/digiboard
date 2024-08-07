@@ -17,11 +17,12 @@ class CampanasResource extends JsonResource
         if (is_null($this->resource)) {
             return [];
         }
-        
+
         return [
             'id' => $this->id,
+            'nombre' => $this->nombre,
             'carteleras' => $this->carteleras,
-            'evaluador' =>  $this->evaluador,
+            'evaluador' => $this->evaluador,
         ];
     }
 }

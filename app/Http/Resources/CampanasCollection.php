@@ -17,9 +17,9 @@ class CampanasCollection extends ResourceCollection
         if (is_null($this->resource)) {
             return [];
         }
-        
+
         return $this->collection->map->only(
-            'id', 'carteleras', 'evaluador'
+            'id', 'carteleras', 'evaluador', 'nombre'
         );
     }
 }

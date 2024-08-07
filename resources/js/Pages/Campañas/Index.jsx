@@ -19,7 +19,7 @@ import 'moment/locale/es.js';
 const localizer = momentLocalizer(moment)
 
 const messages = {
-    allDay: "Todos los días",
+    allDay: "Todo el día",
     previous: "Anterior",
     next: "Siguiente",
     today: "Hoy",
@@ -33,7 +33,7 @@ const messages = {
     noEventsInRange: "No hay eventos en este rango."
 };
 
-export default ({ auth, contacts, usuarios }) => {
+export default ({ auth, contacts, usuarios, empresas }) => {
     const {
         data,
     } = contacts;
@@ -41,6 +41,10 @@ export default ({ auth, contacts, usuarios }) => {
     const {
         data: users,
     } = usuarios;
+
+    const {
+        data: listaEmpresas,
+    } = empresas;
 
     const [list, setList] = useState([]);
     const [id, setId] = useState(null);
@@ -50,14 +54,19 @@ export default ({ auth, contacts, usuarios }) => {
         const _list = data.map((item) => {
             return {
                 id: item.id,
-                diseno: item.diseno?.diseno || "",
-                fecha_inicial: item.fecha_inicial,
-                fecha_final: item.fecha_final,
+                start: item.carteleras[0]?.fecha_inicial,
+                end: item.carteleras[0]?.fecha_final,
+                title: item.nombre,
+                allDay: true
             };
         });
 
         setList(_list);
     };
+
+    const onSelectEvent = (evt) => {
+        console.log( evt );
+    }
 
     const onSetItem = (_id) => {
         setId(_id);
@@ -117,13 +126,15 @@ export default ({ auth, contacts, usuarios }) => {
                             endAccessor="end"
                             style={{ height: "65vh" }}
                             messages={messages}
+                            events={list}
+                            onSelectEvent={onSelectEvent}
                         />
                     </div>
-¿
+
                 </div>
             </div>
             <Modal show={show} closeable={true} title="Gestionar Campaña">
-                <Form setIsOpen={onToggleModal} onReload={onReload} id={id} users={users} />
+                <Form setIsOpen={onToggleModal} onReload={onReload} id={id} users={users} listaEmpresas={listaEmpresas} />
             </Modal>
         </AuthenticatedLayout>
     );

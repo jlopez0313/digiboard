@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class() extends Migration {
     /**
      * Run the migrations.
      */
@@ -20,7 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger('empresas_id')->nullable();
             $table->foreign('empresas_id')->references('id')->on('empresas');
 
-            $table->boolean('is_admin');
+            $table->char('is_admin');
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
@@ -28,7 +27,7 @@ return new class extends Migration
 
             $table->bigInteger('celular')->nullable();
             $table->bigInteger('documento')->nullable();
-            
+
             $table->rememberToken();
             $table->timestamps();
         });

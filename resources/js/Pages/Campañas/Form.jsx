@@ -9,13 +9,20 @@ import axios from "axios";
 import TextArea from "@/Components/Form/TextArea";
 import Icon from "@/Components/Icon";
 import Select from "@/Components/Form/Select";
+import ReactSelect from 'react-select'
+import makeAnimated from 'react-select/animated';
+const animatedComponents = makeAnimated();
 
-export const Form = ({ id, users, setIsOpen, onReload }) => {
+export const Form = ({ id, users, listaEmpresas, setIsOpen, onReload }) => {
 
     const [previews, setPreviews] = useState([]);
+    const [areas, setAreas] = useState([]);
+    const [pantallas, setPantallas] = useState([]);
+    const [myScreens, setMyScreens] = useState(null);
     const filesRef = useRef(null);
 
     const { data, setData, processing, errors, reset } = useForm({
+        nombre: '',
         eje: '',
         objetivo: '',
         impacto: '',
@@ -27,6 +34,7 @@ export const Form = ({ id, users, setIsOpen, onReload }) => {
         fecha_inicial: '',
         fecha_final: '',
         multimedias: [],
+        pantallas: [],
     });
 
     const submit = async (e) => {
@@ -46,9 +54,9 @@ export const Form = ({ id, users, setIsOpen, onReload }) => {
         
         if ( id ) {
             formData.append('_method', 'PUT')
-            await axios.post(`/api/v1/campañas/${id}`, formData);
+            await axios.post(`/api/v1/campanas/${id}`, formData);
         } else {
-            await axios.post(`/api/v1/campañas`, formData);
+            await axios.post(`/api/v1/campanas`, formData);
         }
 
         onReload();
@@ -56,7 +64,7 @@ export const Form = ({ id, users, setIsOpen, onReload }) => {
 
     const onGetItem = async () => {
 
-        const { data } = await axios.get(`/api/v1/campañas/${id}`);
+        const { data } = await axios.get(`/api/v1/campanas/${id}`);
         const item = { ...data.data }
 
         setData(
@@ -80,19 +88,40 @@ export const Form = ({ id, users, setIsOpen, onReload }) => {
             setAreas( lista )
         } else {
             setAreas( [] )
+            setPantallas( [] )
         }
     }
 
     const onGetPantallas = async ( area ) => {
         if ( area ) {
             const { data } = await axios.get(`/api/v1/pantallas/area/${area}`);
-            const lista = [ ...data.data ]
+            const lista = data.data.map( item => {
+                return { value: item.id, label: item.pantalla }
+            })
     
             setPantallas( lista )
         } else {
             setPantallas( [] )
         }
     }
+
+    const onPrepareScreens = (newTags, actionMeta) => {
+        
+        const newTagsId = newTags.map((tag) => {
+          return tag.value;
+        });
+
+        console.log( newTags );
+
+        setMyScreens(
+          newTags.map((tag) => {
+            return { value: tag.value, label: tag.label };
+          })
+        );
+        
+        setData("pantallas", newTagsId);
+        
+    };
 
     const onAddFiles = async ( evt ) => {
         const files = await Array.from( evt.target.files )
@@ -139,18 +168,122 @@ export const Form = ({ id, users, setIsOpen, onReload }) => {
     }, [])
     
     useEffect( () => {
-        data.empresas_id && onGetAreas( data.empresas_id )
+        onGetAreas( data.empresas_id )
     }, [data.empresas_id])
     
     useEffect( () => {
-        data.areas_id && onGetPantallas( data.areas_id )
+        onGetPantallas( data.areas_id )
     }, [data.areas_id])
+
+    useEffect(() => {
+        console.log( pantallas );
+    }, [pantallas])
 
     return (
         <div className="pb-12 pt-6">
             <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <form onSubmit={submit}>
                     <div className="grid grid-cols-2 gap-4">
+
+                        <div>
+                            <InputLabel htmlFor="nombre" value="Nombre de Campaña" />
+
+                            <TextInput
+                                id="nombre"
+                                name="nombre"
+                                value={data.nombre}
+                                className="mt-1 block w-full"
+                                autoComplete="nombre"
+                                onChange={(e) =>
+                                    setData("nombre", e.target.value)
+                                }
+                            />
+
+                            <InputError
+                                message={errors.nombre}
+                                className="mt-2"
+                            />
+                        </div>
+
+                        <div>
+                            <InputLabel
+                                htmlFor="empresas_id"
+                                value="Empresa"
+                            />
+
+                            <Select
+                                id="empresas_id"
+                                name="empresas_id"
+                                className="mt-1 block w-full"
+                                value={data.empresas_id}
+                                onChange={(e) =>
+                                    setData("empresas_id", e.target.value)
+                                }
+                            >
+                                {
+                                    listaEmpresas.map( (tipo, key) => {
+                                        return <option value={ tipo.id } key={key}> { tipo.empresa} </option>
+                                    })
+                                }
+                            </Select>
+
+                            <InputError
+                                message={errors.empresas_id}
+                                className="mt-2"
+                            />
+                        </div>
+
+                        <div>
+                            <InputLabel
+                                htmlFor="areas_id"
+                                value="Area"
+                            />
+
+                            <Select
+                                id="areas_id"
+                                name="areas_id"
+                                className="mt-1 block w-full"
+                                value={data.areas_id}
+                                onChange={(e) =>
+                                    setData("areas_id", e.target.value)
+                                }
+                            >
+                                {                                    
+                                    areas.map( (tipo, key) => {
+                                        return <option value={ tipo.id } key={key}> { tipo.area} </option>
+                                    })
+                                }
+                            </Select>
+
+                            <InputError
+                                message={errors.areas_id}
+                                className="mt-2"
+                            />
+                        </div>
+
+                        <div>
+                            <InputLabel
+                                htmlFor="pantallas_id"
+                                value="Pantalla"
+                            />
+
+                            <ReactSelect
+                                isMulti
+                                id="pantallas_id"
+                                name="pantallas_id"
+                                className="mt-1 block w-full"
+                                closeMenuOnSelect={false}
+                                components={animatedComponents}
+                                options={pantallas}
+                                value={myScreens}
+                                onChange={onPrepareScreens}
+                            />
+
+                            <InputError
+                                message={errors.pantallas_id}
+                                className="mt-2"
+                            />
+                        </div>
 
                         <div>
                             <InputLabel htmlFor="eje" value="Eje Temático" />
@@ -233,7 +366,7 @@ export const Form = ({ id, users, setIsOpen, onReload }) => {
                         </div>
 
                         <div>
-                            <InputLabel htmlFor="unidades" value="Unidades a medir" />
+                            <InputLabel htmlFor="unidades" value="KPI" />
 
                             <TextInput
                                 id="unidades"

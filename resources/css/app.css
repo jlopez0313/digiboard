@@ -17,7 +17,7 @@ html {
 }
 
 .slider {
-    background: url('img/bg-slider.png');
+    background: url('/img/bg-slider.png');
     background-size: 100% 100%;
     
     
@@ -41,7 +41,7 @@ html {
 }
 
 .hablarle {
-    background: url('img/bg-slider.png');
+    background: url('/img/bg-slider.png');
 }
 
 .digiboard {
@@ -100,7 +100,7 @@ p.pro {
 }
 
 .item {
-    background: url('img/bg-slider.png');
+    background: url('/img/bg-slider.png');
 }
 
 .item-1 {
@@ -129,7 +129,7 @@ p.pro {
 
 
 footer {
-    background: url('img/bg-footer.png');
+    background: url('/img/bg-footer.png');
     background-size: 100% 100%;
     min-height: 160px;
     color: #fff

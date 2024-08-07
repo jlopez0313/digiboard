@@ -17,10 +17,10 @@ class CartelerasResource extends JsonResource
         if (is_null($this->resource)) {
             return [];
         }
-        
+
         return [
             'id' => $this->id,
-            'campaña' => $this->campaña,
+            'campana' => $this->campana,
             'diseno' => $this->diseno,
             'cartelera' => $this->cartelera,
             'fecha_inicial' => $this->fecha_inicial,

@@ -21,6 +21,7 @@ export default ({ auth, contacts }) => {
     const titles= [
         'ID',
         'Diseño',
+        'Campaña',
         'Fecha Inicial',
         'Fecha Final',
     ]
@@ -33,7 +34,8 @@ export default ({ auth, contacts }) => {
         const _list = data.map( item => {
             return {
                 'id': item.id,
-                'diseno': item.diseno?.diseno || '',
+                'diseno': item.diseno?.diseno || '-',
+                'campana': item.campana?.nombre || '-',
                 'fecha_inicial': item.fecha_inicial,
                 'fecha_final': item.fecha_final,
             }

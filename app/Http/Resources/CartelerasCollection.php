@@ -17,9 +17,9 @@ class CartelerasCollection extends ResourceCollection
         if (is_null($this->resource)) {
             return [];
         }
-        
+
         return $this->collection->map->only(
-            'id', 'campaña', 'diseno', 'fecha_inicial', 'fecha_final', 'marquesina', 'multimedias'
+            'id', 'campana', 'diseno', 'fecha_inicial', 'fecha_final', 'marquesina', 'multimedias'
         );
     }
 }

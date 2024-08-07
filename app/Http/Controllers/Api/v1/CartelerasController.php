@@ -1,17 +1,15 @@
 <?php
 
 namespace App\Http\Controllers\Api\v1;
-use App\Http\Controllers\Controller;
 
-use Illuminate\Http\Request;
-use App\Http\Requests\CartelerasRequest;
+use App\Http\Controllers\Controller;
 use App\Http\Resources\CartelerasResource;
 use App\Http\Resources\PantallasCartelerasResource;
 use App\Models\Carteleras;
-use App\Models\PantallasCarteleras;
 use App\Models\Multimedias;
 use App\Models\Pantallas;
-use Inertia\Inertia;
+use App\Models\PantallasCarteleras;
+use Illuminate\Http\Request;
 
 class CartelerasController extends Controller
 {
@@ -20,14 +18,27 @@ class CartelerasController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->except('empresas_id', 'areas_id', 'multimedias');
-        $cartelera = Carteleras::create( $data );
+        $data = $request->except(
+            'nombre',
+            'eje',
+            'objetivo',
+            'impacto',
+            'pregunta',
+            'unidades',
+            'evaluador',
+            'empresas_id',
+            'areas_id',
+            'multimedias',
+            'pantallas'
+        );
+
+        $cartelera = Carteleras::create($data);
 
         $multimedias = $request->multimedias;
 
-        foreach($multimedias as $file) {
-            $filename = $file->store('files/' . $cartelera->id);
-            
+        foreach ($multimedias as $file) {
+            $filename = $file->store('files/'.$cartelera->id);
+
             Multimedias::create([
                 'carteleras_id' => $cartelera->id,
                 'src' => $filename,
@@ -36,7 +47,18 @@ class CartelerasController extends Controller
             ]);
         }
 
-        return new CartelerasResource( $cartelera );
+        if ($request->pantallas) {
+            $pantallas = explode(',', $request->pantallas);
+
+            $request->merge(['carteleras_id' => $cartelera->id]);
+
+            foreach ($pantallas as $pantalla) {
+                $request->merge(['pantallas_id' => $pantalla]);
+                $this->asignar($request);
+            }
+        }
+
+        return new CartelerasResource($cartelera);
     }
 
     /**
@@ -44,7 +66,7 @@ class CartelerasController extends Controller
      */
     public function show(Carteleras $cartelera)
     {
-        return new CartelerasResource( $cartelera );
+        return new CartelerasResource($cartelera);
     }
 
     /**
@@ -53,14 +75,14 @@ class CartelerasController extends Controller
     public function update(Request $request, Carteleras $cartelera)
     {
         $data = $request->except('empresas_id', 'areas_id', 'multimedias', '_method');
-        $cartelera->update( $data );
+        $cartelera->update($data);
 
         $multimedias = $request->multimedias;
 
         // 658 x 496 pixeles
 
-        foreach($multimedias as $file) {
-            $filename = $file->store('files/' . $cartelera->id);
+        foreach ($multimedias as $file) {
+            $filename = $file->store('files/'.$cartelera->id);
             Multimedias::create([
                 'carteleras_id' => $cartelera->id,
                 'src' => $filename,
@@ -68,8 +90,8 @@ class CartelerasController extends Controller
                 'mimetype' => $file->getClientMimeType(),
             ]);
         }
-        
-        return new CartelerasResource( $cartelera );
+
+        return new CartelerasResource($cartelera);
     }
 
     /**
@@ -78,29 +100,33 @@ class CartelerasController extends Controller
     public function destroy(Carteleras $cartelera)
     {
         $cartelera->delete();
-        return new CartelerasResource( $cartelera );
-    }
 
+        return new CartelerasResource($cartelera);
+    }
 
     public function asignar(Request $request)
     {
-        $data = $request->except(['empresas_id', 'areas_id']);
+        $data = [];
+        $data['pantallas_id'] = $request->pantallas_id;
+        $data['carteleras_id'] = $request->carteleras_id;
         $data['estado'] = 'I';
-        $assign = PantallasCarteleras::create( $data );
-        
-        $code =  bin2hex( random_bytes(3) );
-        $pantalla = Pantallas::find( $request->pantallas_id);
-        $pantalla->carteleras_id = $request->carteleras_id;
+
+        $assign = PantallasCarteleras::create($data);
+
+        $code = bin2hex(random_bytes(3));
+
+        $pantalla = Pantallas::find($data['pantallas_id']);
+        $pantalla->carteleras_id = $data['carteleras_id'];
         $pantalla->code = $code;
         $pantalla->save();
 
-        return new PantallasCartelerasResource( $assign );
+        return new PantallasCartelerasResource($assign);
     }
 
     public function desasignar(Request $request, PantallasCarteleras $pantalla_cartelera)
     {
         $pantalla_cartelera->delete();
-        return new PantallasCartelerasResource( $pantalla_cartelera );
-    }
 
+        return new PantallasCartelerasResource($pantalla_cartelera);
+    }
 }
