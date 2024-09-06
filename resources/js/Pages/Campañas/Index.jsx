@@ -6,8 +6,6 @@ import Icon from "@/Components/Icon";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, router } from "@inertiajs/react";
 import PrimaryButton from "@/Components/Buttons/PrimaryButton";
-import Modal from "@/Components/Modal";
-import { Form } from "./Form";
 
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { Calendar, momentLocalizer } from 'react-big-calendar'
@@ -33,18 +31,10 @@ const messages = {
     noEventsInRange: "No hay eventos en este rango."
 };
 
-export default ({ auth, contacts, usuarios, empresas }) => {
+export default ({ auth, contacts }) => {
     const {
         data,
     } = contacts;
-
-    const {
-        data: users,
-    } = usuarios;
-
-    const {
-        data: listaEmpresas,
-    } = empresas;
 
     const [list, setList] = useState([]);
     const [id, setId] = useState(null);
@@ -92,6 +82,11 @@ export default ({ auth, contacts, usuarios, empresas }) => {
         router.visit(window.location.pathname);
     };
 
+    const onCreate = ( ) => {
+        onToggleModal(false);
+        router.visit(`campanas/create`);
+    }
+
     useEffect(() => {
         onSetList();
     }, []);
@@ -112,7 +107,7 @@ export default ({ auth, contacts, usuarios, empresas }) => {
                     <div className="flex items-center justify-end mt-4 mb-4">
                         <PrimaryButton
                             className="ms-4"
-                            onClick={() => onToggleModal(true)}
+                            onClick={onCreate}
                         >
                             Agregar
                         </PrimaryButton>
@@ -133,9 +128,7 @@ export default ({ auth, contacts, usuarios, empresas }) => {
 
                 </div>
             </div>
-            <Modal show={show} closeable={true} title="Gestionar Campaña">
-                <Form setIsOpen={onToggleModal} onReload={onReload} id={id} users={users} listaEmpresas={listaEmpresas} />
-            </Modal>
+            
         </AuthenticatedLayout>
     );
 };

@@ -2,6 +2,10 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
+use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
+
+use App\Http\Controllers\Api\v1\TenantsController;
 
 use App\Http\Controllers\Api\v1\DepartamentosController;
 use App\Http\Controllers\Api\v1\CiudadesController;
@@ -14,6 +18,9 @@ use App\Http\Controllers\Api\v1\CampanasController;
 use App\Http\Controllers\Api\v1\CartelerasController;
 use App\Http\Controllers\Api\v1\MultimediasController;
 use App\Http\Controllers\Api\v1\UsuariosController;
+use App\Http\Controllers\Api\v1\UserController;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -30,8 +37,25 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::group(['prefix' => 'v1'], function () {
 
+Route::middleware([
+    'api',
+    'universal',
+    InitializeTenancyByDomain::class,
+])
+->prefix('v1')->group(function () {
+    Route::prefix('usuarios')->group(function () {
+        Route::post('/get-admin', [UserController::class, 'getAdmin']);
+    });
+});
+
+
+Route::middleware([
+    'api',
+    InitializeTenancyByDomain::class,
+    PreventAccessFromCentralDomains::class,
+])
+->prefix('v1')->group(function () {
     Route::apiResource('departamentos', DepartamentosController::class);
 
     Route::prefix('ciudades')->group( function() {

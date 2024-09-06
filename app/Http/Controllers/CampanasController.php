@@ -41,6 +41,16 @@ class CampanasController extends Controller
      */
     public function create()
     {
+        return Inertia::render('Campañas/Form', [
+            'usuarios' => new UsuariosCollection(
+                User::orderBy('name')
+                ->get()
+            ),
+            'empresas' => new EmpresasCollection(
+                Empresas::orderBy('empresa')
+                ->get()
+            ),
+        ]);
     }
 
     /**

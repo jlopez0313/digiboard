@@ -19,6 +19,10 @@ class PantallasController extends Controller
     {
         $data = $request->except('empresas_id') ;
         $data['estado'] = 'I';
+
+        $code = bin2hex(random_bytes(3));
+        $data['code'] = $code;
+
         $pantalla = Pantallas::create( $data );
         return new PantallasResource( $pantalla );
     }

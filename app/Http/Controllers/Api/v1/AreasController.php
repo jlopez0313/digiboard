@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Api\v1;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
-use App\Http\Requests\areasRequest;
-use App\Http\Resources\areasResource;
+use App\Http\Requests\AreasRequest;
+use App\Http\Resources\AreasResource;
 use App\Models\Areas;
 use Inertia\Inertia;
 

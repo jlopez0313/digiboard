@@ -113,11 +113,8 @@ class CartelerasController extends Controller
 
         $assign = PantallasCarteleras::create($data);
 
-        $code = bin2hex(random_bytes(3));
-
         $pantalla = Pantallas::find($data['pantallas_id']);
         $pantalla->carteleras_id = $data['carteleras_id'];
-        $pantalla->code = $code;
         $pantalla->save();
 
         return new PantallasCartelerasResource($assign);
