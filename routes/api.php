@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\v1\TenantsController;
 use App\Http\Controllers\Api\v1\DepartamentosController;
 use App\Http\Controllers\Api\v1\CiudadesController;
 use App\Http\Controllers\Api\v1\EmpresasController;
+use App\Http\Controllers\Api\v1\EvaluacionesController;
 use App\Http\Controllers\Api\v1\AsignacionController;
 
 use App\Http\Controllers\Api\v1\AreasController;
@@ -65,17 +66,9 @@ Route::middleware([
 
     Route::apiResource('empresas', EmpresasController::class);
     Route::apiResource('campanas', CampanasController::class);
+    Route::apiResource('evaluaciones', EvaluacionesController::class);
     Route::apiResource('multimedias', MultimediasController::class);
 
-/*
-    Route::prefix('ciudades')->group( function() {
-        Route::get('/{depto}', [CiudadesController::class, 'byDepto']);
-    });
-*/  
-
-    Route::prefix('areas')->group( function() {
-        Route::get('/empresa/{empresa}', [AreasController::class, 'byEmpresa']);
-    });
     Route::apiResource('areas', AreasController::class);
 
 
@@ -104,4 +97,9 @@ Route::middleware([
     });
     Route::apiResource('usuarios', UsuariosController::class);
 
+})->middleware(['auth:sanctum', 'verified']);
+
+
+Route::group(['prefix' => 'v1'], function () {
+    Route::apiResource('tenants', TenantsController::class);
 })->middleware(['auth:sanctum', 'verified']);

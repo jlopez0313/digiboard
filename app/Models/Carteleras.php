@@ -5,11 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Carteleras extends Model
+class Carteleras extends Model implements HasMedia
 {
     use HasFactory;
     use SoftDeletes;
+    use InteractsWithMedia;
 
     protected $table = 'carteleras';
     protected $guarded = [];
@@ -27,5 +30,10 @@ class Carteleras extends Model
     public function multimedias()
     {
         return $this->hasMany(Multimedias::class, 'carteleras_id');
+    }
+
+    public function medias()
+    {
+        return $this->hasMany(Media::class, 'model_id');
     }
 }

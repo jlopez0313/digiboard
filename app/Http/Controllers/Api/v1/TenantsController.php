@@ -22,6 +22,7 @@ class TenantsController extends Controller
         $tenant = Tenant::create(['id' => $name ]);
         $tenant->domains()->create(['domain' => $name . '.' . env('APP_DOMAIN') ]);
 
+
         return new TenantsResource( $tenant );
     }
 

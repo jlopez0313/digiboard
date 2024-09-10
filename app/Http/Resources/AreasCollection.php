@@ -19,7 +19,7 @@ class AreasCollection extends ResourceCollection
         }
         
         return $this->collection->map->only(
-            'id', 'area', 'empresa', 'ciudad', 'direccion'
+            'id', 'area', 'ciudad', 'direccion'
         );
     }
 }

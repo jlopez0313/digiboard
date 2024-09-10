@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\CampanasCollection;
-use App\Http\Resources\EmpresasCollection;
 use App\Http\Resources\UsuariosCollection;
+use App\Http\Resources\AreasCollection;
+use App\Models\Areas;
 use App\Models\Campanas;
-use App\Models\Empresas;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Request as Peticion;
@@ -29,10 +29,6 @@ class CampanasController extends Controller
                 User::orderBy('name')
                 ->get()
             ),
-            'empresas' => new EmpresasCollection(
-                Empresas::orderBy('empresa')
-                ->get()
-            ),
         ]);
     }
 
@@ -46,10 +42,11 @@ class CampanasController extends Controller
                 User::orderBy('name')
                 ->get()
             ),
-            'empresas' => new EmpresasCollection(
-                Empresas::orderBy('empresa')
+            'areas' => new AreasCollection(
+                Areas::orderBy('area')
                 ->get()
             ),
+            'tipos_respuesta' => config('constants.tipo_respuesta')
         ]);
     }
 

@@ -8,7 +8,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Select from "@/Components/Form/Select";
 
-export const Assign = ({ id, empresas, setIsOpen, onReload }) => {
+export const Assign = ({ id, areas, setIsOpen, onReload }) => {
 
     const { data, setData, processing, errors, reset } = useForm({
         empresas_id: '',
@@ -18,10 +18,9 @@ export const Assign = ({ id, empresas, setIsOpen, onReload }) => {
     });
 
     const {
-        data: listaEmpresas,
-    } = empresas;
+        data: listaAreas,
+    } = areas;
 
-    const [areas, setAreas] = useState([]);
     const [pantallas, setPantallas] = useState([]);
 
     const submit = async (e) => {
@@ -30,17 +29,6 @@ export const Assign = ({ id, empresas, setIsOpen, onReload }) => {
         await axios.put(`/api/v1/carteleras/asignar`, data);
         onReload();
     };
-
-    const onGetAreas = async ( empresa ) => {
-        if ( empresa ) {
-            const { data } = await axios.get(`/api/v1/areas/empresa/${empresa}`);
-            const lista = [ ...data.data ]
-    
-            setAreas( lista )
-        } else {
-            setAreas( [] )
-        }
-    }
 
     const onGetPantallas = async ( area ) => {
         if ( area ) {
@@ -54,10 +42,6 @@ export const Assign = ({ id, empresas, setIsOpen, onReload }) => {
     }
 
     useEffect( () => {
-        onGetAreas( data.empresas_id )
-    }, [data.empresas_id])
-
-    useEffect( () => {
         onGetPantallas( data.areas_id )
     }, [data.areas_id])
 
@@ -66,34 +50,6 @@ export const Assign = ({ id, empresas, setIsOpen, onReload }) => {
             <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <form onSubmit={submit}>
                     <div className="grid grid-cols-2 gap-4">
-                        <div>
-                            <InputLabel
-                                htmlFor="empresas_id"
-                                value="Empresa"
-                            />
-
-                            <Select
-                                id="empresas_id"
-                                name="empresas_id"
-                                className="mt-1 block w-full"
-                                value={data.empresas_id}
-                                onChange={(e) =>
-                                    setData("empresas_id", e.target.value)
-                                }
-                            >
-                                {
-                                    listaEmpresas.map( (tipo, key) => {
-                                        return <option value={ tipo.id } key={key}> { tipo.empresa} </option>
-                                    })
-                                }
-                            </Select>
-
-                            <InputError
-                                message={errors.empresas_id}
-                                className="mt-2"
-                            />
-                        </div>
-
                         <div>
                             <InputLabel
                                 htmlFor="areas_id"
@@ -110,7 +66,7 @@ export const Assign = ({ id, empresas, setIsOpen, onReload }) => {
                                 }
                             >
                                 {                                    
-                                    areas.map( (tipo, key) => {
+                                    listaAreas.map( (tipo, key) => {
                                         return <option value={ tipo.id } key={key}> { tipo.area} </option>
                                     })
                                 }

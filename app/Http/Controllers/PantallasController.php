@@ -6,8 +6,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Request as Peticion;
 use App\Http\Resources\PantallasCollection;
-use App\Http\Resources\EmpresasCollection;
-use App\Models\Empresas;
+use App\Http\Resources\AreasCollection;
+use App\Models\Areas;
 use App\Models\Pantallas;
 use Inertia\Inertia;
 
@@ -23,12 +23,11 @@ class PantallasController extends Controller
             'contacts' => new PantallasCollection(
                 Pantallas::with(
                     'area',
-                    'area.empresa',
                     'cartelera'
                 )->paginate()
             ),
-            'empresas' => new EmpresasCollection(
-                Empresas::orderBy('empresa')
+            'areas' => new AreasCollection(
+                Areas::orderBy('area')
                 ->get()
             )
         ]);

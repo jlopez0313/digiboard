@@ -49,12 +49,4 @@ class AreasController extends Controller
         return new AreasResource( $area );
     }
 
-    public function byEmpresa($empresa)
-    {
-        return AreasResource::collection(
-            Areas::where('empresas_id', $empresa)
-            ->orderBy('area')
-            ->get()
-        );
-    }
 }

@@ -8,20 +8,15 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Select from "@/Components/Form/Select";
 
-export const Form = ({ id, empresas, setIsOpen, onReload }) => {
+export const Form = ({ id, areas, setIsOpen, onReload }) => {
 
     const { data, setData, processing, errors, reset } = useForm({
-        empresas_id: '',
         areas_id: '',
         pantalla: '',
         code: '',
     });
 
-    const {
-        data: listaEmpresas,
-    } = empresas;
-
-    const [areas, setAreas] = useState([]);
+    const {data: listaAreas} = areas
 
     const submit = async (e) => {
         e.preventDefault();
@@ -43,7 +38,6 @@ export const Form = ({ id, empresas, setIsOpen, onReload }) => {
 
         setData(
             {
-                empresas_id: item.area?.empresas_id || '',
                 areas_id: item.area?.id || '',
                 pantalla: item.pantalla,
                 code: item.code,
@@ -51,58 +45,16 @@ export const Form = ({ id, empresas, setIsOpen, onReload }) => {
         )
     }
 
-    const onGetAreas = async ( empresa ) => {
-        if ( empresa ) {
-            const { data } = await axios.get(`/api/v1/areas/empresa/${empresa}`);
-            const lista = [ ...data.data ]
-    
-            setAreas( lista )
-        } else {
-            setAreas( [] )
-        }
-    }
 
     useEffect( () => {
         id && onGetItem()
     }, [])
-
-    useEffect( () => {
-        onGetAreas( data.empresas_id )
-    }, [data.empresas_id])
 
     return (
         <div className="pb-12 pt-6">
             <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <form onSubmit={submit}>
                     <div className="grid grid-cols-2 gap-4">
-                        <div>
-                            <InputLabel
-                                htmlFor="empresas_id"
-                                value="Empresa"
-                            />
-
-                            <Select
-                                id="empresas_id"
-                                name="empresas_id"
-                                className="mt-1 block w-full"
-                                value={data.empresas_id}
-                                onChange={(e) =>
-                                    setData("empresas_id", e.target.value)
-                                }
-                            >
-                                {
-                                    listaEmpresas.map( (tipo, key) => {
-                                        return <option value={ tipo.id } key={key}> { tipo.empresa} </option>
-                                    })
-                                }
-                            </Select>
-
-                            <InputError
-                                message={errors.empresas_id}
-                                className="mt-2"
-                            />
-                        </div>
-
                         <div>
                             <InputLabel
                                 htmlFor="areas_id"
@@ -119,7 +71,7 @@ export const Form = ({ id, empresas, setIsOpen, onReload }) => {
                                 }
                             >
                                 {                                    
-                                    areas.map( (tipo, key) => {
+                                    listaAreas.map( (tipo, key) => {
                                         return <option value={ tipo.id } key={key}> { tipo.area} </option>
                                     })
                                 }

@@ -24,12 +24,18 @@ class CartelerasController extends Controller
             'objetivo',
             'impacto',
             'pregunta',
-            'unidades',
-            'evaluador',
+            'logro_esperado',
+            'evaluador_id',
+            'descripcion_kpi',
+            'valor_malo',
+            'valor_regular',
+            'valor_bueno',
+            'encuesta',
+            'tipo_respuesta_id',
             'empresas_id',
             'areas_id',
             'multimedias',
-            'pantallas'
+            'pantallas',
         );
 
         $cartelera = Carteleras::create($data);
@@ -37,14 +43,18 @@ class CartelerasController extends Controller
         $multimedias = $request->multimedias;
 
         foreach ($multimedias as $file) {
-            $filename = $file->store('files/'.$cartelera->id);
+            $filename = \Storage::disk('media')->put($cartelera->id, $file);
 
+            $cartelera->addMedia('media/' . $filename)->toMediaCollection();
+
+            /*
             Multimedias::create([
                 'carteleras_id' => $cartelera->id,
                 'src' => $filename,
                 'type' => $file->getClientOriginalExtension(),
                 'mimetype' => $file->getClientMimeType(),
             ]);
+            */
         }
 
         if ($request->pantallas) {
@@ -66,6 +76,20 @@ class CartelerasController extends Controller
      */
     public function show(Carteleras $cartelera)
     {
+        $cartelera->getMedia();
+
+        foreach( $cartelera->media as $mediaItems ) {
+            $publicUrl = $mediaItems->getUrl();
+            $publicFullUrl = $mediaItems->getFullUrl(); //url including domain
+            $fullPathOnDisk = $mediaItems->getPath();
+
+            dd([
+                $publicUrl,
+                $publicFullUrl,
+                $fullPathOnDisk,
+            ]); 
+        }
+
         return new CartelerasResource($cartelera);
     }
 
@@ -82,13 +106,19 @@ class CartelerasController extends Controller
         // 658 x 496 pixeles
 
         foreach ($multimedias as $file) {
-            $filename = $file->store('files/'.$cartelera->id);
+            $filename = \Storage::disk('media')->put($cartelera->id, $file);
+            
+            $cartelera->addMedia('media/' . $filename)->toMediaCollection();
+
+            /*
             Multimedias::create([
                 'carteleras_id' => $cartelera->id,
                 'src' => $filename,
                 'type' => $file->getClientOriginalExtension(),
                 'mimetype' => $file->getClientMimeType(),
             ]);
+            */
+            
         }
 
         return new CartelerasResource($cartelera);

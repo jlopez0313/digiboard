@@ -11,7 +11,7 @@ import PrimaryButton from "@/Components/Buttons/PrimaryButton";
 import Modal from "@/Components/Modal";
 import { Form } from "./Form";
 
-export default ({ auth, contacts, empresas }) => {
+export default ({ auth, contacts }) => {
 
     const {
         data,
@@ -20,9 +20,10 @@ export default ({ auth, contacts, empresas }) => {
 
     const titles= [
         'ID',
-        'Empresa',
         'Usuario',
         'Email',
+        'Docunento',
+        'Celular',
     ]
 
     const [list, setList] = useState([]);
@@ -33,9 +34,10 @@ export default ({ auth, contacts, empresas }) => {
         const _list = data.map( item => {
             return {
                 'id': item.id,
-                'empresa': item.empresa?.empresa || '-',
                 'usuario': item.name || '',
                 'email': item.email || '',
+                'documento': item.documento || '-',
+                'celular': item.celular || '-',
             }
         })
 
@@ -114,7 +116,6 @@ export default ({ auth, contacts, empresas }) => {
             </div>
             <Modal show={show} closeable={true} title="Gestionar Usuarios">
                 <Form
-                    empresas={empresas}
                     setIsOpen={onToggleModal}        
                     onReload={onReload}
                     id={id}

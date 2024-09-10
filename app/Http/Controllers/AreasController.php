@@ -8,9 +8,6 @@ use Illuminate\Support\Facades\Request as Peticion;
 use App\Http\Resources\AreasCollection;
 use App\Models\Areas;
 
-use App\Http\Resources\EmpresasCollection;
-use App\Models\Empresas;
-
 use App\Http\Resources\DepartamentosCollection;
 use App\Models\Departamentos;
 
@@ -28,12 +25,8 @@ class AreasController extends Controller
             'filters' => Peticion::all('search', 'trashed'),
             'contacts' => new AreasCollection(
                 Areas::with(
-                    'empresa', 
                     'ciudad.departamento'
                 )->paginate()
-            ),
-            'empresas' => new EmpresasCollection(
-                Empresas::orderBy('empresa')->get()
             ),
             'departamentos' => new DepartamentosCollection(
                 Departamentos::orderBy(

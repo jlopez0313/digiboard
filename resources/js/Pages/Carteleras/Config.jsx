@@ -9,7 +9,7 @@ import Modal from "@/Components/Modal";
 import { Assign } from "./Assign";
 import SecondaryButton from "@/Components/Buttons/SecondaryButton";
 
-export default ({ auth, id, contacts, empresas }) => {
+export default ({ auth, id, contacts, areas }) => {
 
     const {
         data,
@@ -18,7 +18,6 @@ export default ({ auth, id, contacts, empresas }) => {
 
     const titles= [
         'ID',
-        'Empresa',
         'Area',
         'Pantalla',
         'Cartelera',
@@ -34,7 +33,6 @@ export default ({ auth, id, contacts, empresas }) => {
         const _list = data.map( item => {
             return {
                 'id': item.id,
-                'empresa': item.pantalla?.area?.empresa?.empresa,
                 'area': item.pantalla?.area?.area,
                 'pantalla': item.pantalla?.pantalla,
                 'cartelera': item.cartelera?.id || '',
@@ -63,7 +61,8 @@ export default ({ auth, id, contacts, empresas }) => {
     }
 
     const onSearch = (_id) => {
-        router.get( '/asignacion/' + _id )
+        const item = data.find( x => x.id == _id);
+        router.get( '/asignacion/' + item.pantalla?.id )
     }
 
     const onBack = () => {
@@ -120,7 +119,7 @@ export default ({ auth, id, contacts, empresas }) => {
             </div>
             <Modal show={show} closeable={true} title={`Asignar Cartelera #${id}`}>
                 <Assign
-                    empresas={empresas}
+                    areas={areas}
                     setIsOpen={onToggleModal}        
                     onReload={onReload}
                     id={id}

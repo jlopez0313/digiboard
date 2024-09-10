@@ -13,6 +13,7 @@ export default function Login({ status, canResetPassword }) {
         password: '',
         remember: false,
     });
+    
 
     useEffect(() => {
         return () => {
@@ -22,6 +23,10 @@ export default function Login({ status, canResetPassword }) {
 
     const submit = (e) => {
         e.preventDefault();
+
+        /*grecaptcha.enterprise.ready(async () => {
+          const token = await grecaptcha.enterprise.execute('6LeeXDQqAAAAANpmiL0B1ZaYk9ft26U2Q6hJbQpE', {action: 'LOGIN'});
+        });*/
 
         post(route('login'));
     };

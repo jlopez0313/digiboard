@@ -6,7 +6,7 @@ use Stancl\Tenancy\Database\Models\Domain;
 use Stancl\Tenancy\Database\Models\Tenant;
 
 return [
-    'tenant_model' => Tenant::class,
+    'tenant_model' => \App\Models\Tenant::class,
     'id_generator' => Stancl\Tenancy\UUIDGenerator::class,
 
     'domain_model' => Domain::class,
@@ -104,6 +104,7 @@ return [
         'disks' => [
             'local',
             'public',
+            'files',
             // 's3',
         ],
 
@@ -116,6 +117,7 @@ return [
             // Disks whose roots should be overridden after storage_path() is suffixed.
             'local' => '%storage_path%/app/',
             'public' => '%storage_path%/app/public/',
+            'files' => '%storage_path%/app/public/files',
         ],
 
         /**

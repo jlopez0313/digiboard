@@ -26,8 +26,6 @@ class CampanasController extends Controller
             'pantallas'
         );
 
-        $data['usuarios_id'] = $request->evaluador;
-
         $campana = Campanas::create($data);
         $request->merge(['campanas_id' => $campana->id]);
 

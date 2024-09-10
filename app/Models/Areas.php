@@ -14,10 +14,6 @@ class Areas extends Model
     protected $table = 'areas';
     protected $guarded = [];
 
-    public function empresa() {
-        return $this->hasOne(Empresas::class, 'id', 'empresas_id');
-    }
-    
     public function ciudad() {
         return $this->hasOne(Ciudades::class, 'id', 'ciudades_id');
     }

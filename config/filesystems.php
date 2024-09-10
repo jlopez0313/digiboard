@@ -46,10 +46,15 @@ return [
 
         'files' => [
             'driver' => 'local',
-            'root' => storage_path('app/files'),
-            'url' => env('APP_URL').'/storage',
-            'visibility' => 'public',
-            'throw' => false,
+            'root' => public_path('files'),
+            // 'url' => env('APP_URL').'/storage',
+            // 'visibility' => 'public',
+            // 'throw' => false,
+        ],
+
+        'media' => [
+            'driver' => 'local',
+            'root'   => public_path('media'),
         ],
 
         's3' => [

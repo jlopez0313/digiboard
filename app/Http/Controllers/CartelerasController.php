@@ -6,11 +6,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Request as Peticion;
 use App\Http\Resources\CartelerasCollection;
-use App\Http\Resources\EmpresasCollection;
 use App\Http\Resources\PantallasCollection;
 use App\Http\Resources\PantallasCartelerasCollection;
+use App\Http\Resources\AreasCollection;
+use App\Models\Areas;
 use App\Models\Carteleras;
-use App\Models\Empresas;
 use App\Models\Pantallas;
 use App\Models\PantallasCarteleras;
 use Inertia\Inertia;
@@ -86,12 +86,12 @@ class CartelerasController extends Controller
         return Inertia::render('Carteleras/Config', [
             'id' => $id,
             'contacts' => new PantallasCartelerasCollection(
-                PantallasCarteleras::with('cartelera', 'pantalla.area.empresa')
+                PantallasCarteleras::with('cartelera', 'pantalla.area')
                 ->where('carteleras_id', $id)
                 ->paginate()
             ),
-            'empresas' => new EmpresasCollection(
-                Empresas::orderBy('empresa')
+            'areas' => new AreasCollection(
+                Areas::orderBy('area')
                 ->get()
             )
         ]);

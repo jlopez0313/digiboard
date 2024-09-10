@@ -1,24 +1,3 @@
-Rqtos:
-1. Crear empresa 
-2. Crear usuarios de empresa
-3. Crear areas y pantallas
-4. Cargar multimedia
-5. Gestionar contenido en pantallas.
-
-Rqtos:
-1. Crear empresa: (Razón social, nit, logo, correo, cel)
-2. Crear usuarios de empresa (Nombre, correo, cel, cc, perfil admin / gestor)
-3. Crear areas ( Departamento, municipio, ubicación, dirección, nombre)
-4. Pantallas(Nombre id, URL, selecionar área, id, crear URL) 
-4. Cargar multimedia ( Videos, imágenes)
-5. Gestionar contenido en pantallas( crear Diseño de pantallas, seleccionar pantallas, ingresar Marquesina, rango de tiempo  (fecha y hora inicial, fecha y hora final) Botón vista previa
-
-
-
-
-
-
-
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">

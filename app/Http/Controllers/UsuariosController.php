@@ -5,11 +5,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Request as Peticion;
-use App\Http\Resources\EmpresasCollection;
 use App\Http\Resources\AreasCollection;
 use App\Http\Resources\UsuariosCollection;
 use App\Http\Resources\UsuariosAreasCollection;
-use App\Models\Empresas;
 use App\Models\Areas;
 use App\Models\User;
 use App\Models\UsuariosAreas;
@@ -26,14 +24,8 @@ class UsuariosController extends Controller
         return Inertia::render('Usuarios/Index', [
             'filters' => Peticion::all('search', 'trashed'),
             'contacts' => new UsuariosCollection(
-                User::with(
-                    'empresa'
-                )->paginate()
+                User::paginate()
             ),
-            'empresas' => new EmpresasCollection(
-                Empresas::orderBy('empresa')
-                ->get()
-            )
         ]);
     }
 
@@ -97,8 +89,7 @@ class UsuariosController extends Controller
                 ->paginate()
             ),
             'areas' => new AreasCollection(
-                Areas::where('empresas_id', $user->empresas_id)
-                ->orderBy('area')
+                Areas::orderBy('area')
                 ->get()
             )
         ]);

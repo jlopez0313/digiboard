@@ -16,54 +16,47 @@ export default function Authenticated({ user, header, children }) {
                         <div className="flex">
                             <div className="shrink-0 flex items-center">
                                 <Link href="/">
-                                    <ApplicationLogo className="block h-9 w-auto fill-current text-gray-800" />
+                                    <ApplicationLogo className="invert block h-9 w-auto fill-current text-gray-800" />
                                 </Link>
                             </div>
 
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink href={route('dashboard')} active={route().current('dashboard')}>
+                                <NavLink href={'/dashboard'} active={route().current('dashboard')}>
                                     Inicio
                                 </NavLink>
                             </div>
 
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink href={route('parametros')} active={route().current('parametros')}>
+                                <NavLink href={'/parametros'} active={route().current('parametros')}>
                                     Parámetros
                                 </NavLink>
                             </div>
-
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink href={route('empresas')} active={route().current('empresas')}>
-                                    Empresas
-                                </NavLink>
-                            </div>
-
-                            <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink href={route('areas')} active={route().current('areas')}>
+                                <NavLink href={'/areas'} active={route().current('areas')}>
                                     Areas
                                 </NavLink>
                             </div>
 
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink href={route('usuarios')} active={route().current('usuarios')}>
+                                <NavLink href={'/usuarios'} active={route().current('usuarios')}>
                                     Usuarios
                                 </NavLink>
                             </div>
 
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink href={route('pantallas')} active={route().current('pantallas')}>
+                                <NavLink href={'/pantallas'} active={route().current('pantallas')}>
                                     Pantallas
                                 </NavLink>
                             </div>
 
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink href={route('carteleras')} active={route().current('carteleras')}>
+                                <NavLink href={'/carteleras'} active={route().current('carteleras')}>
                                     Carteleras
                                 </NavLink>
                             </div>
 
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink href={route('campanas')} active={route().current('campanas')}>
+                                <NavLink href={'/campanas'} active={route().current('campanas')}>
                                     Campañas
                                 </NavLink>
                             </div>

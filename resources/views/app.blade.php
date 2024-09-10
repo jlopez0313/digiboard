@@ -18,5 +18,8 @@
     </head>
     <body class="font-sans antialiased">
         @inertia
+
+        <script src="https://www.google.com/recaptcha/enterprise.js?render=6LeeXDQqAAAAANpmiL0B1ZaYk9ft26U2Q6hJbQpE"></script>
+        <!-- Your code -->
     </body>
 </html>

@@ -28,5 +28,13 @@ class AsignacionController extends Controller
 
         return new PantallasCartelerasResource( $asignacion );
     }
+    
+
+    public function show(string $id) {
+
+        return Pantallas::with('cartelera.multimedias')
+                ->find($id);
+        
+    }
 
 }

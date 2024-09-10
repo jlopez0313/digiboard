@@ -15,7 +15,9 @@ use App\Http\Controllers\CiudadesController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DepartamentosController;
 use App\Http\Controllers\EmpresasController;
+use App\Http\Controllers\EvaluacionController;
 use App\Http\Controllers\PantallasController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UsuariosController;
 
 /*
@@ -49,7 +51,7 @@ Route::middleware([
 
     Route::prefix('dashboard')->group(function () {
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-    })->name('dashboard');
+    });
 
     Route::prefix('parametros')->group(function () {
         Route::get('/', function () {
@@ -92,6 +94,10 @@ Route::middleware([
         Route::get('/config/{id}', [CampanasController::class, 'config'])->name('campanas.config');
         Route::get('/create', [CampanasController::class, 'create'])->name('campanas.create');
         Route::get('/{id}', [CampanasController::class, 'show'])->name('campanas.show');
+    });
+
+    Route::prefix('evaluacion')->group(function () {
+        Route::get('/{id}', [EvaluacionController::class, 'show'])->name('evaluacion');
     });
 
     Route::prefix('usuarios')->group(function () {

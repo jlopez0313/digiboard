@@ -83,7 +83,7 @@ return [
     |
     */
 
-    'locale' => 'en',
+    'locale' => 'es',
 
     /*
     |--------------------------------------------------------------------------
@@ -96,7 +96,7 @@ return [
     |
     */
 
-    'fallback_locale' => 'en',
+    'fallback_locale' => 'es',
 
     /*
     |--------------------------------------------------------------------------
@@ -168,8 +168,9 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,
+        Maatwebsite\Excel\ExcelServiceProvider::class,
         App\Providers\TenancyServiceProvider::class,
-        // Intervention\Image\ImageServiceProvider::class,
     ])->toArray(),
 
     /*
@@ -185,7 +186,9 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'Example' => App\Facades\Example::class,
-        // 'Image' => Intervention\Image\Facades\Image::class
+        'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+
     ])->toArray(),
 
 ];

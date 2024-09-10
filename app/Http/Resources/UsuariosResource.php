@@ -20,7 +20,6 @@ class UsuariosResource extends JsonResource
         
         return [
             'id' => $this->id,
-            'empresa' => $this->empresa,
             'name' => $this->name,
             'email' => $this->email,
             'is_admin' => $this->is_admin,

@@ -11,7 +11,7 @@ import PrimaryButton from "@/Components/Buttons/PrimaryButton";
 import Modal from "@/Components/Modal";
 import { Form } from "./Form";
 
-export default ({ auth, contacts, empresas }) => {
+export default ({ auth, contacts, areas }) => {
 
     const {
         data,
@@ -20,7 +20,6 @@ export default ({ auth, contacts, empresas }) => {
 
     const titles= [
         'ID',
-        'Empresa',
         'Area',
         'Pantalla',
         'Cartelera',
@@ -36,7 +35,6 @@ export default ({ auth, contacts, empresas }) => {
         const _list = data.map( item => {
             return {
                 'id': item.id,
-                'empresa': item.area?.empresa?.empresa || '',
                 'area': item.area?.area || '',
                 'pantalla': item.pantalla || '-',
                 'cartelera': item.cartelera?.id || '-',
@@ -114,7 +112,7 @@ export default ({ auth, contacts, empresas }) => {
             </div>
             <Modal show={show} closeable={true} title="Gestionar Pantalla">
                 <Form
-                    empresas={empresas}
+                    areas={areas}
                     setIsOpen={onToggleModal}        
                     onReload={onReload}
                     id={id}

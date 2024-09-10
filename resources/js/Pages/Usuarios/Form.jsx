@@ -9,20 +9,15 @@ import axios from "axios";
 import Select from "@/Components/Form/Select";
 import Checkbox from "@/Components/Form/Checkbox";
 
-export const Form = ({ id, empresas, setIsOpen, onReload }) => {
+export const Form = ({ id, setIsOpen, onReload }) => {
 
     const { data, setData, processing, errors, reset } = useForm({
-        empresas_id: '',
         name: '',
         email: '',
         documento: '',
         celular: '',
         is_admin: ''
     });
-
-    const {
-        data: listaEmpresas,
-    } = empresas;
 
     const [areas, setAreas] = useState([]);
 
@@ -46,12 +41,11 @@ export const Form = ({ id, empresas, setIsOpen, onReload }) => {
 
         setData(
             {
-                empresas_id: item.empresa?.id || '',
-                name: item.name,
+                name: item.name || '',
                 email: item.email,
-                documento: item.documento,
-                celular: item.celular,
-                is_admin: item.is_admin,
+                documento: item.documento || '',
+                celular: item.celular || '',
+                is_admin: item.is_admin == 'Y' ? true : false,
             }
         )
     }
@@ -65,34 +59,6 @@ export const Form = ({ id, empresas, setIsOpen, onReload }) => {
             <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <form onSubmit={submit}>
                     <div className="grid grid-cols-2 gap-4">
-                        <div>
-                            <InputLabel
-                                htmlFor="empresas_id"
-                                value="Empresa"
-                            />
-
-                            <Select
-                                id="empresas_id"
-                                name="empresas_id"
-                                className="mt-1 block w-full"
-                                value={data.empresas_id}
-                                onChange={(e) =>
-                                    setData("empresas_id", e.target.value)
-                                }
-                            >
-                                {
-                                    listaEmpresas.map( (tipo, key) => {
-                                        return <option value={ tipo.id } key={key}> { tipo.empresa} </option>
-                                    })
-                                }
-                            </Select>
-
-                            <InputError
-                                message={errors.empresas_id}
-                                className="mt-2"
-                            />
-                        </div>
-
                         <div>
                             <InputLabel htmlFor="name" value="Nombre" />
 

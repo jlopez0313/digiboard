@@ -12,26 +12,42 @@ return [
             'valor' => 'Inactivo'
         ],
     ],
-
-    'origenes' => [
+    'tipo_respuesta' => [
         [
-            'key' => 'N',
-            'valor' => 'Nacional'
+            'id' => '1',
+            'tipo' => 'SI - NO',
+            'respuestas' => [
+                [
+                    'id' => 'S',
+                    'respuesta' => 'SI'
+                ],
+                [
+                    'id' => 'N',
+                    'respuesta' => 'NO'
+                ]
+            ]
         ],
         [
-            'key' => 'I',
-            'valor' => 'Importado'
+            'id' => '2',
+            'tipo' => 'Selección Multiple - Unica Respuesta',
+            'respuestas' => [
+                [
+                    'id' => 'E',
+                    'respuesta' => 'Excelente'
+                ],
+                [
+                    'id' => 'B',
+                    'respuesta' => 'Bueno'
+                ],
+                [
+                    'id' => 'R',
+                    'respuesta' => 'Regular'
+                ],
+                [
+                    'id' => 'M',
+                    'respuesta' => 'Malo'
+                ]
+            ]
         ],
-    ],
-
-    'payments' => [
-        [
-            'key' => 'CR',
-            'valor' => 'Crédito'
-        ],
-        [
-            'key' => 'CO',
-            'valor' => 'Contado'
-        ],
-    ],
+    ]
 ];

@@ -16,31 +16,41 @@ import ReactSelect from "react-select";
 import makeAnimated from "react-select/animated";
 const animatedComponents = makeAnimated();
 
-export default ({ auth, id, usuarios, empresas }) => {
+export default ({ auth, id, usuarios, areas, tipos_respuesta }) => {
+
     const [previews, setPreviews] = useState([]);
-    const [areas, setAreas] = useState([]);
     const [pantallas, setPantallas] = useState([]);
     const [myScreens, setMyScreens] = useState(null);
     const filesRef = useRef(null);
 
     const { data: users } = usuarios;
 
-    const { data: listaEmpresas } = empresas;
+    const { data: listaAreas } = areas;
 
-    const { data, setData, processing, errors, reset } = useForm({
+    const { data, setData, processing, errors, reset } = useForm({    
         nombre: "",
+        pantallas: [],
         eje: "",
         objetivo: "",
         impacto: "",
         pregunta: "",
-        unidades: "",
-        evaluador: "",
+
+        logro_esperado: "",
+        evaluador_id: "",
+        descripcion_kpi: "",
+        valor_malo: "",
+        valor_regular: "",
+        valor_bueno: "",
+
+        encuesta: '',
+        tipo_respuesta_id: '',
+        
         disenos_id: 1,
         marquesina: "",
         fecha_inicial: "",
         fecha_final: "",
         multimedias: [],
-        pantallas: [],
+
     });
 
     const submit = async (e) => {
@@ -80,20 +90,6 @@ export default ({ auth, id, usuarios, empresas }) => {
         });
 
         setPreviews(item.multimedias);
-    };
-
-    const onGetAreas = async (empresa) => {
-        if (empresa) {
-            const { data } = await axios.get(
-                `/api/v1/areas/empresa/${empresa}`
-            );
-            const lista = [...data.data];
-
-            setAreas(lista);
-        } else {
-            setAreas([]);
-            setPantallas([]);
-        }
     };
 
     const onGetPantallas = async (area) => {
@@ -161,21 +157,17 @@ export default ({ auth, id, usuarios, empresas }) => {
         }
     };
 
+    const onReload = () => {
+        router.visit('/campanas');
+    }
+
     useEffect(() => {
         id && onGetItem();
     }, []);
 
     useEffect(() => {
-        onGetAreas(data.empresas_id);
-    }, [data.empresas_id]);
-
-    useEffect(() => {
         onGetPantallas(data.areas_id);
     }, [data.areas_id]);
-
-    useEffect(() => {
-        console.log(pantallas);
-    }, [pantallas]);
 
     return (
         <AuthenticatedLayout
@@ -222,43 +214,6 @@ export default ({ auth, id, usuarios, empresas }) => {
 
                                 <div>
                                     <InputLabel
-                                        htmlFor="empresas_id"
-                                        value="Empresa"
-                                    />
-
-                                    <Select
-                                        id="empresas_id"
-                                        name="empresas_id"
-                                        className="mt-1 block w-full"
-                                        value={data.empresas_id}
-                                        onChange={(e) =>
-                                            setData(
-                                                "empresas_id",
-                                                e.target.value
-                                            )
-                                        }
-                                    >
-                                        {listaEmpresas.map((tipo, key) => {
-                                            return (
-                                                <option
-                                                    value={tipo.id}
-                                                    key={key}
-                                                >
-                                                    {" "}
-                                                    {tipo.empresa}{" "}
-                                                </option>
-                                            );
-                                        })}
-                                    </Select>
-
-                                    <InputError
-                                        message={errors.empresas_id}
-                                        className="mt-2"
-                                    />
-                                </div>
-
-                                <div>
-                                    <InputLabel
                                         htmlFor="areas_id"
                                         value="Area"
                                     />
@@ -272,7 +227,7 @@ export default ({ auth, id, usuarios, empresas }) => {
                                             setData("areas_id", e.target.value)
                                         }
                                     >
-                                        {areas.map((tipo, key) => {
+                                        {listaAreas.map((tipo, key) => {
                                             return (
                                                 <option
                                                     value={tipo.id}
@@ -417,43 +372,43 @@ export default ({ auth, id, usuarios, empresas }) => {
                             <div className="mt-5 grid grid-cols-2 gap-4">
                                 <div>
                                     <InputLabel
-                                        htmlFor="unidades"
+                                        htmlFor="logro_esperado"
                                         value="Logro Esperado"
                                     />
 
                                     <TextInput
-                                        id="unidades"
-                                        name="unidades"
+                                        id="logro_esperado"
+                                        name="logro_esperado"
                                         type="number"
                                         max="100"
                                         min="0"
-                                        value={data.unidades}
+                                        value={data.logro_esperado}
                                         className="mt-1 block w-full"
-                                        autoComplete="unidades"
+                                        autoComplete="logro_esperado"
                                         onChange={(e) =>
-                                            setData("unidades", e.target.value)
+                                            setData("logro_esperado", e.target.value)
                                         }
                                     />
 
                                     <InputError
-                                        message={errors.unidades}
+                                        message={errors.logro_esperado}
                                         className="mt-2"
                                     />
                                 </div>
 
                                 <div>
                                     <InputLabel
-                                        htmlFor="evaluador"
+                                        htmlFor="evaluador_id"
                                         value="Usuario Evaluador"
                                     />
 
                                     <Select
-                                        id="evaluador"
-                                        name="evaluador"
-                                        value={data.evaluador}
+                                        id="evaluador_id"
+                                        name="evaluador_id"
+                                        value={data.evaluador_id}
                                         className="mt-1 block w-full"
                                         onChange={(e) =>
-                                            setData("evaluador", e.target.value)
+                                            setData("evaluador_id", e.target.value)
                                         }
                                     >
                                         {users.map((tipo, key) => {
@@ -470,30 +425,30 @@ export default ({ auth, id, usuarios, empresas }) => {
                                     </Select>
 
                                     <InputError
-                                        message={errors.fecha_inicial}
+                                        message={errors.evaluador_id}
                                         className="mt-2"
                                     />
                                 </div>
 
                                 <div>
                                     <InputLabel
-                                        htmlFor="unidades"
+                                        htmlFor="descripcion_kpi"
                                         value="Descripción KPI"
                                     />
 
                                     <TextArea
-                                        id="unidades"
-                                        name="unidades"
-                                        value={data.unidades}
+                                        id="descripcion_kpi"
+                                        name="descripcion_kpi"
+                                        value={data.descripcion_kpi}
                                         className="mt-1 block w-full"
-                                        autoComplete="unidades"
+                                        autoComplete="descripcion_kpi"
                                         onChange={(e) =>
-                                            setData("unidades", e.target.value)
+                                            setData("descripcion_kpi", e.target.value)
                                         }
                                     />
 
                                     <InputError
-                                        message={errors.unidades}
+                                        message={errors.descripcion_kpi}
                                         className="mt-2"
                                     />
                                 </div>
@@ -505,82 +460,150 @@ export default ({ auth, id, usuarios, empresas }) => {
                             <div className="mt-5 grid grid-cols-2 gap-4">
                                 <div>
                                     <InputLabel
-                                        htmlFor="unidades"
+                                        htmlFor="valor_malo"
                                         value="% Malo"
                                     />
 
                                     <TextInput
-                                        id="unidades"
-                                        name="unidades"
+                                        id="valor_malo"
+                                        name="valor_malo"
                                         type="number"
                                         max="100"
                                         min="0"
-                                        value={data.unidades}
+                                        value={data.valor_malo}
                                         className="mt-1 block w-full"
-                                        autoComplete="unidades"
+                                        autoComplete="valor_malo"
                                         onChange={(e) =>
-                                            setData("unidades", e.target.value)
+                                            setData("valor_malo", e.target.value)
                                         }
                                     />
 
                                     <InputError
-                                        message={errors.unidades}
+                                        message={errors.valor_malo}
                                         className="mt-2"
                                     />
                                 </div>
 
                                 <div>
                                     <InputLabel
-                                        htmlFor="unidades"
+                                        htmlFor="valor_regular"
                                         value="% Regular"
                                     />
 
                                     <TextInput
-                                        id="unidades"
-                                        name="unidades"
+                                        id="valor_regular"
+                                        name="valor_regular"
                                         type="number"
                                         max="100"
                                         min="0"
-                                        value={data.unidades}
+                                        value={data.valor_regular}
                                         className="mt-1 block w-full"
-                                        autoComplete="unidades"
+                                        autoComplete="valor_regular"
                                         onChange={(e) =>
-                                            setData("unidades", e.target.value)
+                                            setData("valor_regular", e.target.value)
                                         }
                                     />
 
                                     <InputError
-                                        message={errors.unidades}
+                                        message={errors.valor_regular}
                                         className="mt-2"
                                     />
                                 </div>
 
                                 <div>
                                     <InputLabel
-                                        htmlFor="unidades"
+                                        htmlFor="valor_bueno"
                                         value="% Bueno"
                                     />
 
                                     <TextInput
-                                        id="unidades"
-                                        name="unidades"
+                                        id="valor_bueno"
+                                        name="valor_bueno"
                                         type="number"
                                         max="100"
                                         min="0"
-                                        value={data.unidades}
+                                        value={data.valor_bueno}
                                         className="mt-1 block w-full"
-                                        autoComplete="unidades"
+                                        autoComplete="valor_bueno"
                                         onChange={(e) =>
-                                            setData("unidades", e.target.value)
+                                            setData("valor_bueno", e.target.value)
                                         }
                                     />
 
                                     <InputError
-                                        message={errors.unidades}
+                                        message={errors.valor_bueno}
                                         className="mt-2"
                                     />
                                 </div>
                             </div>
+                        </div>
+
+                        <div className="mt-5 bg-white overflow-hidden shadow-sm sm:rounded-lg p-8">
+                            <h2 className="font-semibold text-xl text-gray-800 leading-tight">
+                                Encuesta de Satisfacción para usuarios finales
+                            </h2>
+
+                            <div className="mt-5 grid grid-cols-2 gap-4">
+                                <div>
+                                    <InputLabel
+                                        htmlFor="encuesta"
+                                        value="Pregunta de Encuesta"
+                                    />
+
+                                    <TextInput
+                                        id="encuesta"
+                                        name="unidades"
+                                        type="text"
+                                        value={data.encuesta}
+                                        className="mt-1 block w-full"
+                                        autoComplete="encuesta"
+                                        onChange={(e) =>
+                                            setData("encuesta", e.target.value)
+                                        }
+                                    />
+
+                                    <InputError
+                                        message={errors.encuesta}
+                                        className="mt-2"
+                                    />
+                                </div>
+
+                                <div>
+                                    <InputLabel
+                                        htmlFor="tipo_respuesta_id"
+                                        value="Tipo de Respuesta"
+                                    />
+
+                                    <Select
+                                        id="tipo_respuesta_id"
+                                        name="tipo_respuesta_id"
+                                        value={data.tipo_respuesta_id}
+                                        className="mt-1 block w-full"
+                                        onChange={(e) =>
+                                            setData("tipo_respuesta_id", e.target.value)
+                                        }
+                                    >
+                                        {tipos_respuesta.map((tipo, key) => {
+                                            return (
+                                                <option
+                                                    value={tipo.id}
+                                                    key={key}
+                                                >
+                                                    {" "}
+                                                    {tipo.tipo}{" "}
+                                                </option>
+                                            );
+                                        })}
+                                    </Select>
+
+                                    <InputError
+                                        message={errors.tipo_respuesta_id}
+                                        className="mt-2"
+                                    />
+                                </div>
+
+                            </div>
+
                         </div>
 
                         <div className="mt-5 bg-white overflow-hidden shadow-sm sm:rounded-lg p-8">

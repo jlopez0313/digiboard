@@ -11,7 +11,7 @@ import PrimaryButton from "@/Components/Buttons/PrimaryButton";
 import Modal from "@/Components/Modal";
 import { Form } from "./Form";
 
-export default ({ auth, contacts, empresas, departamentos }) => {
+export default ({ auth, contacts, departamentos }) => {
 
     const {
         data,
@@ -22,8 +22,6 @@ export default ({ auth, contacts, empresas, departamentos }) => {
         'ID',
         'Departamento',
         'Ciudad',
-        'Empresa',
-        'Area',
         'Dirección',
     ]
 
@@ -37,8 +35,6 @@ export default ({ auth, contacts, empresas, departamentos }) => {
                 id: item.id,
                 departamento: item.ciudad?.departamento?.departamento || '',
                 ciudad: item.ciudad?.ciudad || '',
-                empresa: item.empresa?.empresa || '',
-                area: item.area,
                 direccion: item.direccion,
             }
         })
@@ -110,9 +106,8 @@ export default ({ auth, contacts, empresas, departamentos }) => {
                     <Pagination links={links} />
                 </div>
             </div>
-            <Modal show={show} closeable={true} title="Gestionar Area">
+            <Modal show={show} closeable={true} title="Gestionar Areas">
                 <Form
-                    empresas={ empresas }
                     departamentos={ departamentos }
                     setIsOpen={onToggleModal}        
                     onReload={onReload}

@@ -12,6 +12,10 @@ class TenantSeeder extends Seeder
      */
     public function run(): void
     {
-        // $this->call(ClientesSeeder::class);
+        $this->call(PerfilesSeeder::class);
+        $this->call(DepartamentosSeeder::class);
+        $this->call(CiudadesSeeder::class);
+        $this->call(UserTenantSeeder::class);
+        $this->call(DisenosSeeder::class);
     }
 }

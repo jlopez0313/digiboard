@@ -19,7 +19,23 @@ class CampanasCollection extends ResourceCollection
         }
 
         return $this->collection->map->only(
-            'id', 'carteleras', 'evaluador', 'nombre'
+            'id',
+            'nombre',
+            'carteleras',
+            'evaluador',
+            'eje',
+            'objetivo',
+            'impacto',
+            'pregunta',
+            'logro_esperado',
+            'evaluador_id',
+            'descripcion_kpi',
+            'valor_malo',
+            'valor_regular',
+            'valor_bueno',
+            'encuesta',
+            'tipo_respuesta_id',
+            'tipo_respuestas'
         );
     }
 }

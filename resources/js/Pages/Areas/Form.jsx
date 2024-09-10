@@ -15,14 +15,9 @@ export const Form = ({ id, empresas, departamentos, setIsOpen, onReload }) => {
     const { data, setData, processing, errors, reset } = useForm({
         departamentos_id: '',
         ciudades_id: '',
-        empresas_id: '',
         direccion: '',
         area: '',
     });
-
-    const {
-        data: listaEmpresas
-    } = empresas
     
     const {
         data: listaDepartamentos
@@ -52,7 +47,6 @@ export const Form = ({ id, empresas, departamentos, setIsOpen, onReload }) => {
             {
                 departamentos_id: item.ciudad?.departamentos_id || '',
                 ciudades_id: item.ciudad?.id || '',
-                empresas_id: item.empresa?.id || '',
                 direccion: item.direccion,
                 area: item.area,
             }
@@ -129,34 +123,6 @@ export const Form = ({ id, empresas, departamentos, setIsOpen, onReload }) => {
 
                             <InputError
                                 message={errors.ciudades_id}
-                                className="mt-2"
-                            />
-                        </div>
-                        
-                        <div>
-                            <InputLabel
-                                htmlFor="empresas_id"
-                                value="Empresa"
-                            />
-
-                            <Select
-                                id="empresas_id"
-                                name="empresas_id"
-                                className="mt-1 block w-full"
-                                value={data.empresas_id}
-                                onChange={(e) =>
-                                    setData("empresas_id", e.target.value)
-                                }
-                            >
-                                {
-                                    listaEmpresas.map( (tipo, key) => {
-                                        return <option value={ tipo.id } key={key}> { tipo.empresa} </option>
-                                    })
-                                }
-                            </Select>
-
-                            <InputError
-                                message={errors.empresas_id}
                                 className="mt-2"
                             />
                         </div>

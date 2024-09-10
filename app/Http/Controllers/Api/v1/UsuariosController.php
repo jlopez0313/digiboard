@@ -32,7 +32,6 @@ class UsuariosController extends Controller
      */
     public function show(User $usuario)
     {
-        $usuario->load('empresa');
         return new UsuariosResource( $usuario );
     }
 

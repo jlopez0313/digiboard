@@ -152,6 +152,7 @@ export const Form = ({ id, setIsOpen, onReload }) => {
                                 id="fecha_inicial"
                                 name="fecha_inicial"
                                 type='date'
+                                min={new Date().toISOString().split('T')[0]}
                                 value={data.fecha_inicial}
                                 className="mt-1 block w-full"
                                 autoComplete="fecha_inicial"

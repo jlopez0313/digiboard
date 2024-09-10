@@ -19,7 +19,7 @@ class UsuariosCollection extends ResourceCollection
         }
         
         return $this->collection->map->only(
-            'id', 'empresa', 'name', 'email', 'documento', 'celular',  'is_admin'
+            'id', 'name', 'email', 'documento', 'celular',  'is_admin'
         );
     }
 }
