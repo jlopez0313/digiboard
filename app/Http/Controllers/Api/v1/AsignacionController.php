@@ -32,7 +32,7 @@ class AsignacionController extends Controller
 
     public function show(string $id) {
 
-        return Pantallas::with('cartelera.multimedias')
+        return Pantallas::with('cartelera.multimedias', 'cartelera.campana')
                 ->find($id);
         
     }

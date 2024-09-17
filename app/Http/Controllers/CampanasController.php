@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CampanasResource;
 use App\Http\Resources\CampanasCollection;
 use App\Http\Resources\UsuariosCollection;
 use App\Http\Resources\AreasCollection;
@@ -19,10 +20,10 @@ class CampanasController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Campañas/Index', [
+        return Inertia::render('Campañas/Calendario/Index', [
             'filters' => Peticion::all('search', 'trashed'),
             'contacts' => new CampanasCollection(
-                Campanas::with('evaluador', 'carteleras')
+                Campanas::with('evaluador', 'cartelera')
                 ->get()
             ),
             'usuarios' => new UsuariosCollection(
@@ -72,6 +73,18 @@ class CampanasController extends Controller
      */
     public function edit(string $id)
     {
+        return Inertia::render('Campañas/Form', [
+            'usuarios' => new UsuariosCollection(
+                User::orderBy('name')
+                ->get()
+            ),
+            'areas' => new AreasCollection(
+                Areas::orderBy('area')
+                ->get()
+            ),
+            'tipos_respuesta' => config('constants.tipo_respuesta'),
+            'id' => $id,
+        ]);
     }
 
     /**
@@ -86,5 +99,36 @@ class CampanasController extends Controller
      */
     public function destroy(string $id)
     {
+    }
+
+    public function lista()
+    {
+        return Inertia::render('Campañas/Lista/Index', [
+            'filters' => Peticion::all('search', 'trashed'),
+            'contacts' => new CampanasCollection(
+                Campanas::with('evaluador', 'cartelera')
+                ->paginate()
+            ),
+        ]);
+    }
+
+    public function encuesta(string $id) {
+        return Inertia::render('Campañas/Encuesta', [
+            'filters' => Peticion::all('search', 'trashed'),
+            'contacts' => new CampanasResource(
+                Campanas::with('evaluador', 'cartelera', 'evaluaciones')
+                ->find( $id )
+            ),
+        ]);
+    }
+
+    public function test(string $id) {
+        return Inertia::render('Campañas/Test', [
+            'filters' => Peticion::all('search', 'trashed'),
+            'contacts' => new CampanasResource(
+                Campanas::with('evaluador', 'cartelera', 'evaluaciones')
+                ->find( $id )
+            ),
+        ]);
     }
 }

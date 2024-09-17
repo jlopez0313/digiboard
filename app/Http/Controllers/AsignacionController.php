@@ -12,8 +12,9 @@ class AsignacionController extends Controller
     public function show(string $id) {
 
         return Inertia::render('Asignacion/Index', [
-            'pantalla' => Pantallas::with('cartelera.multimedias', 'cartelera.medias', 'cartelera.campana')
-                ->find($id)
+            'pantalla' => Pantallas::with('cartelera.multimedias', 'cartelera.campana')
+                ->find($id),
+            'tenant' => 'tenant_' . tenant()->id
         ]);
         
     }

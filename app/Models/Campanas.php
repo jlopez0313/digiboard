@@ -15,12 +15,16 @@ class Campanas extends Model
     protected $guarded = [];
     protected $append = ['tipo_respuestas'];
 
-    public function carteleras() {
-        return $this->hasMany(Carteleras::class, 'campanas_id');
+    public function cartelera() {
+        return $this->hasOne(Carteleras::class, 'campanas_id');
     }
 
     public function evaluador() {
-        return $this->hasOne(USer::class, 'id', 'usuarios_id');
+        return $this->hasOne(USer::class, 'id', 'evaluador_id');
+    }
+
+    public function evaluaciones() {
+        return $this->hasMany(Evaluaciones::class, 'campanas_id');
     }
 
     public function getTipoRespuestasAttribute() {

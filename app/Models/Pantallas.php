@@ -17,6 +17,7 @@ class Pantallas extends Model
     public $timestamps = true;
 
     protected $casts = [
+        'created_at' => 'datetime:Y-m-d H:i A',
         'updated_at' => 'datetime:Y-m-d H:i A',
     ];
 
@@ -41,6 +42,10 @@ class Pantallas extends Model
         return \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $date)->format('Y-m-d H:i:s');
     }
 
+    public function getCreatedAtAttribute( $date ) {
+        return \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $date)->format('Y-m-d H:i:s');
+    }
+    
     protected function serializeDate($date): string {
         return $date->format('Y-m-d H:i:s');
     }

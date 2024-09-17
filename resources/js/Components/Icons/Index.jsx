@@ -1,6 +1,30 @@
 import React from "react";
+import Survey from "./Survey";
+import Edit from "./Edit";
+import Search from "./Search";
+import Test from "./Test";
 
-export default ({ name, className, fill = "", ...props }) => {
+export default ({ name, className, ...props }) => {
+    if (name === "survey") {
+        return <Survey className={className} props={props}/>
+    }
+
+    else if (name === "survey") {
+        return <Survey className={className} props={props}/>
+    }
+
+    else if (name === "edit") {
+        return <Edit className={className} props={props}/>;
+    }
+
+    else if (name === "search") {
+        return  <Search className={className} props={props}/>;
+    }
+
+    else if (name === "test") {
+        return  <Test className={className} props={props}/>;
+    }
+
     if (name === "apple") {
         return (
             <svg
@@ -182,34 +206,7 @@ export default ({ name, className, fill = "", ...props }) => {
             </svg>
         );
     }
-    if (name === "edit") {
-        return (
-            <svg
-                viewBox="0 0 24 24"
-                enableBackground="new 0 0 20 20"
-                className={className}
-                {...props}
-            >
-                <path d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32L19.513 8.2z" />
-            </svg>
-        );
-    }
-    if (name === "search") {
-        return (
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className={className}
-                x="0px"
-                y="0px"
-                width="20"
-                height="20"
-                viewBox="0 0 50 50"
-                {...props}
-            >
-                <path d="M 21 3 C 11.601563 3 4 10.601563 4 20 C 4 29.398438 11.601563 37 21 37 C 24.355469 37 27.460938 36.015625 30.09375 34.34375 L 42.375 46.625 L 46.625 42.375 L 34.5 30.28125 C 36.679688 27.421875 38 23.878906 38 20 C 38 10.601563 30.398438 3 21 3 Z M 21 7 C 28.199219 7 34 12.800781 34 20 C 34 27.199219 28.199219 33 21 33 C 13.800781 33 8 27.199219 8 20 C 8 12.800781 13.800781 7 21 7 Z"></path>
-            </svg>
-        );
-    }
+
     if (name === "cog") {
         return (
             <svg

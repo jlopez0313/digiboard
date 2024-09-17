@@ -21,12 +21,15 @@ class CartelerasResource extends JsonResource
         return [
             'id' => $this->id,
             'campana' => $this->campana,
+            'pantallas' => $this->pantallas,
             'diseno' => $this->diseno,
             'cartelera' => $this->cartelera,
             'fecha_inicial' => $this->fecha_inicial,
             'fecha_final' => $this->fecha_final,
             'marquesina' => $this->marquesina,
             'multimedias' => $this->multimedias ?? [],
+            'media' => $this->media ?? [],
+            'medias' => $this->medias ?? [],
         ];
     }
 }

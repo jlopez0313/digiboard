@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 // import Layout from '@/Components/Layout';
-import Icon from "@/Components/Icon";
 // import SearchFilter from '@/Shared/SearchFilter';
 
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";

@@ -1,17 +1,22 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import EmptyLayout from "@/Layouts/EmptyLayout";
 import { Head } from "@inertiajs/react";
-import { Carousel } from "@material-tailwind/react";
 import { AdminModal } from "@/Components/AdminModal";
 import axios from "axios";
 import QRCode from "react-qr-code";
-import styles from './index.module.css'
+import styles from "./index.module.css";
 import ApplicationLogo from "@/Components/ApplicationLogo";
 
-export default ({ auth, pantalla }) => {
-    console.log(pantalla);
+import { Autoplay } from 'swiper/modules';
+import { Swiper, SwiperSlide } from "swiper/react";
+// Import Swiper styles
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/navigation';
 
+export default ({ auth, pantalla, tenant }) => {
+    
     const [delay, setDelay] = useState(12500);
     const [show, setShow] = useState(true);
     const [adminModal, setAdminModal] = useState(false);
@@ -37,8 +42,8 @@ export default ({ auth, pantalla }) => {
 
     const onRefresh = () => {
         setInterval(async () => {
-            // const { data } = await axios.get(`/api/v1/asignacion/${screen.id}`);
-            // setScreen() ;
+            const { data } = await axios.post(`/api/v1/asignacion/${screen.id}`);
+            setScreen( data ) ;
         }, 1000 * 60 * 30);
     };
 
@@ -78,10 +83,10 @@ export default ({ auth, pantalla }) => {
                     <Head title="Carteleras" />
 
                     <div className={`rounded px-1 py-1 ${styles.encuesta}`}>
-                        <ApplicationLogo className='m-auto' />
+                        <ApplicationLogo className="m-auto" />
 
-                        <p className='font-bold text-lg text-white m-auto text-center'>
-                            { screen.cartelera.campana?.encuesta }
+                        <p className="font-bold text-lg text-white m-auto text-center">
+                            {screen.cartelera.campana?.encuesta}
                         </p>
                         <QRCode
                             size={200}
@@ -91,50 +96,63 @@ export default ({ auth, pantalla }) => {
                                 maxWidth: "90%",
                                 width: "90%",
                             }}
-                            value={"http://gobernacion.localhost:8000/evaluacion/" + screen.cartelera.campana.id }
+                            value={
+                                window.location.origin + '/' +
+                                screen.cartelera.campana.id
+                            }
                             viewBox={`0 0 200 200`}
                         />
                     </div>
 
-                    <Carousel
-                        loop={true}
-                        autoplay={true}
-                        autoplayDelay={delay}
-                        navigation={() => null}
-                        prevArrow={() => null}
-                        nextArrow={() => null}
+                    <Swiper
+                        className="mySwiper h-full w-full"
+                        spaceBetween={10}
+                        slidesPerView={1}
+                        centeredSlides={true}
+                        centeredSlidesBounds={true}
+                        autoplay={{
+                            delay: delay,
+                            disableOnInteraction: false,
+                        }}
+                        modules={[Autoplay, ]}
                     >
-                        {screen.cartelera.medias.map((foto, key) => {
+                        {screen.cartelera.multimedias.map((foto, key) => {
                             return (
-                                <div
+                                <SwiperSlide
                                     key={key}
-                                    className="w-100 sm:h-44 md:h-full flex-shrink-0 flex items-center justify-center"
+                                    className="h-full w-full"
                                 >
-                                    {foto.mime_type.includes("image") ? (
+                                    {foto.mimetype.includes("image") ? (
+                                        <>
                                         <img
-                                            className="h-full w-full object-cover rounded-md"
-                                            src={"/" + foto.src}
+                                            className="m-auto !w-auto !h-full"
+                                            src={"/" + tenant + "/" + foto.src}
                                             alt=""
                                         />
+                                        </>
                                     ) : (
+                                        <>
                                         <video
-                                            className="h-full w-full object-cover rounded-md"
+                                            className="m-auto !w-auto !h-full"
                                             alt=""
                                             controls
                                             autoPlay={false}
-                                            onLoadedData={onGetDelay}
+                                            onLoadedData={onGetDelay}                                            
                                         >
                                             <source
                                                 src={"/" + foto.src}
                                             ></source>
                                         </video>
+
+                                        </>
                                     )}
-                                </div>
+                                </SwiperSlide>
                             );
                         })}
-                    </Carousel>
 
-                    <marquee className="text-white marquee text-3xl md:text-4xl lg:text-5xl p-3 my-3">
+                    </Swiper>
+
+                    <marquee className={`text-white marquee text-3xl md:text-4xl lg:text-5xl p-3 my-3 ${styles['marquee']}`}>
                         {" "}
                         {screen.cartelera.marquesina}{" "}
                     </marquee>

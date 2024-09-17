@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\v1;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CampanasResource;
 use App\Models\Campanas;
+use App\Models\Carteleras;
 use Illuminate\Http\Request;
 
 class CampanasController extends Controller
@@ -15,7 +16,6 @@ class CampanasController extends Controller
     public function store(Request $request)
     {
         $data = $request->except(
-            'empresas_id',
             'areas_id',
             'disenos_id',
             'marquesina',
@@ -40,6 +40,7 @@ class CampanasController extends Controller
      */
     public function show(Campanas $campana)
     {
+        $campana->load('cartelera.pantallas');
         return new CampanasResource($campana);
     }
 
@@ -48,7 +49,26 @@ class CampanasController extends Controller
      */
     public function update(Request $request, Campanas $campana)
     {
-        $campana->update($request->all());
+        $data = $request->except(
+            'areas_id',
+            'disenos_id',
+            'marquesina',
+            'fecha_inicial',
+            'fecha_final',
+            'multimedias',
+            'evaluador',
+            'pantallas',
+        );
+
+        $campana->update($data);
+        $request->merge(['campanas_id' => $campana->id]);
+
+        $cartelera = Carteleras::find( $campana->cartelera->id );
+
+        $cartelerasController = new CartelerasController();
+        $cartelerasController->update($request, $cartelera);
+        
+        
 
         return new CampanasResource($campana);
     }
@@ -59,6 +79,15 @@ class CampanasController extends Controller
     public function destroy(Campanas $campana)
     {
         $campana->delete();
+
+        return new CampanasResource($campana);
+    }
+
+
+    public function evaluar(Request $request, string $id)
+    {
+        $campana = Campanas::find( $id );
+        $campana->update($request->all());
 
         return new CampanasResource($campana);
     }

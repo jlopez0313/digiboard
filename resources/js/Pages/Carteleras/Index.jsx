@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 // import Layout from '@/Components/Layout';
-import Icon from "@/Components/Icon";
 // import SearchFilter from '@/Shared/SearchFilter';
 
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
@@ -47,6 +46,11 @@ export default ({ auth, contacts }) => {
     const onSetItem = (_id) => {
         setId(_id)
         onToggleModal(true)
+    }
+
+    const onSearch = () => {
+        onToggleModal(false);
+        router.get( 'carteleras/show/' + _id )
     }
 
     const onTrash = async (_id) => {

@@ -27,9 +27,12 @@ class CartelerasController extends Controller
             'logro_esperado',
             'evaluador_id',
             'descripcion_kpi',
-            'valor_malo',
-            'valor_regular',
-            'valor_bueno',
+            'valor_min_malo',
+            'valor_max_malo',
+            'valor_min_regular',
+            'valor_max_regular',
+            'valor_min_bueno',
+            'valor_max_bueno',
             'encuesta',
             'tipo_respuesta_id',
             'empresas_id',
@@ -40,21 +43,21 @@ class CartelerasController extends Controller
 
         $cartelera = Carteleras::create($data);
 
-        $multimedias = $request->multimedias;
+        $multimedias = $request->multimedias ?? [];
 
         foreach ($multimedias as $file) {
-            $filename = \Storage::disk('media')->put($cartelera->id, $file);
+            // $filename = \Storage::disk('media')->put($cartelera->id, $file);
+            // $cartelera->addMedia('media/' . $filename)->toMediaCollection();
 
-            $cartelera->addMedia('media/' . $filename)->toMediaCollection();
-
-            /*
+            $filename = $file->store('files/'.$cartelera->id);
+            
             Multimedias::create([
                 'carteleras_id' => $cartelera->id,
                 'src' => $filename,
                 'type' => $file->getClientOriginalExtension(),
                 'mimetype' => $file->getClientMimeType(),
             ]);
-            */
+            
         }
 
         if ($request->pantallas) {
@@ -67,6 +70,8 @@ class CartelerasController extends Controller
                 $this->asignar($request);
             }
         }
+        
+        $this->makeLink();
 
         return new CartelerasResource($cartelera);
     }
@@ -76,20 +81,15 @@ class CartelerasController extends Controller
      */
     public function show(Carteleras $cartelera)
     {
+/*
         $cartelera->getMedia();
 
-        foreach( $cartelera->media as $mediaItems ) {
-            $publicUrl = $mediaItems->getUrl();
-            $publicFullUrl = $mediaItems->getFullUrl(); //url including domain
-            $fullPathOnDisk = $mediaItems->getPath();
-
-            dd([
-                $publicUrl,
-                $publicFullUrl,
-                $fullPathOnDisk,
-            ]); 
+        foreach( $cartelera->media as $key => $mediaItems ) {
+            $cartelera->media[$key]['publicUrl'] = $mediaItems->getUrl();
+            $cartelera->media[$key]['publicFullUrl'] = $mediaItems->getFullUrl(); //url including domain
+            $cartelera->media[$key]['fullPathOnDisk'] = $mediaItems->getPath();
         }
-
+*/
         return new CartelerasResource($cartelera);
     }
 
@@ -98,28 +98,51 @@ class CartelerasController extends Controller
      */
     public function update(Request $request, Carteleras $cartelera)
     {
-        $data = $request->except('empresas_id', 'areas_id', 'multimedias', '_method');
+        $data = $request->except(
+            'nombre',
+            'eje',
+            'objetivo',
+            'impacto',
+            'pregunta',
+            'logro_esperado',
+            'evaluador_id',
+            'descripcion_kpi',
+            'valor_min_malo',
+            'valor_max_malo',
+            'valor_min_regular',
+            'valor_max_regular',
+            'valor_min_bueno',
+            'valor_max_bueno',
+            'encuesta',
+            'tipo_respuesta_id',
+            'empresas_id',
+            'areas_id',
+            'multimedias',
+            'pantallas',
+            '_method'
+        );
+        
         $cartelera->update($data);
 
-        $multimedias = $request->multimedias;
+        $multimedias = $request->multimedias ?? [];
 
         // 658 x 496 pixeles
 
         foreach ($multimedias as $file) {
-            $filename = \Storage::disk('media')->put($cartelera->id, $file);
+            // $filename = \Storage::disk('media')->put($cartelera->id, $file);
+            // $cartelera->addMedia('media/' . $filename)->toMediaCollection();
             
-            $cartelera->addMedia('media/' . $filename)->toMediaCollection();
+            $filename = $file->store('files/'.$cartelera->id);
 
-            /*
             Multimedias::create([
                 'carteleras_id' => $cartelera->id,
                 'src' => $filename,
                 'type' => $file->getClientOriginalExtension(),
                 'mimetype' => $file->getClientMimeType(),
             ]);
-            */
-            
         }
+
+        $this->makeLink();
 
         return new CartelerasResource($cartelera);
     }
@@ -155,5 +178,11 @@ class CartelerasController extends Controller
         $pantalla_cartelera->delete();
 
         return new PantallasCartelerasResource($pantalla_cartelera);
+    }
+
+    public function makeLink() {
+        if  ( !is_link( 'tenant_' . tenant()->id ) ) {
+            symlink(storage_path() . '/app', 'tenant_' . tenant()->id);
+        }
     }
 }

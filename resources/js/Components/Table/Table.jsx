@@ -1,10 +1,10 @@
 import { Link } from "@inertiajs/react";
 import React from "react";
-import Icon from "../Icon";
+import Icon from "../Icons/Index";
 import ActionsTable from "./ActionsTable";
 
 
-export default ({ data = [], routes = {}, titles = [], actions = [], onTrash, onEdit, onSearch, onConfig }) => {
+export default ({ data = [], routes = {}, titles = [], actions = [], ...props }) => {
 
     return (
         <table className="w-full whitespace-nowrap">
@@ -32,10 +32,11 @@ export default ({ data = [], routes = {}, titles = [], actions = [], onTrash, on
                                 if ( 
                                     key == 'ruta'
                                 ) return;
+
                                 return <td className="border-t" key={ key }>
                                     <a
                                         role="button"
-                                        onClick={() => onEdit(item.id)}
+                                        onClick={() => props.onEdit(item.id)}
                                         className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
                                     >
                                         { item[key] }
@@ -56,13 +57,17 @@ export default ({ data = [], routes = {}, titles = [], actions = [], onTrash, on
                                     {
                                         actions.map( (action, key) => {
                                             if (action === 'trash') {
-                                                return <ActionsTable key={key} action={action} onClick={() => onTrash(item.id)}/>
+                                                return <ActionsTable key={key} action={action} onClick={() => props.onTrash(item.id)}/>
                                             } else if( action === 'edit' ) {
-                                                return <ActionsTable key={key} action={action} onClick={() => onEdit(item.id)}/>                                    
+                                                return <ActionsTable key={key} action={action} onClick={() => props.onEdit(item.id)}/>                                    
                                             } else if( action === 'search' ) {
-                                                return <ActionsTable key={key} action={action} onClick={() => onSearch(item.id)}/>                                    
+                                                return <ActionsTable key={key} action={action} onClick={() => props.onSearch(item.id)}/>                                    
                                             } else if( action === 'cog' ) {
-                                                return <ActionsTable key={key} action={action} onClick={() => onConfig(item.id)}/>                                    
+                                                return <ActionsTable key={key} action={action} onClick={() => props.onConfig(item.id)}/>                                    
+                                            } else if( action === 'survey' ) {
+                                                return <ActionsTable key={key} action={action} onClick={() => props.onSurvey(item.id)}/>                                    
+                                            } else if( action === 'test' ) {
+                                                return <ActionsTable key={key} action={action} onClick={() => props.onTest(item.id)}/>                                    
                                             }
                                         })
                                     }

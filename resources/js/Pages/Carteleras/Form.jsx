@@ -7,7 +7,7 @@ import { useForm } from "@inertiajs/react";
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import TextArea from "@/Components/Form/TextArea";
-import Icon from "@/Components/Icon";
+import Icon from "@/Components/Icons/Index";
 
 export const Form = ({ id, setIsOpen, onReload }) => {
 
@@ -62,7 +62,7 @@ export const Form = ({ id, setIsOpen, onReload }) => {
             }
         )
 
-        setPreviews( item.multimedias )
+        setPreviews( item.multimedias.map( x => { return {...x, src: 'tenant_gobernacion/' + x.src } }) )
     }
 
     const onGetAreas = async ( empresa ) => {

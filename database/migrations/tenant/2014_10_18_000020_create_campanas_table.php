@@ -24,11 +24,16 @@ return new class() extends Migration {
             $table->text('impacto');
             $table->text('pregunta');
             $table->string('logro_esperado');
+            $table->string('logro_alcanzado')->nullable();
             $table->string('descripcion_kpi');
-            $table->string('valor_malo');
-            $table->string('valor_regular');
-            $table->string('valor_bueno');
+            $table->string('valor_min_malo');
+            $table->string('valor_max_malo');
+            $table->string('valor_min_regular');
+            $table->string('valor_max_regular');
+            $table->string('valor_min_bueno');
+            $table->string('valor_max_bueno');
             $table->string('encuesta');
+            $table->string('observacion')->nullable();
 
             $table->timestamps();
             $table->softDeletes();

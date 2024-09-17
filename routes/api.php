@@ -65,19 +65,24 @@ Route::middleware([
     Route::apiResource('ciudades', CiudadesController::class);
 
     Route::apiResource('empresas', EmpresasController::class);
-    Route::apiResource('campanas', CampanasController::class);
+
+
+    
     Route::apiResource('evaluaciones', EvaluacionesController::class);
     Route::apiResource('multimedias', MultimediasController::class);
-
+    
     Route::apiResource('areas', AreasController::class);
-
-
+    
     Route::prefix('pantallas')->group( function() {
         Route::get('/area/{area}', [PantallasController::class, 'byArea']);
     });
     Route::apiResource('pantallas', PantallasController::class);
-
-
+    
+    Route::prefix('campanas')->group( function() {
+        Route::put('/evaluar/{id}', [CampanasController::class, 'evaluar']);
+    });
+    Route::apiResource('campanas', CampanasController::class);
+    
     Route::prefix('carteleras')->group( function() {
         Route::put('/asignar', [CartelerasController::class, 'asignar']);
         Route::delete('/desasignar/{pantalla_cartelera}', [CartelerasController::class, 'desasignar']);
@@ -86,6 +91,7 @@ Route::middleware([
     
     
     Route::prefix('asignacion')->group( function() {
+        Route::post('/{id}', [AsignacionController::class, 'show']);
         Route::post('/codigo/{pantalla}', [PantallasController::class, 'codigo']);
         Route::post('/activar/{pantalla}', [AsignacionController::class, 'activar'])->name('asignacion.activar');
     })->middleware(['auth', 'verified']);

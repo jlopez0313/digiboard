@@ -93,7 +93,11 @@ Route::middleware([
         Route::get('/', [CampanasController::class, 'index'])->name('campanas');
         Route::get('/config/{id}', [CampanasController::class, 'config'])->name('campanas.config');
         Route::get('/create', [CampanasController::class, 'create'])->name('campanas.create');
+        Route::get('/lista', [CampanasController::class, 'lista'])->name('campanas.lista');
         Route::get('/{id}', [CampanasController::class, 'show'])->name('campanas.show');
+        Route::get('/edit/{id}', [CampanasController::class, 'edit'])->name('campanas.edit');
+        Route::get('/encuesta/{id}', [CampanasController::class, 'encuesta'])->name('campanas.encuesta');
+        Route::get('/test/{id}', [CampanasController::class, 'test'])->name('campanas.test');
     });
 
     Route::prefix('evaluacion')->group(function () {

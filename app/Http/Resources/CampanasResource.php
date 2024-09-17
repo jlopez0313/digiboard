@@ -21,8 +21,9 @@ class CampanasResource extends JsonResource
         return [
             'id' => $this->id,
             'nombre' => $this->nombre,
-            'carteleras' => $this->carteleras,
+            'cartelera' => $this->cartelera,
             'evaluador' => $this->evaluador,
+            'evaluaciones' => $this->evaluaciones,
 
             'eje' => $this->eje,
             'objetivo' => $this->objetivo,
@@ -30,11 +31,18 @@ class CampanasResource extends JsonResource
             'pregunta' => $this->pregunta,
 
             'logro_esperado' => $this->logro_esperado,
+            'logro_alcanzado' => $this->logro_alcanzado,
+            'observacion' => $this->observacion,
+
             'evaluador_id' => $this->evaluador_id,
             'descripcion_kpi' => $this->descripcion_kpi,
-            'valor_malo' => $this->valor_malo,
-            'valor_regular' => $this->valor_regular,
-            'valor_bueno' => $this->valor_bueno,
+
+            'valor_min_malo' => $this->valor_min_malo,
+            'valor_max_malo' => $this->valor_max_malo,
+            'valor_min_regular' => $this->valor_min_regular,
+            'valor_max_regular' => $this->valor_max_regular,
+            'valor_min_bueno' => $this->valor_min_bueno,
+            'valor_max_bueno' => $this->valor_max_bueno,
 
             'encuesta' => $this->encuesta,
             'tipo_respuesta_id' => $this->tipo_respuesta_id,

@@ -10,7 +10,7 @@ import { useForm } from "@inertiajs/react";
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import TextArea from "@/Components/Form/TextArea";
-import Icon from "@/Components/Icon";
+import Icon from "@/Components/Icons/Index";
 import Select from "@/Components/Form/Select";
 import ReactSelect from "react-select";
 import makeAnimated from "react-select/animated";
@@ -38,9 +38,13 @@ export default ({ auth, id, usuarios, areas, tipos_respuesta }) => {
         logro_esperado: "",
         evaluador_id: "",
         descripcion_kpi: "",
-        valor_malo: "",
-        valor_regular: "",
-        valor_bueno: "",
+        
+        valor_min_malo: "",
+        valor_max_malo: "",
+        valor_min_regular: "",
+        valor_max_regular: "",
+        valor_min_bueno: "",
+        valor_max_bueno: "",        
 
         encuesta: '',
         tipo_respuesta_id: '',
@@ -81,15 +85,42 @@ export default ({ auth, id, usuarios, areas, tipos_respuesta }) => {
         const { data } = await axios.get(`/api/v1/campanas/${id}`);
         const item = { ...data.data };
 
-        setData({
-            disenos_id: item.diseno?.id,
-            marquesina: item.marquesina,
-            fecha_inicial: item.fecha_inicial,
-            fecha_final: item.fecha_final,
-            multimedias: [],
-        });
+        setData({    
+            nombre: item.nombre,
+            pantallas: item.cartelera?.pantallas?.map( x => x.id),
+            eje: item.eje,
+            objetivo: item.objetivo,
+            impacto: item.impacto,
+            pregunta: item.pregunta,
+    
+            logro_esperado: item.logro_esperado,
+            evaluador_id: item.evaluador_id,
+            descripcion_kpi: item.descripcion_kpi,
 
-        setPreviews(item.multimedias);
+            valor_min_malo: item.valor_min_malo,
+            valor_max_malo: item.valor_max_malo,
+            valor_min_regular: item.valor_min_regular,
+            valor_max_regular: item.valor_max_regular,
+            valor_min_bueno: item.valor_min_bueno,
+            valor_max_bueno: item.valor_max_bueno,
+    
+            encuesta: item.encuesta,
+            tipo_respuesta_id: item.tipo_respuesta_id,
+            
+            disenos_id: 1,
+            marquesina: item.cartelera?.marquesina,
+            fecha_inicial: item.cartelera?.fecha_inicial,
+            fecha_final: item.cartelera?.fecha_final,
+            multimedias: [],
+        })
+
+        setMyScreens(
+            item.cartelera?.pantallas.map((tag) => {
+                return { value: tag.id, label: tag.pantalla };
+            })
+        );
+
+        // setPreviews(item.multimedias);
     };
 
     const onGetPantallas = async (area) => {
@@ -158,7 +189,11 @@ export default ({ auth, id, usuarios, areas, tipos_respuesta }) => {
     };
 
     const onReload = () => {
-        router.visit('/campanas');
+        if (id) {
+            router.visit('/campanas/lista');
+        } else {
+            router.visit('/campanas');
+        }
     }
 
     useEffect(() => {
@@ -182,6 +217,15 @@ export default ({ auth, id, usuarios, areas, tipos_respuesta }) => {
 
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                    <div className="flex items-center justify-end mb-4">
+                        <SecondaryButton
+                            className="ms-4"
+                            onClick={() => onReload()}
+                        >
+                            Regresar
+                        </SecondaryButton>
+                    </div>
+
                     <form onSubmit={submit}>
                         <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg p-8">
                             <h2 className="font-semibold text-xl text-gray-800 leading-tight">
@@ -380,7 +424,6 @@ export default ({ auth, id, usuarios, areas, tipos_respuesta }) => {
                                         id="logro_esperado"
                                         name="logro_esperado"
                                         type="number"
-                                        max="100"
                                         min="0"
                                         value={data.logro_esperado}
                                         className="mt-1 block w-full"
@@ -460,78 +503,156 @@ export default ({ auth, id, usuarios, areas, tipos_respuesta }) => {
                             <div className="mt-5 grid grid-cols-2 gap-4">
                                 <div>
                                     <InputLabel
-                                        htmlFor="valor_malo"
-                                        value="% Malo"
+                                        htmlFor="valor_min_malo"
+                                        value="% Mínimo Malo"
                                     />
 
                                     <TextInput
-                                        id="valor_malo"
-                                        name="valor_malo"
+                                        id="valor_min_malo"
+                                        name="valor_min_malo"
                                         type="number"
                                         max="100"
                                         min="0"
-                                        value={data.valor_malo}
+                                        value={data.valor_min_malo}
                                         className="mt-1 block w-full"
-                                        autoComplete="valor_malo"
+                                        autoComplete="valor_min_malo"
                                         onChange={(e) =>
-                                            setData("valor_malo", e.target.value)
+                                            setData("valor_min_malo", e.target.value)
                                         }
                                     />
 
                                     <InputError
-                                        message={errors.valor_malo}
+                                        message={errors.valor_min_malo}
                                         className="mt-2"
                                     />
                                 </div>
 
                                 <div>
                                     <InputLabel
-                                        htmlFor="valor_regular"
-                                        value="% Regular"
+                                        htmlFor="valor_max_malo"
+                                        value="% Máximo Malo"
                                     />
 
                                     <TextInput
-                                        id="valor_regular"
-                                        name="valor_regular"
+                                        id="valor_max_malo"
+                                        name="valor_max_malo"
                                         type="number"
                                         max="100"
                                         min="0"
-                                        value={data.valor_regular}
+                                        value={data.valor_max_malo}
                                         className="mt-1 block w-full"
-                                        autoComplete="valor_regular"
+                                        autoComplete="valor_max_malo"
                                         onChange={(e) =>
-                                            setData("valor_regular", e.target.value)
+                                            setData("valor_max_malo", e.target.value)
                                         }
                                     />
 
                                     <InputError
-                                        message={errors.valor_regular}
+                                        message={errors.valor_max_malo}
                                         className="mt-2"
                                     />
                                 </div>
 
                                 <div>
                                     <InputLabel
-                                        htmlFor="valor_bueno"
-                                        value="% Bueno"
+                                        htmlFor="valor_min_regular"
+                                        value="% Mínimo Regular"
                                     />
 
                                     <TextInput
-                                        id="valor_bueno"
-                                        name="valor_bueno"
+                                        id="valor_min_regular"
+                                        name="valor_min_regular"
                                         type="number"
                                         max="100"
-                                        min="0"
-                                        value={data.valor_bueno}
+                                        min={Number(data.valor_max_malo) + 1}
+                                        value={data.valor_min_regular}
                                         className="mt-1 block w-full"
-                                        autoComplete="valor_bueno"
+                                        autoComplete="valor_min_regular"
                                         onChange={(e) =>
-                                            setData("valor_bueno", e.target.value)
+                                            setData("valor_min_regular", e.target.value)
                                         }
                                     />
 
                                     <InputError
-                                        message={errors.valor_bueno}
+                                        message={errors.valor_min_regular}
+                                        className="mt-2"
+                                    />
+                                </div>
+
+                                <div>
+                                    <InputLabel
+                                        htmlFor="valor_min_regular"
+                                        value="% Máximo Regular"
+                                    />
+
+                                    <TextInput
+                                        id="valor_max_regular"
+                                        name="valor_max_regular"
+                                        type="number"
+                                        max="100"
+                                        min={Number(data.valor_max_malo) + 1}
+                                        value={data.valor_max_regular}
+                                        className="mt-1 block w-full"
+                                        autoComplete="valor_max_regular"
+                                        onChange={(e) =>
+                                            setData("valor_max_regular", e.target.value)
+                                        }
+                                    />
+
+                                    <InputError
+                                        message={errors.valor_max_regular}
+                                        className="mt-2"
+                                    />
+                                </div>
+
+                                <div>
+                                    <InputLabel
+                                        htmlFor="valor_min_bueno"
+                                        value="% Mínimo Bueno"
+                                    />
+
+                                    <TextInput
+                                        id="valor_min_bueno"
+                                        name="valor_min_bueno"
+                                        type="number"
+                                        max="100"
+                                        min={Number(data.valor_max_regular) + 1}
+                                        value={data.valor_min_bueno}
+                                        className="mt-1 block w-full"
+                                        autoComplete="valor_min_bueno"
+                                        onChange={(e) =>
+                                            setData("valor_min_bueno", e.target.value)
+                                        }
+                                    />
+
+                                    <InputError
+                                        message={errors.valor_min_bueno}
+                                        className="mt-2"
+                                    />
+                                </div>
+
+                                <div>
+                                    <InputLabel
+                                        htmlFor="valor_max_bueno"
+                                        value="% Máximo Bueno"
+                                    />
+
+                                    <TextInput
+                                        id="valor_max_bueno"
+                                        name="valor_max_bueno"
+                                        type="number"
+                                        max="100"
+                                        min={Number(data.valor_max_regular) + 1}
+                                        value={data.valor_max_bueno}
+                                        className="mt-1 block w-full"
+                                        autoComplete="valor_max_bueno"
+                                        onChange={(e) =>
+                                            setData("valor_max_bueno", e.target.value)
+                                        }
+                                    />
+
+                                    <InputError
+                                        message={errors.valor_max_bueno}
                                         className="mt-2"
                                     />
                                 </div>

@@ -16,6 +16,13 @@ class Carteleras extends Model implements HasMedia
 
     protected $table = 'carteleras';
     protected $guarded = [];
+    protected $append = ['media'];
+
+    protected $casts = [
+        'updated_at' => 'datetime:Y-m-d H:i A',
+    ];
+
+
 
     public function campana()
     {
@@ -35,5 +42,13 @@ class Carteleras extends Model implements HasMedia
     public function medias()
     {
         return $this->hasMany(Media::class, 'model_id');
+    }
+    
+    public function pantallas() {
+        return $this->hasMany(Pantallas::class, 'carteleras_id');
+    }
+
+    protected function serializeDate($date): string {
+        return $date->format('Y-m-d H:i:s');
     }
 }
