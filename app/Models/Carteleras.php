@@ -5,14 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Spatie\MediaLibrary\HasMedia;
-use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Carteleras extends Model implements HasMedia
+class Carteleras extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    use InteractsWithMedia;
 
     protected $table = 'carteleras';
     protected $guarded = [];
@@ -21,8 +18,6 @@ class Carteleras extends Model implements HasMedia
     protected $casts = [
         'updated_at' => 'datetime:Y-m-d H:i A',
     ];
-
-
 
     public function campana()
     {
@@ -37,11 +32,6 @@ class Carteleras extends Model implements HasMedia
     public function multimedias()
     {
         return $this->hasMany(Multimedias::class, 'carteleras_id');
-    }
-
-    public function medias()
-    {
-        return $this->hasMany(Media::class, 'model_id');
     }
     
     public function pantallas() {
