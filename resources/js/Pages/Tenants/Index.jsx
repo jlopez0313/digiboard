@@ -113,7 +113,7 @@ export default ({ auth, tenants }) => {
                             data={list}
                             links={links}
                             onEdit={ (evt) => {} }
-                            onTrash={ (evt) => {} }
+                            onTrash={ onTrash }
                             titles={titles}
                             actions={['trash']}
                         />
