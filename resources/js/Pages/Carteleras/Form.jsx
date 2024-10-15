@@ -67,7 +67,7 @@ export const Form = ({ id, tenant, setIsOpen, onReload }) => {
             }
         )
 
-        setPreviews( item.multimedias.map( x => { return {...x, src: `tenant_${tenant}/` + x.src } }) )
+        setPreviews( item.multimedias.map( x => { return {...x, src: `${tenant}/` + x.src } }) )
     }
 
     const onGetAreas = async ( empresa ) => {

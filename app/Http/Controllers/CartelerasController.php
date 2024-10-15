@@ -23,7 +23,7 @@ class CartelerasController extends Controller
     public function index()
     {
         return Inertia::render('Carteleras/Index', [
-            'tenant' => tenant()->id,
+            'tenant' => 'tenant_' . tenant()->id,
             'filters' => Peticion::all('search', 'trashed'),
             'contacts' => new CartelerasCollection(
                 Carteleras::with('diseno')
