@@ -49,8 +49,8 @@ export default ({ auth, tenants }) => {
         }
     }
 
-    const onTrash = async (data) => {
-        if ( data ) {
+    const onTrash = async (id) => {
+        if ( id ) {
             await axios.delete(`/api/v1/tenants/${id}`);
             onReload()
         }
