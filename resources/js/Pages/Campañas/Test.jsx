@@ -135,6 +135,7 @@ export default ({ auth, contacts }) => {
     };
 
     useEffect(() => {
+        console.log( campaña )
         campaña.logro_alcanzado && onChart();
     }, [campaña]);
 
