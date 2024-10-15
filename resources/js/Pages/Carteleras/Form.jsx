@@ -36,15 +36,20 @@ export const Form = ({ id, setIsOpen, onReload }) => {
                 formData.append( key, data[key] )
             }
         })
-        
-        if ( id ) {
-            formData.append('_method', 'PUT')
-            await axios.post(`/api/v1/carteleras/${id}`, formData);
-        } else {
-            await axios.post(`/api/v1/carteleras`, formData);
-        }
 
-        onReload();
+        try {
+            if ( id ) {
+                formData.append('_method', 'PUT')
+                await axios.post(`/api/v1/carteleras/${id}`, formData);
+            } else {
+                await axios.post(`/api/v1/carteleras`, formData);
+            }
+    
+            onReload();
+        } catch (e) {
+            
+        }
+        
     };
 
     const onGetItem = async () => {

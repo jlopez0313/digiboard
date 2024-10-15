@@ -8,6 +8,7 @@ use App\Http\Requests\TenantsRequest;
 use App\Http\Resources\TenantsResource;
 use App\Models\Tenant;
 use Inertia\Inertia;
+use App\Events\TenantCreated;
 
 
 class TenantsController extends Controller
@@ -22,6 +23,7 @@ class TenantsController extends Controller
         $tenant = Tenant::create(['id' => $name ]);
         $tenant->domains()->create(['domain' => $name . '.' . env('APP_DOMAIN') ]);
 
+        TenantCreated::dispatch($tenant);
 
         return new TenantsResource( $tenant );
     }
