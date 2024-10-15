@@ -196,6 +196,14 @@ export default ({ auth, id, usuarios, areas, tipos_respuesta }) => {
         }
     }
 
+    const onSurvey = async () => {
+        router.visit(`/campanas/encuesta/${id}`);
+    };
+
+    const onTest = async () => {
+        router.visit(`/campanas/test/${id}`);
+    };
+
     useEffect(() => {
         id && onGetItem();
     }, []);
@@ -218,6 +226,21 @@ export default ({ auth, id, usuarios, areas, tipos_respuesta }) => {
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="flex items-center justify-end mb-4">
+                        
+                        <PrimaryButton
+                            className="ms-4"
+                            onClick={() => onSurvey()}
+                        >
+                            Encuesta
+                        </PrimaryButton>
+                        
+                        <PrimaryButton
+                            className="ms-4"
+                            onClick={() => onTest()}
+                        >
+                            Evaluación
+                        </PrimaryButton>
+                        
                         <SecondaryButton
                             className="ms-4"
                             onClick={() => onReload()}
