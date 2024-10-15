@@ -23,7 +23,7 @@ class SetTenantFolderPermissions
     {
          // Suponiendo que $event->tenant contiene el tenant recién creado
          $tenantId = $event->tenant->id;
-         $tenantFolder = storage_path($tenantId);
+         $tenantFolder = storage_path('tenant_' . $tenantId);
  
          if (!file_exists($tenantFolder)) {
              mkdir($tenantFolder, 0755, true); // Crear la carpeta
