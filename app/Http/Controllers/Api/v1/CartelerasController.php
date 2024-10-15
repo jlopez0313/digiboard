@@ -90,7 +90,10 @@ class CartelerasController extends Controller
             $cartelera->media[$key]['fullPathOnDisk'] = $mediaItems->getPath();
         }
 */
-        return new CartelerasResource($cartelera);
+        return response()->json([
+            'tenant' => tenant(),
+            'data' => new CartelerasResource($cartelera),
+        ]);
     }
 
     /**
