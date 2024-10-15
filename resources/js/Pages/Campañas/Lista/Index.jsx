@@ -21,6 +21,7 @@ export default ({ auth, contacts }) => {
         "Fecha Inicial",
         "Fecha Final",
         "KPI",
+        "Codigo",
     ];
 
     const [list, setList] = useState([]);
@@ -41,6 +42,7 @@ export default ({ auth, contacts }) => {
                           100
                       ).toFixed(2) + '%'
                     : "-",
+                codigo: item.cartelera?.pantallas[0]?.code || '-'
             };
         });
 
@@ -53,6 +55,15 @@ export default ({ auth, contacts }) => {
             onReload();
         }
     };
+
+    const onSearch = (id) => {
+        const cartelera = data.find(x => x.id == id)
+        const item = cartelera?.pantallas[0] || null;
+        if ( item ) {
+            const url = `${window.location.protocol}//${window.location.host}/asignacion/${item.id}`;
+            router.visit(url);
+        }
+    }
 
     const onCreate = () => {
         onToggleModal(false);
@@ -135,6 +146,7 @@ export default ({ auth, contacts }) => {
                         <Table
                             data={list}
                             links={links}
+                            onSearch={onSearch}
                             onSurvey={onSurvey}
                             onTest={onTest}
                             onCreate={onCreate}
