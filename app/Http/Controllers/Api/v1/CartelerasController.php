@@ -42,14 +42,12 @@ class CartelerasController extends Controller
         );
 
         $cartelera = Carteleras::create($data);
-        chmod('files/'.$cartelera->id, 0777);
-
+        
         $multimedias = $request->multimedias ?? [];
 
         foreach ($multimedias as $file) {
             // $filename = \Storage::disk('media')->put($cartelera->id, $file);
             // $cartelera->addMedia('media/' . $filename)->toMediaCollection();
-
 
             $filename = $file->store('files/'.$cartelera->id);
             
