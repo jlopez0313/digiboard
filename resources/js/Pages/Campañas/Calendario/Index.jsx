@@ -58,6 +58,8 @@ export default ({ auth, contacts }) => {
     const onSelectEvent = (evt) => {
         setOpen((o) => !o);
         console.log(evt);
+        onToggleModal(false);
+        router.visit(`/campanas/edit/${evt.id}`);
     };
 
     const onSetItem = (_id) => {
