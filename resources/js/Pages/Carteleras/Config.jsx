@@ -22,6 +22,7 @@ export default ({ auth, id, contacts, areas }) => {
         'Pantalla',
         'Cartelera',
         'URL',
+        'Codigo',
         'Estado',
     ]
 
@@ -37,6 +38,7 @@ export default ({ auth, id, contacts, areas }) => {
                 'pantalla': item.pantalla?.pantalla,
                 'cartelera': item.cartelera?.id || '',
                 'url': item.pantalla ? `${window.location.protocol}//${window.location.host}/asignacion/${item.pantalla.id}` : '',
+                'codigo': item.pantalla?.code || '',
                 'estado': item.estado_label,
             }
         })
