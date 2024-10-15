@@ -21,6 +21,6 @@ class Tenant extends BaseTenant implements TenantWithDatabase
 
 
     public function getCreatedAtAttribute( $date ) {
-        return \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $date)->format('Y-m-d H:i:s');
+        return \Carbon\Carbon::createFromFormat('Y-m-d', $date)->format('Y-m-d');
     }
 }
