@@ -42,7 +42,7 @@ export default ({ auth, contacts }) => {
                           100
                       ).toFixed(2) + '%'
                     : "-",
-                codigo: item.cartelera?.pantallas[0]?.code || '-'
+                codigo: item.cartelera?.pantallas ? item.cartelera?.pantallas[0]?.code : '-'
             };
         });
 
