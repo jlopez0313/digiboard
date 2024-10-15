@@ -58,8 +58,8 @@ export default ({ auth, contacts }) => {
     };
 
     const onSearch = (id) => {
-        const cartelera = data.find(x => x.id == id)
-        const item = cartelera?.pantallas[0] || null;
+        const campaña = data.find(x => x.id == id)
+        const item = campaña?.cartelera?.pantallas[0] || null;
         if ( item ) {
             const url = `${window.location.protocol}//${window.location.host}/asignacion/${item.id}`;
             router.visit(url);
