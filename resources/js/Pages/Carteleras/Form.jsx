@@ -11,8 +11,6 @@ import Icon from "@/Components/Icons/Index";
 
 export const Form = ({ id, tenant, setIsOpen, onReload }) => {
 
-    console.log( tenant )
-
     const [previews, setPreviews] = useState([]);
     const filesRef = useRef(null);
 
@@ -69,7 +67,7 @@ export const Form = ({ id, tenant, setIsOpen, onReload }) => {
             }
         )
 
-        setPreviews( item.multimedias.map( x => { return {...x, src: 'tenant_gobernacion/' + x.src } }) )
+        setPreviews( item.multimedias.map( x => { return {...x, src: `tenant_${tenant}/` + x.src } }) )
     }
 
     const onGetAreas = async ( empresa ) => {
