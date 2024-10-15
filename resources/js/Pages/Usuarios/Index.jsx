@@ -21,7 +21,7 @@ export default ({ auth, contacts }) => {
         'ID',
         'Usuario',
         'Email',
-        'Docunento',
+        'Documento',
         'Celular',
     ]
 
