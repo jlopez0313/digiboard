@@ -23,7 +23,7 @@ class CampanasController extends Controller
         return Inertia::render('Campañas/Calendario/Index', [
             'filters' => Peticion::all('search', 'trashed'),
             'contacts' => new CampanasCollection(
-                Campanas::with('evaluador', 'cartelera')
+                Campanas::with('evaluador', 'cartelera.pantallas')
                 ->get()
             ),
             'usuarios' => new UsuariosCollection(
