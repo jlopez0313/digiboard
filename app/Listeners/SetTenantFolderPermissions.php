@@ -30,6 +30,10 @@ class SetTenantFolderPermissions
          }
  
          // Cambiar los permisos a 777
-         chmod($tenantFolder, 0777);
+         try {
+            chmod($tenantFolder, 0777);
+         } catch (\Exception $ex) {
+            
+         }
     }
 }
