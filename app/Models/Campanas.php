@@ -20,7 +20,7 @@ class Campanas extends Model
     }
 
     public function evaluador() {
-        return $this->hasOne(USer::class, 'id', 'evaluador_id');
+        return $this->hasOne(User::class, 'id', 'evaluador_id');
     }
 
     public function evaluaciones() {
