@@ -30,7 +30,6 @@ export default ({ auth, contacts }) => {
 
     const onSetList = () => {
         const _list = data.map((item) => {
-            console.log(item )
             return {
                 id: item.id,
                 diseno: item.nombre,
