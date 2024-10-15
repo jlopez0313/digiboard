@@ -106,7 +106,7 @@ class CampanasController extends Controller
         return Inertia::render('Campañas/Lista/Index', [
             'filters' => Peticion::all('search', 'trashed'),
             'contacts' => new CampanasCollection(
-                Campanas::with('evaluador', 'cartelera')
+                Campanas::with('evaluador', 'cartelera.pantallas')
                 ->paginate()
             ),
         ]);
@@ -116,7 +116,7 @@ class CampanasController extends Controller
         return Inertia::render('Campañas/Encuesta', [
             'filters' => Peticion::all('search', 'trashed'),
             'contacts' => new CampanasResource(
-                Campanas::with('evaluador', 'cartelera', 'evaluaciones')
+                Campanas::with('evaluador', 'cartelera.pantallas', 'evaluaciones')
                 ->find( $id )
             ),
         ]);
@@ -126,7 +126,7 @@ class CampanasController extends Controller
         return Inertia::render('Campañas/Test', [
             'filters' => Peticion::all('search', 'trashed'),
             'contacts' => new CampanasResource(
-                Campanas::with('evaluador', 'cartelera', 'evaluaciones')
+                Campanas::with('evaluador', 'cartelera.pantallas', 'evaluaciones')
                 ->find( $id )
             ),
         ]);
