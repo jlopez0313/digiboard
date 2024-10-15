@@ -9,7 +9,9 @@ import axios from "axios";
 import TextArea from "@/Components/Form/TextArea";
 import Icon from "@/Components/Icons/Index";
 
-export const Form = ({ id, setIsOpen, onReload }) => {
+export const Form = ({ id, tenant, setIsOpen, onReload }) => {
+
+    console.log( tenant )
 
     const [previews, setPreviews] = useState([]);
     const filesRef = useRef(null);
@@ -47,7 +49,7 @@ export const Form = ({ id, setIsOpen, onReload }) => {
     
             onReload();
         } catch (e) {
-            
+
         }
         
     };

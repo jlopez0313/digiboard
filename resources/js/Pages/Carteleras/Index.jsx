@@ -10,7 +10,7 @@ import PrimaryButton from "@/Components/Buttons/PrimaryButton";
 import Modal from "@/Components/Modal";
 import { Form } from "./Form";
 
-export default ({ auth, contacts }) => {
+export default ({ auth, contacts, tenant }) => {
 
     const {
         data,
@@ -123,6 +123,7 @@ export default ({ auth, contacts }) => {
                     setIsOpen={onToggleModal}        
                     onReload={onReload}
                     id={id}
+                    tenant={tenant}
                 />
             </Modal>
         </AuthenticatedLayout>
