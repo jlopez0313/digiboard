@@ -36,7 +36,7 @@ export default ({ data = [], routes = {}, titles = [], actions = [], ...props })
                                 return <td className="border-t" key={ key }>
                                     <a
                                         role="button"
-                                        onClick={() => props.onEdit(item.id)}
+                                        // onClick={() => props.onEdit(item.id)}
                                         className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
                                     >
                                         { item[key] }
