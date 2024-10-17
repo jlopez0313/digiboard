@@ -83,7 +83,9 @@ export default ({ auth, pantalla, tenant }) => {
                     <Head title="Carteleras" />
 
                     <div className={`rounded px-1 py-1 ${styles.encuesta}`}>
-                        <ApplicationLogo className="m-auto" />
+                        {/*
+                            <ApplicationLogo className="m-auto" />
+                        */}
 
                         <p className="font-bold text-lg text-white m-auto text-center">
                             {screen.cartelera.campana?.encuesta}

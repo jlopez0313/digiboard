@@ -46,7 +46,9 @@ export default ({ campana }) => {
         <div
             className={`mt-5 text-2xl px-10 py-5 rounded-xl max-w-4xl mx-auto my-auto bg-black ${styles.evaluacion}`}
         >
-            <ApplicationLogo className="mx-auto mb-8" />
+            {/*
+                <ApplicationLogo className="mx-auto mb-8" />
+            */}
 
             <p className="text-white mb-3">{my_data.encuesta}</p>
 
