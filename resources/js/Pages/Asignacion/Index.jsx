@@ -97,7 +97,7 @@ export default ({ auth, pantalla, tenant }) => {
                                 width: "90%",
                             }}
                             value={
-                                window.location.origin + '/' +
+                                window.location.origin + '/evaluacion/' +
                                 screen.cartelera.campana.id
                             }
                             viewBox={`0 0 200 200`}
