@@ -87,6 +87,7 @@ class CampanasController extends Controller
             ),
             'tipos_respuesta' => config('constants.tipo_respuesta'),
             'id' => $id,
+            'orientaciones' => config('constants.orientaciones'),
         ]);
     }
 
