@@ -35,7 +35,7 @@ export const Form = ({ id, departamentos, setIsOpen, onReload }) => {
 
         setData(
             {                
-                departamentos_id: item.departamento?.id || '',
+                departamentos_id: item.departamento?.id || '-',
                 ciudad: item.ciudad,
             }
         )

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->unsignedBigInteger('carteleras_id')->nullable();
             $table->foreign('carteleras_id')->references('id')->on('carteleras');
             
+            $table->char('orientaciones_id');
             $table->string('pantalla');
             $table->string('code')->nullable();
             $table->char('estado');

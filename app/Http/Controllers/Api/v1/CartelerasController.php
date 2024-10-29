@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api\v1;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CartelerasResource;
 use App\Http\Resources\PantallasCartelerasResource;
+use App\Models\Ciudades;
+use App\Models\Areas;
 use App\Models\Carteleras;
 use App\Models\Multimedias;
 use App\Models\Pantallas;
@@ -38,7 +40,9 @@ class CartelerasController extends Controller
             'empresas_id',
             'areas_id',
             'multimedias',
-            'pantallas',
+            'pantallas_id',
+            'deptos_id',
+            'ciudades_id',
         );
 
         $cartelera = Carteleras::create($data);
@@ -60,15 +64,9 @@ class CartelerasController extends Controller
             
         }
 
-        if ($request->pantallas) {
-            $pantallas = explode(',', $request->pantallas);
-
+        if ($request->pantallas_id) {
             $request->merge(['carteleras_id' => $cartelera->id]);
-
-            foreach ($pantallas as $pantalla) {
-                $request->merge(['pantallas_id' => $pantalla]);
-                $this->asignar($request);
-            }
+            $this->asignar($request);
         }
         
         $this->makeLink();
@@ -118,7 +116,9 @@ class CartelerasController extends Controller
             'empresas_id',
             'areas_id',
             'multimedias',
-            'pantallas',
+            'pantallas_id',
+            'deptos_id',
+            'ciudades_id',
             '_method'
         );
         
@@ -159,18 +159,92 @@ class CartelerasController extends Controller
 
     public function asignar(Request $request)
     {
-        $data = [];
-        $data['pantallas_id'] = $request->pantallas_id;
-        $data['carteleras_id'] = $request->carteleras_id;
-        $data['estado'] = 'I';
+        if (in_array('ALL', $request->pantallas_id)) {
 
-        $assign = PantallasCarteleras::create($data);
+            $ciudades = [];
+            if( $request->deptos_id == 'ALL' ) {
+                if ( $request->ciudades_id == 'ALL' ) {
+                    $ciudades = Ciudades::pluck('id')
+                    ->toArray();
+                } else {
+                    $ciudades = Ciudades::where('id', $request->ciudades_id)
+                    ->pluck('id')
+                    ->toArray();
+                }
+            } else {
+                if ( $request->ciudades_id == 'ALL' ) {
+                    $ciudades = Ciudades::where('departamentos_id', $request->deptos_id)
+                    ->pluck('id')
+                    ->toArray();
+                } else {
+                    $ciudades = Ciudades::where('departamentos_id', $request->deptos_id)
+                    ->where('id', $request->ciudades_id)
+                    ->pluck('id')
+                    ->toArray();
+                }
+            }
 
-        $pantalla = Pantallas::find($data['pantallas_id']);
-        $pantalla->carteleras_id = $data['carteleras_id'];
-        $pantalla->save();
+            $areas = [];
+            if( $request->areas_id == 'ALL' ) {
+                    $areas = Areas::whereIn('ciudades_id', $ciudades)
+                    ->pluck('id')
+                    ->toArray();
+            } else {
+                $areas = Areas::where('id', $request->areas_id)
+                ->pluck('id')
+                ->toArray();
+            }
 
-        return new PantallasCartelerasResource($assign);
+            $remove = PantallasCarteleras::where('carteleras_id', $request->carteleras_id)
+            ->delete();
+
+            $all = Pantallas::whereIn('areas_id', $areas)
+            ->where('orientaciones_id', $request->orientaciones_id);
+            
+            $all->update(['carteleras_id' => $request->carteleras_id]);
+
+            $data = [];
+
+            foreach( $all->get() as $pantalla ) {
+                $data[] = [
+                    'pantallas_id' => $pantalla->id,
+                    'carteleras_id' => $request->carteleras_id,
+                    'estado' => 'I',
+                    'created_at' => \Carbon\Carbon::now(),
+                    'updated_at' => \Carbon\Carbon::now(),
+                ];
+            }
+
+            $assign = PantallasCarteleras::insert($data);
+            return $assign;
+
+        } else {
+
+            $remove = PantallasCarteleras::where('carteleras_id', $request->carteleras_id)
+            ->whereIn('pantallas_id', $request->pantallas_id)
+            ->delete();
+
+            $data = [];
+
+            foreach( $request->pantallas_id as $pantalla ) {
+    
+                $data[] = [
+                    'pantallas_id' => $pantalla,
+                    'carteleras_id' => $request->carteleras_id,
+                    'estado' => 'I',
+                    'created_at' => \Carbon\Carbon::now(),
+                    'updated_at' => \Carbon\Carbon::now(),
+                ];
+
+                $pantalla = Pantallas::find($pantalla);
+                $pantalla->carteleras_id = $request->carteleras_id;
+                $pantalla->save();
+                
+            }
+
+            $assign = PantallasCarteleras::insert($data);
+            return $assign;
+        }
     }
 
     public function desasignar(Request $request, PantallasCarteleras $pantalla_cartelera)

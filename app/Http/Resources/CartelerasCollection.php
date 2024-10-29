@@ -23,6 +23,8 @@ class CartelerasCollection extends ResourceCollection
             'campana',
             'pantallas',
             'diseno',
+            'orientaciones_id',
+            'orientacion_label',
             'fecha_inicial',
             'fecha_final',
             'marquesina',

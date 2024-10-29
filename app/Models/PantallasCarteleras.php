@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class PantallasCarteleras extends Model
 {
     use HasFactory;
-    use softDeletes;
+    // use softDeletes;
 
     protected $table = 'pantallas_carteleras';
     protected $guarded = [];

@@ -22,14 +22,15 @@ class PantallasController extends Controller
             'filters' => Peticion::all('search', 'trashed'),
             'contacts' => new PantallasCollection(
                 Pantallas::with(
-                    'area',
+                    'area.ciudad.departamento',
                     'cartelera'
                 )->paginate()
             ),
             'areas' => new AreasCollection(
                 Areas::orderBy('area')
                 ->get()
-            )
+            ),
+            'orientaciones' => config('constants.orientaciones')
         ]);
     }
 

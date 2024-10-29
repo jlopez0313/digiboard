@@ -8,11 +8,12 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Select from "@/Components/Form/Select";
 
-export const Form = ({ id, areas, setIsOpen, onReload }) => {
+export const Form = ({ id, areas, orientaciones, setIsOpen, onReload }) => {
 
     const { data, setData, processing, errors, reset } = useForm({
         areas_id: '',
         pantalla: '',
+        orientaciones_id: '',
         code: '',
     });
 
@@ -38,8 +39,9 @@ export const Form = ({ id, areas, setIsOpen, onReload }) => {
 
         setData(
             {
-                areas_id: item.area?.id || '',
+                areas_id: item.area?.id || '-',
                 pantalla: item.pantalla,
+                orientaciones_id: item.orientaciones_id,
                 code: item.code,
             }
         )
@@ -100,6 +102,34 @@ export const Form = ({ id, areas, setIsOpen, onReload }) => {
 
                             <InputError
                                 message={errors.pantalla}
+                                className="mt-2"
+                            />
+                        </div>
+
+                        <div>
+                            <InputLabel
+                                htmlFor="orientaciones_id"
+                                value="Orientación"
+                            />
+
+                            <Select
+                                id="orientaciones_id"
+                                name="orientaciones_id"
+                                className="mt-1 block w-full"
+                                value={data.orientaciones_id}
+                                onChange={(e) =>
+                                    setData("orientaciones_id", e.target.value)
+                                }
+                            >
+                                {                                    
+                                    orientaciones.map( (tipo, key) => {
+                                        return <option value={ tipo.key } key={key}> { tipo.valor} </option>
+                                    })
+                                }
+                            </Select>
+
+                            <InputError
+                                message={errors.orientaciones_id}
                                 className="mt-2"
                             />
                         </div>

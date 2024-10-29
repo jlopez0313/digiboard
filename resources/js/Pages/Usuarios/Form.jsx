@@ -41,10 +41,10 @@ export const Form = ({ id, setIsOpen, onReload }) => {
 
         setData(
             {
-                name: item.name || '',
+                name: item.name || '-',
                 email: item.email,
-                documento: item.documento || '',
-                celular: item.celular || '',
+                documento: item.documento || '-',
+                celular: item.celular || '-',
                 is_admin: item.is_admin == 'Y' ? true : false,
             }
         )

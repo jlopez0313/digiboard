@@ -23,6 +23,8 @@ class PantallasResource extends JsonResource
             'area' => $this->area,
             'cartelera' => $this->cartelera,
             'pantalla' => $this->pantalla,
+            'orientaciones_id' => $this->orientaciones_id,
+            'orientacion_label' => $this->orientacion_label,
             'code' => $this->code,
             'estado' => $this->area,
             'estado_label' => $this->estado_label,

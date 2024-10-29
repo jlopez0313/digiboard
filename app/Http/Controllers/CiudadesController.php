@@ -22,6 +22,8 @@ class CiudadesController extends Controller
             'filters' => Peticion::all('search', 'trashed'),
             'contacts' => new CiudadesCollection(
                 Ciudades::with('departamento')
+                ->orderBy('departamentos_id')
+                ->orderBy('ciudad')
                 ->paginate()
             ),
             'dataDeptos' => new DepartamentosCollection(

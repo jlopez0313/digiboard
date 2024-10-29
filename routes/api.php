@@ -66,15 +66,17 @@ Route::middleware([
 
     Route::apiResource('empresas', EmpresasController::class);
 
-
     
     Route::apiResource('evaluaciones', EvaluacionesController::class);
     Route::apiResource('multimedias', MultimediasController::class);
     
+    Route::prefix('areas')->group( function() {
+        Route::get('by-ciudad/{ciudad}', [AreasController::class, 'byCiudad']);
+    });
     Route::apiResource('areas', AreasController::class);
     
     Route::prefix('pantallas')->group( function() {
-        Route::get('/area/{area}', [PantallasController::class, 'byArea']);
+        Route::get('/area/{area}/orientacion/{orientacion}', [PantallasController::class, 'byArea']);
     });
     Route::apiResource('pantallas', PantallasController::class);
     

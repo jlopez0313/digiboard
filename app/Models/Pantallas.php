@@ -38,6 +38,15 @@ class Pantallas extends Model
         return $origenObj['valor'] ?? 'N/A';
     }
 
+    public function getOrientacionLabelAttribute() {
+        $lista = config('constants.orientaciones');
+        $origenObj = \Arr::first($lista, function($val, $key) {
+            return $val['key'] == $this->orientaciones_id;
+        });
+        
+        return $origenObj['valor'] ?? 'N/A';
+    }
+
     public function getUpdatedAtAttribute( $date ) {
         return \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $date)->format('Y-m-d H:i:s');
     }

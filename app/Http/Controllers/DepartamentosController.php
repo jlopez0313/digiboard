@@ -18,7 +18,8 @@ class DepartamentosController extends Controller
         return Inertia::render('Parametros/Departamentos/Index', [
             'filters' => Peticion::all('search', 'trashed'),
             'contacts' => new DepartamentosCollection(
-                Departamentos::paginate()
+                Departamentos::orderBy('departamento')
+                ->paginate()
             ),
         ]);
     }

@@ -6,6 +6,8 @@ use App\Http\Resources\CampanasResource;
 use App\Http\Resources\CampanasCollection;
 use App\Http\Resources\UsuariosCollection;
 use App\Http\Resources\AreasCollection;
+use App\Http\Resources\DepartamentosCollection;
+use App\Models\Departamentos;
 use App\Models\Areas;
 use App\Models\Campanas;
 use App\Models\User;
@@ -43,11 +45,12 @@ class CampanasController extends Controller
                 User::orderBy('name')
                 ->get()
             ),
-            'areas' => new AreasCollection(
-                Areas::orderBy('area')
+            'departamentos' => new DepartamentosCollection(
+                Departamentos::orderBy('departamento')
                 ->get()
             ),
-            'tipos_respuesta' => config('constants.tipo_respuesta')
+            'tipos_respuesta' => config('constants.tipo_respuesta'),
+            'orientaciones' => config('constants.orientaciones')
         ]);
     }
 
@@ -78,8 +81,8 @@ class CampanasController extends Controller
                 User::orderBy('name')
                 ->get()
             ),
-            'areas' => new AreasCollection(
-                Areas::orderBy('area')
+            'departamentos' => new DepartamentosCollection(
+                Departamentos::orderBy('departamento')
                 ->get()
             ),
             'tipos_respuesta' => config('constants.tipo_respuesta'),

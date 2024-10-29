@@ -14,22 +14,35 @@ import Icon from "@/Components/Icons/Index";
 import Select from "@/Components/Form/Select";
 import ReactSelect from "react-select";
 import makeAnimated from "react-select/animated";
+import { notify } from "@/Helpers/Notify";
 const animatedComponents = makeAnimated();
 
-export default ({ auth, id, usuarios, areas, tipos_respuesta }) => {
-
+export default ({
+    auth,
+    id,
+    orientaciones,
+    usuarios,
+    departamentos,
+    tipos_respuesta,
+}) => {
     const [previews, setPreviews] = useState([]);
     const [pantallas, setPantallas] = useState([]);
     const [myScreens, setMyScreens] = useState(null);
+    const [isMulti, setIsMulti] = useState(false);
+
+    const [ciudades, setCiudades] = useState([]);
+    const [areas, setAreas] = useState([]);
+
     const filesRef = useRef(null);
 
     const { data: users } = usuarios;
 
-    const { data: listaAreas } = areas;
+    const { data: listaDeptos } = departamentos;
 
-    const { data, setData, processing, errors, reset } = useForm({    
+    const { data, setData, processing, errors, reset } = useForm({
+        orientaciones_id: "",
         nombre: "",
-        pantallas: [],
+        pantallas_id: [],
         eje: "",
         objetivo: "",
         impacto: "",
@@ -38,23 +51,22 @@ export default ({ auth, id, usuarios, areas, tipos_respuesta }) => {
         logro_esperado: "",
         evaluador_id: "",
         descripcion_kpi: "",
-        
+
         valor_min_malo: "",
         valor_max_malo: "",
         valor_min_regular: "",
         valor_max_regular: "",
         valor_min_bueno: "",
-        valor_max_bueno: "",        
+        valor_max_bueno: "",
 
-        encuesta: '',
-        tipo_respuesta_id: '',
-        
+        encuesta: "",
+        tipo_respuesta_id: "",
+
         disenos_id: 1,
         marquesina: "",
         fecha_inicial: "",
         fecha_final: "",
         multimedias: [],
-
     });
 
     const submit = async (e) => {
@@ -65,6 +77,10 @@ export default ({ auth, id, usuarios, areas, tipos_respuesta }) => {
             if (key === "multimedias") {
                 for (const file of data[key]) {
                     formData.append("multimedias[]", file); // appending every file to formdata
+                }
+            } else if (key === "pantallas_id") {
+                for (const file of data[key]) {
+                    formData.append("pantallas_id[]", file); // appending every file to formdata
                 }
             } else {
                 formData.append(key, data[key]);
@@ -85,14 +101,14 @@ export default ({ auth, id, usuarios, areas, tipos_respuesta }) => {
         const { data } = await axios.get(`/api/v1/campanas/${id}`);
         const item = { ...data.data };
 
-        setData({    
+        setData({
             nombre: item.nombre,
-            pantallas: item.cartelera?.pantallas?.map( x => x.id),
+            pantallas: item.cartelera?.pantallas?.map((x) => x.id),
             eje: item.eje,
             objetivo: item.objetivo,
             impacto: item.impacto,
             pregunta: item.pregunta,
-    
+
             logro_esperado: item.logro_esperado,
             evaluador_id: item.evaluador_id,
             descripcion_kpi: item.descripcion_kpi,
@@ -103,16 +119,16 @@ export default ({ auth, id, usuarios, areas, tipos_respuesta }) => {
             valor_max_regular: item.valor_max_regular,
             valor_min_bueno: item.valor_min_bueno,
             valor_max_bueno: item.valor_max_bueno,
-    
+
             encuesta: item.encuesta,
             tipo_respuesta_id: item.tipo_respuesta_id,
-            
+
             disenos_id: 1,
             marquesina: item.cartelera?.marquesina,
             fecha_inicial: item.cartelera?.fecha_inicial,
             fecha_final: item.cartelera?.fecha_final,
             multimedias: [],
-        })
+        });
 
         setMyScreens(
             item.cartelera?.pantallas.map((tag) => {
@@ -123,50 +139,159 @@ export default ({ auth, id, usuarios, areas, tipos_respuesta }) => {
         // setPreviews(item.multimedias);
     };
 
+    const onGetCiudades = async (depto) => {
+        if (depto) {
+            if (depto == "ALL") {
+                setData("ciudades_id", "ALL");
+            } else {
+                const { data } = await axios.get(
+                    `/api/v1/ciudades/by-departamento/${depto}`
+                );
+                const lista = [...data.data];
+
+                setData("ciudades_id", "");
+                setCiudades(lista);
+            }
+        } else {
+            setData("ciudades_id", "");
+            setCiudades([]);
+        }
+    };
+
+    const onGetAreas = async (ciudad) => {
+        if (ciudad) {
+            if (ciudad == "ALL") {
+                setData("areas_id", "ALL");
+            } else {
+                const { data } = await axios.get(
+                    `/api/v1/areas/by-ciudad/${ciudad}`
+                );
+                const lista = [...data.data];
+
+                setData("areas_id", "");
+                setAreas(lista);
+            }
+        } else {
+            setData("areas_id", "");
+            setAreas([]);
+        }
+    };
+
     const onGetPantallas = async (area) => {
         if (area) {
-            const { data } = await axios.get(`/api/v1/pantallas/area/${area}`);
-            const lista = data.data.map((item) => {
-                return { value: item.id, label: item.pantalla };
-            });
+            if (area == "ALL") {
+                setIsMulti(false);
+                setMyScreens([{ value: "ALL", label: "TODAS" }]);
+                setPantallas([{ value: "ALL", label: "TODAS" }]);
+            } else {
+                const { data: items } = await axios.get(
+                    `/api/v1/pantallas/area/${area}/orientacion/${data.orientaciones_id}`
+                );
+                const lista = items.data.map((item) => {
+                    return { value: item.id, label: item.pantalla };
+                });
 
-            setPantallas(lista);
+                lista.unshift({ value: "ALL", label: "TODAS" });
+
+                setIsMulti(true);
+
+                setMyScreens([]);
+                setPantallas(lista);
+            }
         } else {
+            setMyScreens([]);
             setPantallas([]);
         }
     };
 
     const onPrepareScreens = (newTags, actionMeta) => {
-        const newTagsId = newTags.map((tag) => {
-            return tag.value;
-        });
+        if (isMulti) {
+            const hasAll = newTags.find((tag) => tag.value == "ALL");
 
-        console.log(newTags);
+            if (hasAll) {
+                setIsMulti(false);
+                setMyScreens([hasAll]);
+                setData("pantallas_id", [hasAll.value]);
+            } else {
+                const newTagsId = newTags.map((tag) => {
+                    return tag.value;
+                });
 
-        setMyScreens(
-            newTags.map((tag) => {
-                return { value: tag.value, label: tag.label };
-            })
-        );
+                setMyScreens(
+                    newTags.map((tag) => {
+                        return { value: tag.value, label: tag.label };
+                    })
+                );
 
-        setData("pantallas", newTagsId);
+                setData("pantallas_id", newTagsId);
+            }
+        } else {
+            if (newTags.value !== "ALL") {
+                setIsMulti(true);
+                setMyScreens([newTags]);
+                setData("pantallas_id", [newTags.value]);
+            }
+        }
+    };
+
+    const onSetOrientacion = async (orientacion) => {
+        if (orientacion != orientaciones_id) {
+            setPreviews([]);
+            await setData({
+                ...data,
+                multimedias: [],
+            });
+        }
+
+        setData("orientaciones_id", orientacion);
     };
 
     const onAddFiles = async (evt) => {
-        const files = await Array.from(evt.target.files);
+        const files = Array.from(evt.target.files);
+        let hasDifferentSize = false;
 
-        setData({
-            ...data,
-            multimedias: [...data.multimedias, ...files],
-        });
+        await Promise.all(
+            files.map((file) => {
+                return new Promise((resolve) => {
+                    const preview = URL.createObjectURL(file);
+                    const img = new Image();
+                    img.src = preview;
 
-        Object.keys(files).forEach((key) => {
-            const preview = URL.createObjectURL(files[key]);
-            setPreviews((list) => [
-                ...list,
-                { src: preview, mimetype: files[key].type },
-            ]);
-        });
+                    img.onload = () => {
+                        let isSizeOk = false;
+
+                        if (data.orientaciones_id === "V") {
+                            isSizeOk = img.naturalHeight >= img.naturalWidth;
+                        } else {
+                            isSizeOk = img.naturalWidth >= img.naturalHeight;
+                        }
+
+                        if (isSizeOk) {
+                            setPreviews((list) => [
+                                ...list,
+                                { src: preview, mimetype: file.type },
+                            ]);
+
+                            setData((prevData) => ({
+                                ...prevData,
+                                multimedias: [...prevData.multimedias, file],
+                            }));
+                        } else {
+                            hasDifferentSize = true;
+                        }
+
+                        resolve();
+                    };
+                });
+            })
+        );
+
+        if (hasDifferentSize) {
+            notify(
+                "warning",
+                "Algunos archivos no se cargaron porque no cumplen con la orientación solicitada. Intenta con otra orientación"
+            );
+        }
     };
 
     const onRemoveMedia = async (key, id) => {
@@ -190,11 +315,11 @@ export default ({ auth, id, usuarios, areas, tipos_respuesta }) => {
 
     const onReload = () => {
         if (id) {
-            router.visit('/campanas/lista');
+            router.visit("/campanas/lista");
         } else {
-            router.visit('/campanas');
+            router.visit("/campanas");
         }
-    }
+    };
 
     const onSurvey = async () => {
         router.visit(`/campanas/encuesta/${id}`);
@@ -207,6 +332,14 @@ export default ({ auth, id, usuarios, areas, tipos_respuesta }) => {
     useEffect(() => {
         id && onGetItem();
     }, []);
+
+    useEffect(() => {
+        onGetCiudades(data.deptos_id);
+    }, [data.deptos_id]);
+
+    useEffect(() => {
+        onGetAreas(data.ciudades_id);
+    }, [data.ciudades_id]);
 
     useEffect(() => {
         onGetPantallas(data.areas_id);
@@ -226,21 +359,20 @@ export default ({ auth, id, usuarios, areas, tipos_respuesta }) => {
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="flex items-center justify-end mb-4">
-                        
                         <PrimaryButton
                             className="ms-4"
                             onClick={() => onSurvey()}
                         >
                             Encuesta
                         </PrimaryButton>
-                        
+
                         <PrimaryButton
                             className="ms-4"
                             onClick={() => onTest()}
                         >
                             Evaluación
                         </PrimaryButton>
-                        
+
                         <SecondaryButton
                             className="ms-4"
                             onClick={() => onReload()}
@@ -281,6 +413,114 @@ export default ({ auth, id, usuarios, areas, tipos_respuesta }) => {
 
                                 <div>
                                     <InputLabel
+                                        htmlFor="orientaciones_id"
+                                        value="Orientación de Pantalla"
+                                    />
+
+                                    <Select
+                                        id="orientaciones_id"
+                                        name="orientaciones_id"
+                                        className="mt-1 block w-full"
+                                        value={data.orientaciones_id}
+                                        onChange={(e) =>
+                                            onSetOrientacion(e.target.value)
+                                        }
+                                    >
+                                        {orientaciones.map((tipo, key) => {
+                                            return (
+                                                <option
+                                                    value={tipo.key}
+                                                    key={key}
+                                                >
+                                                    {" "}
+                                                    {tipo.valor}{" "}
+                                                </option>
+                                            );
+                                        })}
+                                    </Select>
+
+                                    <InputError
+                                        message={errors.orientaciones_id}
+                                        className="mt-2"
+                                    />
+                                </div>
+
+                                <div>
+                                    <InputLabel
+                                        htmlFor="deptos_id"
+                                        value="Departamento"
+                                    />
+
+                                    <Select
+                                        id="deptos_id"
+                                        name="deptos_id"
+                                        className="mt-1 block w-full"
+                                        value={data.deptos_id}
+                                        onChange={(e) =>
+                                            setData("deptos_id", e.target.value)
+                                        }
+                                    >
+                                        <option value="ALL"> TODOS </option>
+
+                                        {listaDeptos.map((tipo, key) => {
+                                            return (
+                                                <option
+                                                    value={tipo.id}
+                                                    key={key}
+                                                >
+                                                    {" "}
+                                                    {tipo.departamento}{" "}
+                                                </option>
+                                            );
+                                        })}
+                                    </Select>
+
+                                    <InputError
+                                        message={errors.deptos_id}
+                                        className="mt-2"
+                                    />
+                                </div>
+
+                                <div>
+                                    <InputLabel
+                                        htmlFor="ciudades_id"
+                                        value="Ciudad"
+                                    />
+
+                                    <Select
+                                        id="ciudades_id"
+                                        name="ciudades_id"
+                                        className="mt-1 block w-full"
+                                        value={data.ciudades_id}
+                                        onChange={(e) =>
+                                            setData(
+                                                "ciudades_id",
+                                                e.target.value
+                                            )
+                                        }
+                                    >
+                                        <option value="ALL"> TODAS </option>
+                                        {ciudades.map((tipo, key) => {
+                                            return (
+                                                <option
+                                                    value={tipo.id}
+                                                    key={key}
+                                                >
+                                                    {" "}
+                                                    {tipo.ciudad}{" "}
+                                                </option>
+                                            );
+                                        })}
+                                    </Select>
+
+                                    <InputError
+                                        message={errors.ciudades_id}
+                                        className="mt-2"
+                                    />
+                                </div>
+
+                                <div>
+                                    <InputLabel
                                         htmlFor="areas_id"
                                         value="Area"
                                     />
@@ -294,7 +534,9 @@ export default ({ auth, id, usuarios, areas, tipos_respuesta }) => {
                                             setData("areas_id", e.target.value)
                                         }
                                     >
-                                        {listaAreas.map((tipo, key) => {
+                                        <option value="ALL"> TODAS </option>
+
+                                        {areas.map((tipo, key) => {
                                             return (
                                                 <option
                                                     value={tipo.id}
@@ -320,7 +562,7 @@ export default ({ auth, id, usuarios, areas, tipos_respuesta }) => {
                                     />
 
                                     <ReactSelect
-                                        isMulti
+                                        isMulti={isMulti}
                                         id="pantallas_id"
                                         name="pantallas_id"
                                         className="mt-1 block w-full"
@@ -452,7 +694,10 @@ export default ({ auth, id, usuarios, areas, tipos_respuesta }) => {
                                         className="mt-1 block w-full"
                                         autoComplete="logro_esperado"
                                         onChange={(e) =>
-                                            setData("logro_esperado", e.target.value)
+                                            setData(
+                                                "logro_esperado",
+                                                e.target.value
+                                            )
                                         }
                                     />
 
@@ -474,7 +719,10 @@ export default ({ auth, id, usuarios, areas, tipos_respuesta }) => {
                                         value={data.evaluador_id}
                                         className="mt-1 block w-full"
                                         onChange={(e) =>
-                                            setData("evaluador_id", e.target.value)
+                                            setData(
+                                                "evaluador_id",
+                                                e.target.value
+                                            )
                                         }
                                     >
                                         {users.map((tipo, key) => {
@@ -509,7 +757,10 @@ export default ({ auth, id, usuarios, areas, tipos_respuesta }) => {
                                         className="mt-1 block w-full"
                                         autoComplete="descripcion_kpi"
                                         onChange={(e) =>
-                                            setData("descripcion_kpi", e.target.value)
+                                            setData(
+                                                "descripcion_kpi",
+                                                e.target.value
+                                            )
                                         }
                                     />
 
@@ -540,7 +791,10 @@ export default ({ auth, id, usuarios, areas, tipos_respuesta }) => {
                                         className="mt-1 block w-full"
                                         autoComplete="valor_min_malo"
                                         onChange={(e) =>
-                                            setData("valor_min_malo", e.target.value)
+                                            setData(
+                                                "valor_min_malo",
+                                                e.target.value
+                                            )
                                         }
                                     />
 
@@ -566,7 +820,10 @@ export default ({ auth, id, usuarios, areas, tipos_respuesta }) => {
                                         className="mt-1 block w-full"
                                         autoComplete="valor_max_malo"
                                         onChange={(e) =>
-                                            setData("valor_max_malo", e.target.value)
+                                            setData(
+                                                "valor_max_malo",
+                                                e.target.value
+                                            )
                                         }
                                     />
 
@@ -592,7 +849,10 @@ export default ({ auth, id, usuarios, areas, tipos_respuesta }) => {
                                         className="mt-1 block w-full"
                                         autoComplete="valor_min_regular"
                                         onChange={(e) =>
-                                            setData("valor_min_regular", e.target.value)
+                                            setData(
+                                                "valor_min_regular",
+                                                e.target.value
+                                            )
                                         }
                                     />
 
@@ -618,7 +878,10 @@ export default ({ auth, id, usuarios, areas, tipos_respuesta }) => {
                                         className="mt-1 block w-full"
                                         autoComplete="valor_max_regular"
                                         onChange={(e) =>
-                                            setData("valor_max_regular", e.target.value)
+                                            setData(
+                                                "valor_max_regular",
+                                                e.target.value
+                                            )
                                         }
                                     />
 
@@ -644,7 +907,10 @@ export default ({ auth, id, usuarios, areas, tipos_respuesta }) => {
                                         className="mt-1 block w-full"
                                         autoComplete="valor_min_bueno"
                                         onChange={(e) =>
-                                            setData("valor_min_bueno", e.target.value)
+                                            setData(
+                                                "valor_min_bueno",
+                                                e.target.value
+                                            )
                                         }
                                     />
 
@@ -670,7 +936,10 @@ export default ({ auth, id, usuarios, areas, tipos_respuesta }) => {
                                         className="mt-1 block w-full"
                                         autoComplete="valor_max_bueno"
                                         onChange={(e) =>
-                                            setData("valor_max_bueno", e.target.value)
+                                            setData(
+                                                "valor_max_bueno",
+                                                e.target.value
+                                            )
                                         }
                                     />
 
@@ -724,7 +993,10 @@ export default ({ auth, id, usuarios, areas, tipos_respuesta }) => {
                                         value={data.tipo_respuesta_id}
                                         className="mt-1 block w-full"
                                         onChange={(e) =>
-                                            setData("tipo_respuesta_id", e.target.value)
+                                            setData(
+                                                "tipo_respuesta_id",
+                                                e.target.value
+                                            )
                                         }
                                     >
                                         {tipos_respuesta.map((tipo, key) => {
@@ -745,9 +1017,7 @@ export default ({ auth, id, usuarios, areas, tipos_respuesta }) => {
                                         className="mt-2"
                                     />
                                 </div>
-
                             </div>
-
                         </div>
 
                         <div className="mt-5 bg-white overflow-hidden shadow-sm sm:rounded-lg p-8">

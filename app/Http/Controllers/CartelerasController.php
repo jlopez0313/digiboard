@@ -9,6 +9,8 @@ use App\Http\Resources\CartelerasCollection;
 use App\Http\Resources\PantallasCollection;
 use App\Http\Resources\PantallasCartelerasCollection;
 use App\Http\Resources\AreasCollection;
+use App\Http\Resources\DepartamentosCollection;
+use App\Models\Departamentos;
 use App\Models\Areas;
 use App\Models\Carteleras;
 use App\Models\Pantallas;
@@ -28,7 +30,8 @@ class CartelerasController extends Controller
             'contacts' => new CartelerasCollection(
                 Carteleras::with('diseno')
                 ->paginate()
-            )
+            ),
+            'orientaciones' => config('constants.orientaciones')
         ]);
     }
 
@@ -84,15 +87,16 @@ class CartelerasController extends Controller
 
     public function config(string $id)
     {
-        return Inertia::render('Carteleras/Config', [
+        return Inertia::render('Carteleras/Config/Index', [
             'id' => $id,
+            'cartelera' => Carteleras::find($id),
             'contacts' => new PantallasCartelerasCollection(
                 PantallasCarteleras::with('cartelera', 'pantalla.area')
                 ->where('carteleras_id', $id)
                 ->paginate()
             ),
-            'areas' => new AreasCollection(
-                Areas::orderBy('area')
+            'departamentos' => new DepartamentosCollection(
+                Departamentos::orderBy('departamento')
                 ->get()
             )
         ]);

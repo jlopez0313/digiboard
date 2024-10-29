@@ -13,6 +13,15 @@ use Inertia\Inertia;
 class PantallasController extends Controller
 {
     /**
+     * Get all resources.
+     */
+    public function index()
+    {
+        $data = Pantallas::all();
+        return PantallasResource::collection( $data );
+    }
+    
+    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
@@ -54,10 +63,11 @@ class PantallasController extends Controller
         return new PantallasResource( $pantalla );
     }
 
-    public function byArea($area)
+    public function byArea($area, $orientacion)
     {
         return PantallasResource::collection(
             Pantallas::where('areas_id', $area)
+            ->where('orientaciones_id', $orientacion)
             ->orderBy('pantalla')
             ->get()
         );

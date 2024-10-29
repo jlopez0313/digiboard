@@ -9,6 +9,7 @@ import Table from "@/Components/Table/Table";
 import PrimaryButton from "@/Components/Buttons/PrimaryButton";
 import Modal from "@/Components/Modal";
 import { Form } from "./Form";
+import SecondaryButton from "@/Components/Buttons/SecondaryButton";
 
 export default ({ auth, contacts, dataDeptos }) => {
     const {
@@ -36,7 +37,7 @@ export default ({ auth, contacts, dataDeptos }) => {
         const _list = data.map( item => {
             return {
                 'id': item.id,
-                'departamento': item.departamento?.departamento || '',
+                'departamento': item.departamento?.departamento || '-',
                 'ciudad': item.ciudad,
             }
         })
@@ -68,6 +69,10 @@ export default ({ auth, contacts, dataDeptos }) => {
         router.visit(window.location.pathname);
     }
 
+    const onBack = () => {
+        router.get('/parametros');
+    }
+
     useEffect(()=> {
         onSetList()
     }, [])
@@ -86,6 +91,13 @@ export default ({ auth, contacts, dataDeptos }) => {
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="flex items-center justify-end mt-4 mb-4">
+                        <SecondaryButton
+                            className="ms-4"
+                            onClick={() => onBack()}
+                        >
+                            Atrás
+                        </SecondaryButton>
+                        
                         <PrimaryButton
                             className="ms-4"
                             onClick={() => onToggleModal(true)}

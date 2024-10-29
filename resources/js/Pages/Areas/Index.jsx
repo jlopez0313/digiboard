@@ -19,9 +19,10 @@ export default ({ auth, contacts, departamentos }) => {
 
     const titles= [
         'ID',
-        'Departamento',
-        'Ciudad',
+        'Area',
         'Dirección',
+        'Ciudad',
+        'Departamento',
     ]
 
     const [list, setList] = useState([]);
@@ -32,9 +33,10 @@ export default ({ auth, contacts, departamentos }) => {
         const _list = data.map( item => {
             return {
                 id: item.id,
-                departamento: item.ciudad?.departamento?.departamento || '',
-                ciudad: item.ciudad?.ciudad || '',
+                area: item.area || '-',
                 direccion: item.direccion,
+                ciudad: item.ciudad?.ciudad || '-',
+                departamento: item.ciudad?.departamento?.departamento || '-',
             }
         })
 

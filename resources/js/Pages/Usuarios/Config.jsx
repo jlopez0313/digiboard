@@ -32,8 +32,8 @@ export default ({ auth, id, contacts, areas }) => {
         const _list = data.map( item => {
             return {
                 'id': item.id,
-                'usuario': item.usuario?.name || '',
-                'area': item.area?.area || '',
+                'usuario': item.usuario?.name || '-',
+                'area': item.area?.area || '-',
             }
         })
 
@@ -66,7 +66,7 @@ export default ({ auth, id, contacts, areas }) => {
 
         setUser(
             {
-                empresas_id: item.empresa?.id || '',
+                empresas_id: item.empresa?.id || '-',
                 name: item.name,
                 email: item.email,
                 documento: item.documento,

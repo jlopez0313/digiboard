@@ -33,8 +33,8 @@ export default ({ auth, contacts }) => {
         const _list = data.map( item => {
             return {
                 'id': item.id,
-                'usuario': item.name || '',
-                'email': item.email || '',
+                'usuario': item.name || '-',
+                'email': item.email || '-',
                 'documento': item.documento || '-',
                 'celular': item.celular || '-',
             }

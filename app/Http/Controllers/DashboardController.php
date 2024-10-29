@@ -18,7 +18,7 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        $all = Pantallas::with('cartelera')
+        $all = Pantallas::with('cartelera', 'area.ciudad.departamento')
         ->orderByDesc('updated_at')
         ->get();
 

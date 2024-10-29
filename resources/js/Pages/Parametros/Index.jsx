@@ -12,13 +12,13 @@ export default function Dashboard({ auth }) {
 
     const list = [
         {
-            id: 1,
+            id: 'DEPT',
             parametro: 'Departamentos',
             descripcion: 'Gestionar Departamentos',
             ruta: 'parametros/departamentos'
         },
         {
-            id: 2,
+            id: 'CIUD',
             parametro: 'Ciudades',   
             descripcion: 'Gestionar Ciudades',
             ruta: 'parametros/ciudades'
@@ -40,7 +40,7 @@ export default function Dashboard({ auth }) {
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                        <Table data={list} titles={titles} actions={['chevron-right']} onEdit={ onNavigate } />
+                        <Table data={list} titles={titles} actions={['search']} onSearch={ onNavigate } />
                     </div>
                 </div>
             </div>

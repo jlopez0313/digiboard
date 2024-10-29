@@ -41,4 +41,13 @@ class Carteleras extends Model
     protected function serializeDate($date): string {
         return $date->format('Y-m-d H:i:s');
     }
+
+    public function getOrientacionLabelAttribute() {
+        $lista = config('constants.orientaciones');
+        $origenObj = \Arr::first($lista, function($val, $key) {
+            return $val['key'] == $this->orientaciones_id;
+        });
+        
+        return $origenObj['valor'] ?? 'N/A';
+    }
 }

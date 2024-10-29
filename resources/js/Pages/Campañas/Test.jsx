@@ -46,8 +46,8 @@ export default ({ auth, contacts }) => {
     const [total, setTotal] = useState(0);
 
     const { data, setData, processing, errors, reset } = useForm({
-        logro_alcanzado: campaña.logro_alcanzado || '',
-        observacion: campaña.observacion || '',
+        logro_alcanzado: campaña.logro_alcanzado || '-',
+        observacion: campaña.observacion || '-',
     });
 
     const onReload = () => {

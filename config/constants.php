@@ -12,6 +12,16 @@ return [
             'valor' => 'Inactivo'
         ],
     ],
+    'orientaciones' => [
+        [
+            'key' => 'H',
+            'valor' => 'Horizontal'
+        ],
+        [
+            'key' => 'V',
+            'valor' => 'Vertical'
+        ],
+    ],
     'tipo_respuesta' => [
         [
             'id' => '1',

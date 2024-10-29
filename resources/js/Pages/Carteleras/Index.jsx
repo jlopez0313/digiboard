@@ -10,7 +10,7 @@ import PrimaryButton from "@/Components/Buttons/PrimaryButton";
 import Modal from "@/Components/Modal";
 import { Form } from "./Form";
 
-export default ({ auth, contacts, tenant }) => {
+export default ({ auth, contacts, orientaciones, tenant }) => {
 
     const {
         data,
@@ -20,6 +20,7 @@ export default ({ auth, contacts, tenant }) => {
     const titles= [
         'ID',
         'Diseño',
+        'Orientación',
         'Campaña',
         'Fecha Inicial',
         'Fecha Final',
@@ -34,6 +35,7 @@ export default ({ auth, contacts, tenant }) => {
             return {
                 'id': item.id,
                 'diseno': item.diseno?.diseno || '-',
+                'orientacion': item.orientacion_label || '-',
                 'campana': item.campana?.nombre || '-',
                 'fecha_inicial': item.fecha_inicial,
                 'fecha_final': item.fecha_final,
@@ -124,6 +126,7 @@ export default ({ auth, contacts, tenant }) => {
                     onReload={onReload}
                     id={id}
                     tenant={tenant}
+                    orientaciones={orientaciones}
                 />
             </Modal>
         </AuthenticatedLayout>

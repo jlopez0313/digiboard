@@ -23,6 +23,8 @@ return new class extends Migration
             $table->string('marquesina');
             $table->date('fecha_inicial')->nullable();
             $table->date('fecha_final')->nullable();
+
+            $table->char('orientaciones_id');
             $table->timestamps();
             $table->softDeletes();
         });

@@ -9,6 +9,7 @@ import Table from "@/Components/Table/Table";
 import PrimaryButton from "@/Components/Buttons/PrimaryButton";
 import Modal from "@/Components/Modal";
 import { Form } from "./Form";
+import SecondaryButton from "@/Components/Buttons/SecondaryButton";
 
 export default ({ auth, contacts }) => {
     const {
@@ -16,41 +17,38 @@ export default ({ auth, contacts }) => {
         meta: { links },
     } = contacts;
 
-    const titles= [
-        'ID',
-        'Departamento'
-    ]
+    const titles = ["ID", "Departamento"];
 
     const [list, setList] = useState([]);
     const [id, setId] = useState(null);
     const [show, setShow] = useState(false);
-    
-    const onSetList = () => {
-        const _list = data.map( item => {
-            return {
-                'id': item.id,
-                'tipo': item.departamento,
-            }
-        })
 
-        setList( _list );
-    }
+    const onSetList = () => {
+        const _list = data.map((item) => {
+            return {
+                id: item.id,
+                tipo: item.departamento,
+            };
+        });
+
+        setList(_list);
+    };
 
     const onSetItem = (_id) => {
-        setId(_id)
-        onToggleModal(true)
-    }
+        setId(_id);
+        onToggleModal(true);
+    };
 
     const onTrash = async (_id) => {
-        if ( data ) {
+        if (data) {
             await axios.delete(`/api/v1/departamentos/${_id}`);
-            onReload()
+            onReload();
         }
-    }
+    };
 
     const onToggleModal = (isShown) => {
-        if ( !isShown ) {
-            setId(null)
+        if (!isShown) {
+            setId(null);
         }
         setShow(isShown);
     };
@@ -58,6 +56,10 @@ export default ({ auth, contacts }) => {
     const onReload = () => {
         onToggleModal(false);
         router.visit(window.location.pathname);
+    };
+
+    const onBack = () => {
+        router.get('/parametros');
     }
 
     useEffect(() => {
@@ -76,9 +78,14 @@ export default ({ auth, contacts }) => {
             <Head title="Departamentos" />
 
             <div className="py-12">
-
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="flex items-center justify-end mt-4 mb-4">
+                        <SecondaryButton
+                            className="ms-4"
+                            onClick={() => onBack()}
+                        >
+                            Atrás
+                        </SecondaryButton>
                         <PrimaryButton
                             className="ms-4"
                             onClick={() => onToggleModal(true)}
@@ -88,13 +95,13 @@ export default ({ auth, contacts }) => {
                     </div>
 
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                        <Table 
+                        <Table
                             data={list}
                             links={links}
-                            onEdit={ onSetItem }
-                            onTrash={ onTrash }
+                            onEdit={onSetItem}
+                            onTrash={onTrash}
                             titles={titles}
-                            actions={['edit', 'trash']}
+                            actions={["edit", "trash"]}
                         />
                     </div>
 
@@ -103,13 +110,8 @@ export default ({ auth, contacts }) => {
             </div>
 
             <Modal show={show} closeable={true} title="Gestionar Departamento">
-                <Form
-                    setIsOpen={onToggleModal}        
-                    onReload={onReload}
-                    id={id}
-                />
+                <Form setIsOpen={onToggleModal} onReload={onReload} id={id} />
             </Modal>
-
         </AuthenticatedLayout>
     );
-}
+};

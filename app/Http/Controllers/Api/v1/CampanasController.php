@@ -23,7 +23,11 @@ class CampanasController extends Controller
             'fecha_final',
             'multimedias',
             'evaluador',
-            'pantallas'
+            'pantallas',
+            'orientaciones_id',
+            'deptos_id',
+            'ciudades_id',
+            'pantallas_id'
         );
 
         $campana = Campanas::create($data);

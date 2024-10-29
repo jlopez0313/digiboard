@@ -24,6 +24,8 @@ class CartelerasResource extends JsonResource
             'pantallas' => $this->pantallas,
             'diseno' => $this->diseno,
             'cartelera' => $this->cartelera,
+            'orientaciones_id' => $this->orientaciones_id,
+            'orientacion_label' => $this->orientacion_label,
             'fecha_inicial' => $this->fecha_inicial,
             'fecha_final' => $this->fecha_final,
             'marquesina' => $this->marquesina,

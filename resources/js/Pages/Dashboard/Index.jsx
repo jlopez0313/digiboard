@@ -17,6 +17,9 @@ export default ({ auth, contacts }) => {
 
     const titles = [
         'ID',
+        "Departamento",
+        "Ciudad",
+        "Area",
         "Pantalla",
         "Cartelera",
         "Estado",
@@ -31,6 +34,9 @@ export default ({ auth, contacts }) => {
         const _list = data.map((item) => {
             return {
                 id: item.id,
+                depto: item.area?.ciudad?.departamento?.departamento || '-',
+                ciudad: item.area?.ciudad?.ciudad || '-',
+                area: item.area?.area || '-',
                 pantalla: item.pantalla,
                 cartelera: item.cartelera?.id || <i>-Sin Asignar-</i>,
                 estado: item.estado == 'A' ? 

@@ -10,7 +10,7 @@ import PrimaryButton from "@/Components/Buttons/PrimaryButton";
 import Modal from "@/Components/Modal";
 import { Form } from "./Form";
 
-export default ({ auth, contacts, areas }) => {
+export default ({ auth, orientaciones, contacts, areas }) => {
 
     const {
         data,
@@ -19,8 +19,11 @@ export default ({ auth, contacts, areas }) => {
 
     const titles= [
         'ID',
+        'Departamento',
+        'Ciudad',
         'Area',
         'Pantalla',
+        'Orientación',
         'Cartelera',
         'URL',
         'Codigo'
@@ -34,8 +37,11 @@ export default ({ auth, contacts, areas }) => {
         const _list = data.map( item => {
             return {
                 'id': item.id,
-                'area': item.area?.area || '',
+                'depto': item.area?.ciudad?.departamento?.departamento || '-',
+                'ciudad': item.area?.ciudad?.ciudad || '-',
+                'area': item.area?.area || '-',
                 'pantalla': item.pantalla || '-',
+                'orientacion': item.orientacion_label || '-',
                 'cartelera': item.cartelera?.id || '-',
                 'url': `${window.location.protocol}//${window.location.host}/asignacion/${item.id}`,
                 'code': item.code || '-',
@@ -111,6 +117,7 @@ export default ({ auth, contacts, areas }) => {
             </div>
             <Modal show={show} closeable={true} title="Gestionar Pantalla">
                 <Form
+                    orientaciones={orientaciones}
                     areas={areas}
                     setIsOpen={onToggleModal}        
                     onReload={onReload}
