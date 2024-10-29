@@ -95,7 +95,7 @@ export default ({ auth, contacts }) => {
                     <div className="flex items-center justify-end mt-4 mb-4">
                     </div>
 
-                    <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                    <div className="bg-white overflow-auto shadow-sm sm:rounded-lg">
                         <Table
                             data={list}
                             onEdit={ () => {} }

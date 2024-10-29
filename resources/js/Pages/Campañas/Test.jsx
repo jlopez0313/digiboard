@@ -158,7 +158,7 @@ export default ({ auth, contacts }) => {
                     </div>
 
                     <form onSubmit={submit}>
-                        <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                        <div className="bg-white overflow-auto shadow-sm sm:rounded-lg">
                             <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg p-8">
                                 <h2 className="font-semibold text-xl text-gray-800 leading-tight">
                                     KPI

@@ -94,7 +94,7 @@ export default ({ auth, contacts }) => {
                         </PrimaryButton>
                     </div>
 
-                    <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                    <div className="bg-white overflow-auto shadow-sm sm:rounded-lg">
                         <Table
                             data={list}
                             links={links}
