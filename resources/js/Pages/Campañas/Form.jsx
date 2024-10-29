@@ -131,7 +131,7 @@ export default ({
         });
 
         setMyScreens(
-            item.cartelera?.pantallas.map((tag) => {
+            item.cartelera?.pantallas?.map((tag) => {
                 return { value: tag.id, label: tag.pantalla };
             })
         );
@@ -187,7 +187,7 @@ export default ({
                 const { data: items } = await axios.get(
                     `/api/v1/pantallas/area/${area}/orientacion/${data.orientaciones_id}`
                 );
-                const lista = items.data.map((item) => {
+                const lista = items.data?.map((item) => {
                     return { value: item.id, label: item.pantalla };
                 });
 
