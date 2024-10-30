@@ -85,6 +85,7 @@ class CampanasController extends Controller
                 Departamentos::orderBy('departamento')
                 ->get()
             ),
+            'tenant' => 'tenant_' . tenant()->id,
             'tipos_respuesta' => config('constants.tipo_respuesta'),
             'id' => $id,
             'orientaciones' => config('constants.orientaciones'),

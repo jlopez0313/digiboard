@@ -35,7 +35,7 @@ class Carteleras extends Model
     }
     
     public function pantallas() {
-        return $this->hasMany(Pantallas::class, 'carteleras_id');
+        return $this->hasMany(PantallasCarteleras::class, 'carteleras_id');
     }
 
     protected function serializeDate($date): string {

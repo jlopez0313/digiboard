@@ -20,6 +20,7 @@ const animatedComponents = makeAnimated();
 export default ({
     auth,
     id,
+    tenant,
     orientaciones,
     usuarios,
     departamentos,
@@ -32,6 +33,7 @@ export default ({
 
     const [ciudades, setCiudades] = useState([]);
     const [areas, setAreas] = useState([]);
+    const [shouldSkipEffect, setShouldSkipEffect] = useState(id ? true : false);
 
     const filesRef = useRef(null);
 
@@ -97,17 +99,114 @@ export default ({
         onReload();
     };
 
+    const onGetLocations = (item) => {
+
+        // Departamentos
+        const deptos = item.cartelera?.pantallas?.map((p_c) => {
+            return {
+                id: p_c.pantalla?.area?.ciudad?.departamento?.id,
+                departamento:
+                    p_c.pantalla?.area?.ciudad?.departamento?.departamento,
+            };
+        });
+
+        const groupedDeptos = deptos.reduce((acc, current) => {
+            const key = current["id"];
+
+            if (!acc[key]) {
+                acc[key] = [];
+            }
+            acc[key].push(current);
+
+            return acc;
+        }, {});
+
+        const groupedDeptosArray = Object.entries(groupedDeptos).map(
+            ([key, value]) => ({
+                department: key,
+                items: value,
+            })
+        );
+
+        // Ciudades
+        const cities = item.cartelera?.pantallas?.map((p_c) => {
+            return {
+                id: p_c.pantalla?.area?.ciudad?.id,
+                ciudad:
+                    p_c.pantalla?.area?.ciudad?.ciudad,
+            };
+        });
+
+        const groupedCities = cities.reduce((acc, current) => {
+            const key = current["id"];
+
+            if (!acc[key]) {
+                acc[key] = [];
+            }
+            acc[key].push(current);
+
+            return acc;
+        }, {});
+
+        const groupedCitiesArray = Object.entries(groupedCities).map(
+            ([key, value]) => ({
+                city: key,
+                items: value,
+            })
+        );
+
+        // Areas
+        const areas = item.cartelera?.pantallas?.map((p_c) => {
+            return {
+                id: p_c.pantalla?.area?.id,
+                area:
+                    p_c.pantalla?.area?.area,
+            };
+        });
+
+        const groupedAreas = areas.reduce((acc, current) => {
+            const key = current["id"];
+
+            if (!acc[key]) {
+                acc[key] = [];
+            }
+            acc[key].push(current);
+
+            return acc;
+        }, {});
+
+        const groupedAreasArray = Object.entries(groupedAreas).map(
+            ([key, value]) => ({
+                area: key,
+                items: value,
+            })
+        );
+
+        return {
+            deptos: groupedDeptosArray,
+            cities: groupedCitiesArray,
+            areas: groupedAreasArray,
+        }
+    }
+
     const onGetItem = async () => {
         const { data } = await axios.get(`/api/v1/campanas/${id}`);
         const item = { ...data.data };
 
+        const location = onGetLocations( item );
+
         setData({
             nombre: item.nombre,
-            pantallas: item.cartelera?.pantallas?.map((x) => x.id),
+            pantallas: item.cartelera?.pantallas?.map((x) => x.pantallas_id),
             eje: item.eje,
             objetivo: item.objetivo,
             impacto: item.impacto,
             pregunta: item.pregunta,
+            orientaciones_id: item.cartelera?.orientaciones_id || "",
+
+            deptos_id: location.deptos.length > 1 ? 'ALL' : location.deptos[0].department,
+            ciudades_id: location.cities.length > 1 ? 'ALL' : location.cities[0].city,
+            areas_id: location.areas.length > 1 ? 'ALL' : location.areas[0].area,
 
             logro_esperado: item.logro_esperado,
             evaluador_id: item.evaluador_id,
@@ -132,11 +231,18 @@ export default ({
 
         setMyScreens(
             item.cartelera?.pantallas?.map((tag) => {
-                return { value: tag.id, label: tag.pantalla };
+                return {
+                    value: tag.pantalla?.id,
+                    label: tag.pantalla?.pantalla,
+                };
             })
         );
 
-        // setPreviews(item.multimedias);
+        setPreviews(
+            item.cartelera?.multimedias.map((x) => {
+                return { ...x, src: `/${tenant}/` + x.src };
+            })
+        );
     };
 
     const onGetCiudades = async (depto) => {
@@ -149,7 +255,6 @@ export default ({
                 );
                 const lista = [...data.data];
 
-                setData("ciudades_id", "");
                 setCiudades(lista);
             }
         } else {
@@ -168,7 +273,6 @@ export default ({
                 );
                 const lista = [...data.data];
 
-                setData("areas_id", "");
                 setAreas(lista);
             }
         } else {
@@ -195,7 +299,11 @@ export default ({
 
                 setIsMulti(true);
 
-                setMyScreens([]);
+                if ( !shouldSkipEffect ) {
+                    setMyScreens([]);
+                } else {
+                    setShouldSkipEffect( false )
+                }
                 setPantallas(lista);
             }
         } else {

@@ -44,7 +44,7 @@ class CampanasController extends Controller
      */
     public function show(Campanas $campana)
     {
-        $campana->load('cartelera.pantallas');
+        $campana->load('cartelera.pantallas.pantalla.area.ciudad.departamento', 'cartelera.multimedias');
         return new CampanasResource($campana);
     }
 
