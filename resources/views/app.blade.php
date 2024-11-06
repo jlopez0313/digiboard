@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
+        <link rel="manifest" href="{{ url('/manifest.json') }}">
+
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -22,5 +24,16 @@
         <!-- <script src="https://www.google.com/recaptcha/enterprise.js?render=6LeeXDQqAAAAANpmiL0B1ZaYk9ft26U2Q6hJbQpE"></script> -->
          
         <!-- Your code -->
+
+        <script>
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/service-worker.js')
+                .then(function(registration) {
+                    console.log('Service Worker registrado con éxito:', registration.scope);
+                }).catch(function(error) {
+                    console.log('Error al registrar el Service Worker:', error);
+                });
+            }
+        </script>
     </body>
 </html>

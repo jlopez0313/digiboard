@@ -32,6 +32,18 @@ use App\Http\Controllers\UsuariosController;
 |
 */
 
+Route::get('/manifest.json', function () {
+    return response()->json(config('pwa'));
+});
+
+Route::get('/tenant/{tenantId}/storage/{filePath}', function ($tenantId, $filePath) {
+    tenancy()->initialize($tenantId);
+    $file = Storage::disk('tenancy')->get($filePath);
+    $mimeType = Storage::disk('tenancy')->mimeType($filePath);
+    return Response::make($file, 200)->header("Content-Type", $mimeType);
+})->where('filePath', '.*');
+
+
 Route::middleware([
     'web',
     InitializeTenancyByDomain::class,
@@ -39,6 +51,14 @@ Route::middleware([
 ])->group(function () {
     Route::get('/', function () {
         return 'This is your multi-tenant application. The id of the current tenant is ' . tenant('id');
+    });
+
+    Route::middleware('auth')->group(function () {
+        // Ruta para habilitar 2FA
+        Route::post('/user/two-factor-authentication', [TwoFactorController::class, 'store']);
+        
+        // Ruta para mostrar el código QR
+        Route::get('/user/two-factor-authentication', [TwoFactorController::class, 'show'])->name('two-factor.show');
     });
 
     Route::get('/', function () {
