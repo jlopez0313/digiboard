@@ -20,6 +20,8 @@ use App\Http\Controllers\PantallasController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UsuariosController;
 
+use App\Http\Controllers\Auth\AuthController;
+
 /*
 |--------------------------------------------------------------------------
 | Tenant Routes
@@ -53,13 +55,9 @@ Route::middleware([
         return 'This is your multi-tenant application. The id of the current tenant is ' . tenant('id');
     });
 
-    Route::middleware('auth')->group(function () {
-        // Ruta para habilitar 2FA
-        Route::post('/user/two-factor-authentication', [TwoFactorController::class, 'store']);
-        
-        // Ruta para mostrar el código QR
-        Route::get('/user/two-factor-authentication', [TwoFactorController::class, 'show'])->name('two-factor.show');
-    });
+    Route::get('generate-qr', [AuthController::class, 'generateQRCode'])->name('logged.generateQR');
+    Route::get('twofactor', [AuthController::class, 'showTwoFactorForm'])->name('logged.twofactor');
+    Route::post('twofactor', [AuthController::class, 'verifyTwoFactor']);
 
     Route::get('/', function () {
         return Inertia::render('Welcome', [
@@ -69,69 +67,81 @@ Route::middleware([
         ]);
     });
 
-    Route::prefix('dashboard')->group(function () {
-        Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-    });
+    Route::middleware([
+        'verify2fa'
+    ])
+    ->group( function () {
 
-    Route::prefix('parametros')->group(function () {
-        Route::get('/', function () {
-            return Inertia::render('Parametros/Index');
-        })->name('parametros');
+        
 
-        Route::prefix('departamentos')->group(function () {
-            Route::get('/', [DepartamentosController::class, 'index'])->name('parametros.departamentos');
+
+        
+
+        Route::prefix('dashboard')->group(function () {
+            Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
         });
 
-        Route::prefix('ciudades')->group(function () {
-            Route::get('/', [CiudadesController::class, 'index'])->name('parametros.ciudades');
+        Route::prefix('parametros')->group(function () {
+            Route::get('/', function () {
+                return Inertia::render('Parametros/Index');
+            })->name('parametros');
+
+            Route::prefix('departamentos')->group(function () {
+                Route::get('/', [DepartamentosController::class, 'index'])->name('parametros.departamentos');
+            });
+
+            Route::prefix('ciudades')->group(function () {
+                Route::get('/', [CiudadesController::class, 'index'])->name('parametros.ciudades');
+            });
         });
-    });
 
-    Route::prefix('empresas')->group(function () {
-        Route::get('/', [EmpresasController::class, 'index'])->name('empresas');
-    });
+        Route::prefix('empresas')->group(function () {
+            Route::get('/', [EmpresasController::class, 'index'])->name('empresas');
+        });
 
-    Route::prefix('areas')->group(function () {
-        Route::get('/', [AreasController::class, 'index'])->name('areas');
-    });
+        Route::prefix('areas')->group(function () {
+            Route::get('/', [AreasController::class, 'index'])->name('areas');
+        });
 
-    Route::prefix('pantallas')->group(function () {
-        Route::get('/', [PantallasController::class, 'index'])->name('pantallas');
-    });
+        Route::prefix('pantallas')->group(function () {
+            Route::get('/', [PantallasController::class, 'index'])->name('pantallas');
+        });
 
-    Route::prefix('asignacion')->group(function () {
-        Route::get('/{id}', [AsignacionController::class, 'show'])->name('asignacion.show');
-    });
+        Route::prefix('asignacion')->group(function () {
+            Route::get('/{id}', [AsignacionController::class, 'show'])->name('asignacion.show');
+        });
 
-    Route::prefix('carteleras')->group(function () {
-        Route::get('/', [CartelerasController::class, 'index'])->name('carteleras');
-        Route::get('/config/{id}', [CartelerasController::class, 'config'])->name('carteleras.config');
-        Route::get('/{id}', [CartelerasController::class, 'show'])->name('carteleras.show');
-    });
+        Route::prefix('carteleras')->group(function () {
+            Route::get('/', [CartelerasController::class, 'index'])->name('carteleras');
+            Route::get('/config/{id}', [CartelerasController::class, 'config'])->name('carteleras.config');
+            Route::get('/{id}', [CartelerasController::class, 'show'])->name('carteleras.show');
+        });
 
-    Route::prefix('campanas')->group(function () {
-        Route::get('/', [CampanasController::class, 'index'])->name('campanas');
-        Route::get('/config/{id}', [CampanasController::class, 'config'])->name('campanas.config');
-        Route::get('/create', [CampanasController::class, 'create'])->name('campanas.create');
-        Route::get('/lista', [CampanasController::class, 'lista'])->name('campanas.lista');
-        Route::get('/{id}', [CampanasController::class, 'show'])->name('campanas.show');
-        Route::get('/edit/{id}', [CampanasController::class, 'edit'])->name('campanas.edit');
-        Route::get('/encuesta/{id}', [CampanasController::class, 'encuesta'])->name('campanas.encuesta');
-        Route::get('/test/{id}', [CampanasController::class, 'test'])->name('campanas.test');
-    });
+        Route::prefix('campanas')->group(function () {
+            Route::get('/', [CampanasController::class, 'index'])->name('campanas');
+            Route::get('/config/{id}', [CampanasController::class, 'config'])->name('campanas.config');
+            Route::get('/create', [CampanasController::class, 'create'])->name('campanas.create');
+            Route::get('/lista', [CampanasController::class, 'lista'])->name('campanas.lista');
+            Route::get('/{id}', [CampanasController::class, 'show'])->name('campanas.show');
+            Route::get('/edit/{id}', [CampanasController::class, 'edit'])->name('campanas.edit');
+            Route::get('/encuesta/{id}', [CampanasController::class, 'encuesta'])->name('campanas.encuesta');
+            Route::get('/test/{id}', [CampanasController::class, 'test'])->name('campanas.test');
+        });
 
-    Route::prefix('evaluacion')->group(function () {
-        Route::get('/{id}', [EvaluacionController::class, 'show'])->name('evaluacion');
-    });
+        Route::prefix('evaluacion')->group(function () {
+            Route::get('/{id}', [EvaluacionController::class, 'show'])->name('evaluacion');
+        });
 
-    Route::prefix('usuarios')->group(function () {
-        Route::get('/', [UsuariosController::class, 'index'])->name('usuarios');
-        Route::get('/config/{id}', [UsuariosController::class, 'config'])->name('usuarios.config');
-    });
+        Route::prefix('usuarios')->group(function () {
+            Route::get('/', [UsuariosController::class, 'index'])->name('usuarios');
+            Route::get('/config/{id}', [UsuariosController::class, 'config'])->name('usuarios.config');
+        });
 
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+        Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+        Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    
+    });
 });
 
 // require __DIR__.'/tenant_auth.php';

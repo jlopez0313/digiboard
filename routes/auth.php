@@ -14,6 +14,8 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\Auth\AuthController;
+
 Route::middleware([
     'guest',
     'universal',
@@ -24,11 +26,9 @@ Route::middleware([
 
     Route::post('register', [RegisteredUserController::class, 'store']);
 
-    Route::get('login', [AuthenticatedSessionController::class, 'create'])
-                ->name('login');
-
-    Route::post('login', [AuthenticatedSessionController::class, 'store']);
-
+    Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
+    Route::post('login', [AuthController::class, 'login'])->name('auth.login');
+    
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
                 ->name('password.request');
 
@@ -66,6 +66,8 @@ Route::middleware([
 
     Route::put('password', [PasswordController::class, 'update'])->name('password.update');
 
+    Route::get('logout', [AuthenticatedSessionController::class, 'destroy'])
+                ->name('logout');
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
                 ->name('logout');
 });

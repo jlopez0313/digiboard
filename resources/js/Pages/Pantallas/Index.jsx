@@ -19,9 +19,9 @@ export default ({ auth, orientaciones, contacts, areas }) => {
 
     const titles= [
         'ID',
-        'Departamento',
-        'Ciudad',
         'Area',
+        'Ciudad',
+        'Departamento',
         'Pantalla',
         'Orientación',
         'Cartelera',
@@ -37,9 +37,9 @@ export default ({ auth, orientaciones, contacts, areas }) => {
         const _list = data.map( item => {
             return {
                 'id': item.id,
-                'depto': item.area?.ciudad?.departamento?.departamento || '-',
-                'ciudad': item.area?.ciudad?.ciudad || '-',
                 'area': item.area?.area || '-',
+                'ciudad': item.area?.ciudad?.ciudad || '-',
+                'depto': item.area?.ciudad?.departamento?.departamento || '-',
                 'pantalla': item.pantalla || '-',
                 'orientacion': item.orientacion_label || '-',
                 'cartelera': item.cartelera?.id || '-',

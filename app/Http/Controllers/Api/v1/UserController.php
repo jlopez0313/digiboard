@@ -65,6 +65,5 @@ class UserController extends Controller {
         $usuario->delete();
         return new UserResource( $usuario );
     }
-
-
+    
 }

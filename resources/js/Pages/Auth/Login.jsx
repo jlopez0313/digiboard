@@ -5,7 +5,8 @@ import InputError from '@/Components/Form/InputError';
 import InputLabel from '@/Components/Form/InputLabel';
 import PrimaryButton from "@/Components/Buttons/PrimaryButton";
 import TextInput from '@/Components/Form/TextInput';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, Link, router, useForm } from '@inertiajs/react';
+import axios from 'axios';
 
 export default function Login({ status, canResetPassword }) {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -21,14 +22,21 @@ export default function Login({ status, canResetPassword }) {
         };
     }, []);
 
-    const submit = (e) => {
+    const submit = async (e) => {
         e.preventDefault();
+        post( route('auth.login') );
+        /*
+        try {
+            const resp = await axios.post('/api/v1/login', data)
+            if( resp.status == 200 ) {
+                router.visit('/twofactor')
+            } else {
+                router.visit('/generate-qr')
+            }
+        } catch (error) {
 
-        /*grecaptcha.enterprise.ready(async () => {
-          const token = await grecaptcha.enterprise.execute('6LeeXDQqAAAAANpmiL0B1ZaYk9ft26U2Q6hJbQpE', {action: 'LOGIN'});
-        });*/
-
-        post(route('login'));
+        }
+        */
     };
 
     return (

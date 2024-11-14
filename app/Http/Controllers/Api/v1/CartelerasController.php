@@ -12,6 +12,7 @@ use App\Models\Multimedias;
 use App\Models\Pantallas;
 use App\Models\PantallasCarteleras;
 use Illuminate\Http\Request;
+use Intervention\Image\Facades\Image;
 
 class CartelerasController extends Controller
 {
@@ -53,15 +54,24 @@ class CartelerasController extends Controller
             // $filename = \Storage::disk('media')->put($cartelera->id, $file);
             // $cartelera->addMedia('media/' . $filename)->toMediaCollection();
 
-            $filename = $file->store('files/'.$cartelera->id);
-            
+            $path = 'files/'.$cartelera->id;
+            $filename = $file->hashName();
+
+            $resizedImage = Image::make($file)
+                                  ->resize(800, 600, function ($constraint) {
+                                      $constraint->aspectRatio();
+                                      $constraint->upsize();
+                                  });
+
+            $fullPath = storage_path("app/$path/$filename");
+            $resizedImage->save($fullPath, 100, 'png');
+                                          
             Multimedias::create([
                 'carteleras_id' => $cartelera->id,
-                'src' => $filename,
-                'type' => $file->getClientOriginalExtension(),
+                'src' => "$path/$filename",
+                'type' => 'png',
                 'mimetype' => $file->getClientMimeType(),
             ]);
-            
         }
 
         if ($request->pantallas_id) {
@@ -132,12 +142,22 @@ class CartelerasController extends Controller
             // $filename = \Storage::disk('media')->put($cartelera->id, $file);
             // $cartelera->addMedia('media/' . $filename)->toMediaCollection();
             
-            $filename = $file->store('files/'.$cartelera->id);
+            $path = 'files/'.$cartelera->id;
+            $filename = $file->hashName();
 
+            $resizedImage = Image::make($file)
+                                  ->resize(800, 600, function ($constraint) {
+                                      $constraint->aspectRatio();
+                                      $constraint->upsize();
+                                  });
+
+            $fullPath = storage_path("app/$path/$filename");
+            $resizedImage->save($fullPath, 100, 'png');
+                                          
             Multimedias::create([
                 'carteleras_id' => $cartelera->id,
-                'src' => $filename,
-                'type' => $file->getClientOriginalExtension(),
+                'src' => "$path/$filename",
+                'type' => 'png',
                 'mimetype' => $file->getClientMimeType(),
             ]);
         }

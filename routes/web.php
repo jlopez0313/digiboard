@@ -8,6 +8,8 @@ use Inertia\Inertia;
 use App\Http\Controllers\TenantsController;
 use App\Http\Controllers\ProfileController;
 
+use App\Http\Controllers\Auth\AuthController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -37,6 +39,7 @@ Route::get('/artisan', function () {
 
 foreach (config('tenancy.central_domains') as $domain) {
     Route::domain($domain)->group(function () {
+        
         Route::get('/', function () {
             return Inertia::render('Welcome', [
                 'canLogin' => Route::has('login'),

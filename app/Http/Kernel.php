@@ -3,6 +3,7 @@
 namespace App\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
+use PragmaRX\Google2FA\Vendor\Laravel\Middlewares\Google2FA;
 
 class Kernel extends HttpKernel
 {
@@ -29,6 +30,9 @@ class Kernel extends HttpKernel
      * @var array<string, array<int, class-string|string>>
      */
     protected $middlewareGroups = [
+        'verify2fa' => [
+            \App\Http\Middleware\Verify2FA::class
+        ],
         'web' => [
             Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
@@ -68,5 +72,6 @@ class Kernel extends HttpKernel
         'signed' => Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+        '2fa' => Google2FA::class,
     ];
 }

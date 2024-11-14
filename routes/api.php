@@ -21,7 +21,7 @@ use App\Http\Controllers\Api\v1\MultimediasController;
 use App\Http\Controllers\Api\v1\UsuariosController;
 use App\Http\Controllers\Api\v1\UserController;
 
-
+use App\Http\Controllers\Auth\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -57,6 +57,7 @@ Route::middleware([
     PreventAccessFromCentralDomains::class,
 ])
 ->prefix('v1')->group(function () {
+
     Route::apiResource('departamentos', DepartamentosController::class);
 
     Route::prefix('ciudades')->group( function() {
@@ -106,7 +107,6 @@ Route::middleware([
     Route::apiResource('usuarios', UsuariosController::class);
 
 })->middleware(['auth:sanctum', 'verified']);
-
 
 Route::group(['prefix' => 'v1'], function () {
     Route::apiResource('tenants', TenantsController::class);
