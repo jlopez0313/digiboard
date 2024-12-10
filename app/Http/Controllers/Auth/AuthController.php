@@ -38,7 +38,7 @@ class AuthController extends Controller
             $user = \Auth::user();
 
             // Si el usuario tiene 2FA activado
-            if ($user->google2fa_secret != null) {
+            if ($user->google2fa_secret) {
                 return redirect()->to('twofactor');
             } else {
                 return redirect()->to('generate-qr');                
