@@ -37,6 +37,8 @@ class AuthController extends Controller
         if (\Auth::attempt($credentials)) {
             $user = \Auth::user();
 
+            dd(  $user );
+
             // Si el usuario tiene 2FA activado
             if ($user->google2fa_secret) {
                 return redirect()->to('twofactor');
