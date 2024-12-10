@@ -37,8 +37,6 @@ class AuthController extends Controller
         if (\Auth::attempt($credentials)) {
             $user = \Auth::user();
 
-            dd(  $user );
-
             // Si el usuario tiene 2FA activado
             if ($user->google2fa_secret) {
                 return redirect()->to('twofactor');
@@ -70,8 +68,13 @@ class AuthController extends Controller
     public function verifyTwoFactor(Request $request)
     {
         $user = $request->user();
+        $google2fa = new Google2FA();
+        $secret = session('google2fa_secret', $user->google2fa_secret);
 
-        if ($user->verifyGoogle2FACode($request->input('code'))) {
+        if ($google2fa->verifyKey($secret, $request->input('code'))) {
+
+            $user->google2fa_secret = $secret;
+            $user->save();
             
             session(['2fa_verified' => true]);
             return redirect()->to('dashboard');
@@ -88,7 +91,10 @@ class AuthController extends Controller
     public function generateQRCode()
     {
         $google2fa = new Google2FA();
-        $secret = Auth::user()->generateGoogle2FASecret();
+        $secret = $google2fa->generateSecretKey();
+
+        session(['google2fa_secret' => $secret]);
+
         $QR_Image = $google2fa->getQRCodeUrl(
             'Digiboard', // Nombre de tu aplicación
             Auth::user()->email,
