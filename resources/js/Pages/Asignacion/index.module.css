@@ -1,9 +1,9 @@
 .encuesta {
     position: absolute;
     right: 20px ;
-    bottom: 20% ;
+    bottom: 10% ;
     background-color: rgba(0,0,0,.4);
-    max-width: 170px;
+    max-width: 150px;
     z-index: 999;
 }
 

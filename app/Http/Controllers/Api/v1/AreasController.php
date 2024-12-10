@@ -12,6 +12,15 @@ use Inertia\Inertia;
 
 class AreasController extends Controller
 {
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        $data = $request->except(['departamentos_id']);
+        $area = Areas::create( $data );
+        return new AreasResource( $area );
+    }
 
     /**
      * Display the specified resource.

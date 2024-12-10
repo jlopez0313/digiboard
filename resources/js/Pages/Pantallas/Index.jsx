@@ -10,7 +10,7 @@ import PrimaryButton from "@/Components/Buttons/PrimaryButton";
 import Modal from "@/Components/Modal";
 import { Form } from "./Form";
 
-export default ({ auth, orientaciones, contacts, areas }) => {
+export default ({ auth, orientaciones, contacts, departamentos }) => {
 
     const {
         data,
@@ -118,7 +118,7 @@ export default ({ auth, orientaciones, contacts, areas }) => {
             <Modal show={show} closeable={true} title="Gestionar Pantalla">
                 <Form
                     orientaciones={orientaciones}
-                    areas={areas}
+                    departamentos={departamentos}
                     setIsOpen={onToggleModal}        
                     onReload={onReload}
                     id={id}

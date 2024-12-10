@@ -76,4 +76,8 @@ class User extends Authenticatable
         return $google2fa->verifyKey($this->google2fa_secret, $code);
     }
 
+    public function areas() {
+        return $this->hasMany(UsuariosAreas::class, 'usuarios_id');
+    }
+
 }

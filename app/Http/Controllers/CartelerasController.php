@@ -87,7 +87,7 @@ class CartelerasController extends Controller
 
     public function config(string $id)
     {
-        return Inertia::render('Carteleras/Config/Index', [
+        return Inertia::render('Carteleras/Asignar/Index', [
             'id' => $id,
             'cartelera' => Carteleras::find($id),
             'contacts' => new PantallasCartelerasCollection(

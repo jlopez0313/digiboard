@@ -6,7 +6,7 @@ import Pagination from "@/Components/Table/Pagination";
 import Table from "@/Components/Table/Table";
 import PrimaryButton from "@/Components/Buttons/PrimaryButton";
 import Modal from "@/Components/Modal";
-import { Assign } from "./Assign";
+import { Form } from "./Form";
 import SecondaryButton from "@/Components/Buttons/SecondaryButton";
 
 export default ({ auth, id, cartelera, contacts, departamentos }) => {
@@ -64,7 +64,7 @@ export default ({ auth, id, cartelera, contacts, departamentos }) => {
 
     const onSearch = (_id) => {
         const item = data.find( x => x.id == _id);
-        router.get( '/asignacion/' + item.pantalla?.id )
+        window.open('/asignacion/' + item.pantalla?.id, '_blank', 'noopener,noreferrer');
     }
 
     const onBack = () => {
@@ -120,7 +120,7 @@ export default ({ auth, id, cartelera, contacts, departamentos }) => {
                 </div>
             </div>
             <Modal show={show} closeable={true} title={`Asignar Cartelera #${id}`}>
-                <Assign
+                <Form
                     departamentos={departamentos}
                     setIsOpen={onToggleModal}        
                     onReload={onReload}

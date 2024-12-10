@@ -6,10 +6,10 @@ import Pagination from "@/Components/Table/Pagination";
 import Table from "@/Components/Table/Table";
 import PrimaryButton from "@/Components/Buttons/PrimaryButton";
 import Modal from "@/Components/Modal";
-import { Assign } from "./Assign";
+import { Form } from "./Form";
 import SecondaryButton from "@/Components/Buttons/SecondaryButton";
 
-export default ({ auth, id, contacts, areas }) => {
+export default ({ auth, id, contacts, departamentos }) => {
 
     const {
         data,
@@ -20,6 +20,8 @@ export default ({ auth, id, contacts, areas }) => {
         'ID',
         'Usuario',
         'Area',
+        'Ciudad',
+        'Departamento',
     ]
 
     const [list, setList] = useState([]);
@@ -34,6 +36,8 @@ export default ({ auth, id, contacts, areas }) => {
                 'id': item.id,
                 'usuario': item.usuario?.name || '-',
                 'area': item.area?.area || '-',
+                'ciudad': item.area?.ciudad?.ciudad || '-',
+                'depto': item.area?.ciudad?.departamento?.departamento || '-',
             }
         })
 
@@ -127,8 +131,9 @@ export default ({ auth, id, contacts, areas }) => {
                 </div>
             </div>
             <Modal show={show} closeable={true} title="Asignar Areas">
-                <Assign
-                    areas={areas}
+                <Form
+                    departamentos={departamentos}
+                    old_areas={data}
                     setIsOpen={onToggleModal}        
                     onReload={onReload}
                     id={id}

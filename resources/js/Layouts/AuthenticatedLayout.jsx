@@ -11,6 +11,7 @@ import { ToastContainer } from "react-toastify";
 export default function Authenticated({ user, header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
 
+
     return (
         <div className="min-h-screen bg-gray-100">
             <ToastContainer />
@@ -26,42 +27,42 @@ export default function Authenticated({ user, header, children }) {
                             </div>
 
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink href={'/dashboard'} active={route().current('dashboard')}>
+                                <NavLink href={'/dashboard'} active={window.location.pathname.includes('dashboard')}>
                                     Inicio
                                 </NavLink>
                             </div>
 
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink href={'/parametros'} active={route().current('parametros')}>
+                                <NavLink href={'/parametros'} active={window.location.pathname.includes('parametros')}>
                                     Parámetros
                                 </NavLink>
                             </div>
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink href={'/areas'} active={route().current('areas')}>
+                                <NavLink href={'/areas'} active={window.location.pathname.includes('areas')}>
                                     Areas
                                 </NavLink>
                             </div>
 
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink href={'/usuarios'} active={route().current('usuarios')}>
+                                <NavLink href={'/usuarios'} active={window.location.pathname.includes('usuarios')}>
                                     Usuarios
                                 </NavLink>
                             </div>
 
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink href={'/pantallas'} active={route().current('pantallas')}>
+                                <NavLink href={'/pantallas'} active={window.location.pathname.includes('pantallas')}>
                                     Pantallas
                                 </NavLink>
                             </div>
 
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink href={'/carteleras'} active={route().current('carteleras')}>
+                                <NavLink href={'/carteleras'} active={window.location.pathname.includes('carteleras')}>
                                     Carteleras
                                 </NavLink>
                             </div>
 
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink href={'/campanas'} active={route().current('campanas')}>
+                                <NavLink href={'/campanas'} active={window.location.pathname.includes('campanas')}>
                                     Campañas
                                 </NavLink>
                             </div>
@@ -133,7 +134,7 @@ export default function Authenticated({ user, header, children }) {
 
                 <div className={(showingNavigationDropdown ? 'block' : 'hidden') + ' sm:hidden'}>
                     <div className="pt-2 pb-3 space-y-1">
-                        <ResponsiveNavLink href={route('dashboard')} active={route().current('dashboard')}>
+                        <ResponsiveNavLink href={route('dashboard')} active={window.location.pathname.includes('dashboard')}>
                             Dashboard
                         </ResponsiveNavLink>
                     </div>

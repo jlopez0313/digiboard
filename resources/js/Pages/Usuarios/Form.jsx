@@ -8,51 +8,56 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Select from "@/Components/Form/Select";
 import Checkbox from "@/Components/Form/Checkbox";
+import { notify } from "@/Helpers/Notify";
 
 export const Form = ({ id, setIsOpen, onReload }) => {
+    const [isLoading, setIsLoading] = useState(false);
 
     const { data, setData, processing, errors, reset } = useForm({
-        name: '',
-        email: '',
-        documento: '',
-        celular: '',
-        is_admin: ''
+        name: "",
+        email: "",
+        documento: "",
+        celular: "",
+        is_admin: "",
     });
 
     const [areas, setAreas] = useState([]);
 
     const submit = async (e) => {
         e.preventDefault();
+        setIsLoading(true);
+        try {
+            if (id) {
+                await axios.put(`/api/v1/usuarios/${id}`, data);
+            } else {
+                await axios.post(`/api/v1/usuarios`, data);
+            }
 
-        
-        if ( id ) {
-            await axios.put(`/api/v1/usuarios/${id}`, data);
-        } else {
-            await axios.post(`/api/v1/usuarios`, data);
+            onReload();
+        } catch (error) {
+            console.log(error);
+            notify("error", "Internal Error");
+        } finally {
+            setIsLoading(false);
         }
-
-        onReload();
     };
 
     const onGetItem = async () => {
-
         const { data } = await axios.get(`/api/v1/usuarios/${id}`);
-        const item = { ...data.data }
+        const item = { ...data.data };
 
-        setData(
-            {
-                name: item.name || '-',
-                email: item.email,
-                documento: item.documento || '-',
-                celular: item.celular || '-',
-                is_admin: item.is_admin == 'Y' ? true : false,
-            }
-        )
-    }
+        setData({
+            name: item.name || "-",
+            email: item.email,
+            documento: item.documento || "-",
+            celular: item.celular || "-",
+            is_admin: item.is_admin == "Y" ? true : false,
+        });
+    };
 
-    useEffect( () => {
-        id && onGetItem()
-    }, [])
+    useEffect(() => {
+        id && onGetItem();
+    }, []);
 
     return (
         <div className="pb-12 pt-6">
@@ -87,7 +92,7 @@ export const Form = ({ id, setIsOpen, onReload }) => {
                                 id="email"
                                 type="email"
                                 name="email"
-                                readOnly={ id }
+                                readOnly={id}
                                 value={data.email}
                                 className="mt-1 block w-full"
                                 autoComplete="email"
@@ -101,7 +106,7 @@ export const Form = ({ id, setIsOpen, onReload }) => {
                                 className="mt-2"
                             />
                         </div>
-                        
+
                         <div>
                             <InputLabel htmlFor="celular" value="Celular" />
 
@@ -122,7 +127,7 @@ export const Form = ({ id, setIsOpen, onReload }) => {
                                 className="mt-2"
                             />
                         </div>
-                        
+
                         <div>
                             <InputLabel htmlFor="documento" value="Documento" />
 
@@ -143,9 +148,12 @@ export const Form = ({ id, setIsOpen, onReload }) => {
                                 className="mt-2"
                             />
                         </div>
-                        
+
                         <div>
-                            <InputLabel htmlFor="is_admin" value="Es Administrador?" />
+                            <InputLabel
+                                htmlFor="is_admin"
+                                value="Es Administrador?"
+                            />
 
                             <Checkbox
                                 id="is_admin"
@@ -153,7 +161,7 @@ export const Form = ({ id, setIsOpen, onReload }) => {
                                 checked={data.is_admin ? true : false}
                                 className="mt-1"
                                 autoComplete="is_admin"
-                                onChange={(e) => 
+                                onChange={(e) =>
                                     setData("is_admin", e.target.checked)
                                 }
                             />
@@ -168,15 +176,15 @@ export const Form = ({ id, setIsOpen, onReload }) => {
                     <div className="flex items-center justify-end mt-4">
                         <PrimaryButton
                             className="ms-4 mx-4"
-                            disabled={processing}
+                            disabled={isLoading}
                         >
-                            {" "}
-                            Guardar{" "}
+                            {isLoading ? "Guardando..." : "Guardar"}
                         </PrimaryButton>
 
                         <SecondaryButton
                             type="button"
                             onClick={() => setIsOpen(false)}
+                            disabled={isLoading}
                         >
                             {" "}
                             Cancelar{" "}

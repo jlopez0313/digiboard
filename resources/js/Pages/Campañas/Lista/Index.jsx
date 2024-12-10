@@ -30,6 +30,7 @@ export default ({ auth, contacts }) => {
 
     const onSetList = () => {
         const _list = data.map((item) => {
+
             return {
                 id: item.id,
                 diseno: item.nombre,
@@ -42,7 +43,7 @@ export default ({ auth, contacts }) => {
                           100
                       ).toFixed(2) + '%'
                     : "-",
-                codigo: item.cartelera?.pantallas ? item.cartelera?.pantallas[0]?.code : '-'
+                codigo: item.cartelera?.pantallas ? item.cartelera?.pantallas[0]?.pantalla?.code : '-'
             };
         });
 
@@ -59,9 +60,9 @@ export default ({ auth, contacts }) => {
     const onSearch = (id) => {
         const campaña = data.find(x => x.id == id)
         const item = campaña?.cartelera?.pantallas[0] || null;
+
         if ( item ) {
-            const url = `${window.location.protocol}//${window.location.host}/asignacion/${item.id}`;
-            router.visit(url);
+            window.open(`/asignacion/${item.pantallas_id}`, '_blank', 'noopener,noreferrer');
         }
     }
 

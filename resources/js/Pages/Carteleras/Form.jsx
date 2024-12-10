@@ -12,6 +12,9 @@ import Icon from "@/Components/Icons/Index";
 import { notify } from "@/Helpers/Notify";
 
 export const Form = ({ id, tenant, orientaciones, setIsOpen, onReload }) => {
+
+    const [isLoading, setIsLoading] = useState(false);
+
     const [previews, setPreviews] = useState([]);
     const filesRef = useRef(null);
 
@@ -26,6 +29,8 @@ export const Form = ({ id, tenant, orientaciones, setIsOpen, onReload }) => {
 
     const submit = async (e) => {
         e.preventDefault();
+        setIsLoading(true);
+        
 
         const formData = new FormData();
         Object.keys(data).forEach((key) => {
@@ -47,7 +52,12 @@ export const Form = ({ id, tenant, orientaciones, setIsOpen, onReload }) => {
             }
 
             onReload();
-        } catch (e) {}
+        } catch (error) {
+            console.log(error);
+            notify("error", "Internal Error");
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const onGetItem = async () => {
@@ -300,15 +310,15 @@ export const Form = ({ id, tenant, orientaciones, setIsOpen, onReload }) => {
                     <div className="flex items-center justify-end mt-4">
                         <PrimaryButton
                             className="ms-4 mx-4"
-                            disabled={processing}
+                            disabled={isLoading}
                         >
-                            {" "}
-                            Guardar{" "}
+                            {isLoading ? "Guardando..." : "Guardar"}
                         </PrimaryButton>
 
                         <SecondaryButton
                             type="button"
                             onClick={() => setIsOpen(false)}
+                            disabled={isLoading}
                         >
                             {" "}
                             Cancelar{" "}

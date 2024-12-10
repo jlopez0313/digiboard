@@ -26,7 +26,7 @@ class PantallasController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->all() ;
+        $data = $request->except(['deptos_id', 'ciudades_id']);
         $data['estado'] = 'I';
 
         $code = bin2hex(random_bytes(3));
@@ -41,7 +41,7 @@ class PantallasController extends Controller
      */
     public function show(Pantallas $pantalla)
     {
-        $pantalla->load('area');
+        $pantalla->load('area.ciudad.departamento');
         return new PantallasResource( $pantalla );
     }
 
@@ -50,7 +50,8 @@ class PantallasController extends Controller
      */
     public function update(Request $request, Pantallas $pantalla)
     {
-        $pantalla->update( $request->all() );
+        $data = $request->except(['deptos_id', 'ciudades_id']);
+        $pantalla->update( $data );
         return new PantallasResource( $pantalla );
     }
 

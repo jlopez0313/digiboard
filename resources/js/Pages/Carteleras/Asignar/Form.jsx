@@ -14,7 +14,10 @@ import ReactSelect from "react-select";
 import makeAnimated from "react-select/animated";
 const animatedComponents = makeAnimated();
 
-export const Assign = ({ id, cartelera, departamentos, setIsOpen, onReload }) => {
+export const Form = ({ id, cartelera, departamentos, setIsOpen, onReload }) => {
+
+    const [isLoading, setIsLoading] = useState(false);
+
     const { data, setData, processing, errors, reset } = useForm({
         orientaciones_id: cartelera.orientaciones_id,
         empresas_id: "",
@@ -35,12 +38,15 @@ export const Assign = ({ id, cartelera, departamentos, setIsOpen, onReload }) =>
 
     const submit = async (e) => {
         e.preventDefault();
+        setIsLoading(true);
 
         try {
             await axios.put(`/api/v1/carteleras/asignar`, data);
             onReload();
         } catch (e) {
             notify("error", "Error Interno, por favor intente de nuevo.");
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -85,7 +91,7 @@ export const Assign = ({ id, cartelera, departamentos, setIsOpen, onReload }) =>
     const onGetPantallas = async (area) => {
         if (area) {
             if (area == "ALL") {
-                setData("pantallas_id", "ALL");
+                setData("pantallas_id", ["ALL"]);
                 setIsMulti(false);
                 setMyScreens([{ value: "ALL", label: "TODAS" }]);
                 setPantallas([{ value: "ALL", label: "TODAS" }]);
@@ -111,8 +117,10 @@ export const Assign = ({ id, cartelera, departamentos, setIsOpen, onReload }) =>
     };
 
     const onPrepareScreens = (newTags, actionMeta) => {
+        
         if (isMulti) {
             const hasAll = newTags.find((tag) => tag.value == "ALL");
+
 
             if (hasAll) {
                 setIsMulti(false);
@@ -276,15 +284,15 @@ export const Assign = ({ id, cartelera, departamentos, setIsOpen, onReload }) =>
                     <div className="flex items-center justify-end mt-4">
                         <PrimaryButton
                             className="ms-4 mx-4"
-                            disabled={processing}
+                            disabled={isLoading}
                         >
-                            {" "}
-                            Guardar{" "}
+                            {isLoading ? "Guardando..." : "Guardar"}
                         </PrimaryButton>
 
                         <SecondaryButton
                             type="button"
                             onClick={() => setIsOpen(false)}
+                            disabled={isLoading}
                         >
                             {" "}
                             Cancelar{" "}

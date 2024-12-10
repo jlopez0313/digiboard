@@ -56,7 +56,7 @@ class UsuariosController extends Controller
 
     public function asignar(Request $request)
     {
-        $data = $request->all();
+        $data = $request->except(['deptos_id', 'ciudades_id']);
         $assign = UsuariosAreas::create( $data );
         
         return new UsuariosAreasResource( $assign );

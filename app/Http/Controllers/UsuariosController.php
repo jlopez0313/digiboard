@@ -5,10 +5,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Request as Peticion;
-use App\Http\Resources\AreasCollection;
+use App\Http\Resources\DepartamentosCollection;
 use App\Http\Resources\UsuariosCollection;
 use App\Http\Resources\UsuariosAreasCollection;
-use App\Models\Areas;
+use App\Models\Departamentos;
 use App\Models\User;
 use App\Models\UsuariosAreas;
 
@@ -81,15 +81,15 @@ class UsuariosController extends Controller
     {
         $user = User::find( $id );
 
-        return Inertia::render('Usuarios/Config', [
+        return Inertia::render('Usuarios/Areas/Index', [
             'id' => $id,
             'contacts' => new UsuariosAreasCollection(
-                UsuariosAreas::with('usuario', 'area')
+                UsuariosAreas::with('usuario', 'area.ciudad.departamento')
                 ->where('usuarios_id', $id)
                 ->paginate()
             ),
-            'areas' => new AreasCollection(
-                Areas::orderBy('area')
+            'departamentos' => new DepartamentosCollection(
+                Departamentos::orderBy('departamento')
                 ->get()
             )
         ]);

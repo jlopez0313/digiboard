@@ -15,8 +15,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 
-export default ({ auth, pantalla, tenant }) => {
-
+export default ({ auth, pantalla, parametros, tenant }) => {
     const [delay, setDelay] = useState(12500);
     const [show, setShow] = useState(true);
     const [adminModal, setAdminModal] = useState(false);
@@ -76,6 +75,7 @@ export default ({ auth, pantalla, tenant }) => {
             {show ? (
                 <EmptyLayout
                     user={auth.user}
+                    parametros={parametros}
                     header={
                         <h2 className="font-semibold text-xl text-gray-800 leading-tight">
                             Carteleras
@@ -85,15 +85,18 @@ export default ({ auth, pantalla, tenant }) => {
                     <Head title="Carteleras" />
                     {screen?.cartelera?.campana && !adminModal && (
                         <div className={`rounded px-1 py-1 ${styles.encuesta}`}>
-                            {/*
-                                    <ApplicationLogo className="m-auto" />
-                                */}
+                            {
+                                <ApplicationLogo
+                                    className="m-auto"
+                                    logo={"/" + tenant + "/" + parametros?.logo}
+                                />
+                            }
 
                             <p className="font-bold text-lg text-white m-auto text-center">
                                 {screen?.cartelera?.campana?.encuesta}
                             </p>
                             <QRCode
-                                size={200}
+                                size={180}
                                 className="mx-auto my-3"
                                 style={{
                                     height: "auto",
@@ -105,7 +108,7 @@ export default ({ auth, pantalla, tenant }) => {
                                     "/evaluacion/" +
                                     screen?.cartelera?.campana?.id
                                 }
-                                viewBox={`0 0 200 200`}
+                                viewBox={`0 0 180 180`}
                             />
                         </div>
                     )}

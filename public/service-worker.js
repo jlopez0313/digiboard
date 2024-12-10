@@ -14,7 +14,7 @@ self.addEventListener('fetch', (event) => {
 
     // Almacena en caché los recursos específicos del tenant
     if (url.pathname.includes('/tenant_')) {
-        console.log( 'OK' )
+        console.log( 'OK fetch' )
 
         event.respondWith(
             caches.open(cacheName).then((cache) => {

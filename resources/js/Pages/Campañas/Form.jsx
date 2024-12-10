@@ -26,6 +26,8 @@ export default ({
     departamentos,
     tipos_respuesta,
 }) => {
+    const [isLoading, setIsLoading] = useState(false);
+
     const [previews, setPreviews] = useState([]);
     const [pantallas, setPantallas] = useState([]);
     const [myScreens, setMyScreens] = useState(null);
@@ -73,6 +75,7 @@ export default ({
 
     const submit = async (e) => {
         e.preventDefault();
+        setIsLoading(true);
 
         const formData = new FormData();
         Object.keys(data).forEach((key) => {
@@ -89,18 +92,24 @@ export default ({
             }
         });
 
-        if (id) {
-            formData.append("_method", "PUT");
-            await axios.post(`/api/v1/campanas/${id}`, formData);
-        } else {
-            await axios.post(`/api/v1/campanas`, formData);
-        }
+        try {
+            if (id) {
+                formData.append("_method", "PUT");
+                await axios.post(`/api/v1/campanas/${id}`, formData);
+            } else {
+                await axios.post(`/api/v1/campanas`, formData);
+            }
 
-        onReload();
+            onReload();
+        } catch (error) {
+            console.log(error);
+            notify("error", "Internal Error");
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const onGetLocations = (item) => {
-
         // Departamentos
         const deptos = item.cartelera?.pantallas?.map((p_c) => {
             return {
@@ -132,8 +141,7 @@ export default ({
         const cities = item.cartelera?.pantallas?.map((p_c) => {
             return {
                 id: p_c.pantalla?.area?.ciudad?.id,
-                ciudad:
-                    p_c.pantalla?.area?.ciudad?.ciudad,
+                ciudad: p_c.pantalla?.area?.ciudad?.ciudad,
             };
         });
 
@@ -159,8 +167,7 @@ export default ({
         const areas = item.cartelera?.pantallas?.map((p_c) => {
             return {
                 id: p_c.pantalla?.area?.id,
-                area:
-                    p_c.pantalla?.area?.area,
+                area: p_c.pantalla?.area?.area,
             };
         });
 
@@ -186,14 +193,23 @@ export default ({
             deptos: groupedDeptosArray,
             cities: groupedCitiesArray,
             areas: groupedAreasArray,
-        }
-    }
+        };
+    };
 
     const onGetItem = async () => {
         const { data } = await axios.get(`/api/v1/campanas/${id}`);
         const item = { ...data.data };
 
-        const location = onGetLocations( item );
+        const location = onGetLocations(item);
+
+
+        if ( location.deptos.length == 1) {
+            onGetCiudades( location.deptos[0].department )
+        }
+
+        if ( location.cities.length == 1) {
+            onGetAreas( location.cities[0].city )
+        }
 
         setData({
             nombre: item.nombre,
@@ -204,9 +220,14 @@ export default ({
             pregunta: item.pregunta,
             orientaciones_id: item.cartelera?.orientaciones_id || "",
 
-            deptos_id: location.deptos.length > 1 ? 'ALL' : location.deptos[0].department,
-            ciudades_id: location.cities.length > 1 ? 'ALL' : location.cities[0].city,
-            areas_id: location.areas.length > 1 ? 'ALL' : location.areas[0].area,
+            deptos_id:
+                location.deptos.length > 1
+                    ? "ALL"
+                    : location.deptos[0].department,
+            ciudades_id:
+                location.cities.length > 1 ? "ALL" : location.cities[0].city,
+            areas_id:
+                location.areas.length > 1 ? "ALL" : location.areas[0].area,
 
             logro_esperado: item.logro_esperado,
             evaluador_id: item.evaluador_id,
@@ -245,6 +266,15 @@ export default ({
         );
     };
 
+    const onClearCiudades = async (depto) => {
+        setData("ciudades_id", "");
+        setData("deptos_id", depto);
+
+        setTimeout(async () => {
+            await onGetCiudades(depto);
+        }, 0);
+    };
+
     const onGetCiudades = async (depto) => {
         if (depto) {
             if (depto == "ALL") {
@@ -258,9 +288,17 @@ export default ({
                 setCiudades(lista);
             }
         } else {
-            setData("ciudades_id", "");
             setCiudades([]);
         }
+    };
+
+    const onClearAreas = async (ciudad) => {
+        setData("areas_id", "");
+        setData("ciudades_id", ciudad);
+
+        setTimeout(async () => {
+            await onGetAreas(ciudad);
+        }, 0);
     };
 
     const onGetAreas = async (ciudad) => {
@@ -273,10 +311,11 @@ export default ({
                 );
                 const lista = [...data.data];
 
+                // setData("areas_id", "");
                 setAreas(lista);
             }
         } else {
-            setData("areas_id", "");
+            // setData("areas_id", "");
             setAreas([]);
         }
     };
@@ -299,10 +338,10 @@ export default ({
 
                 setIsMulti(true);
 
-                if ( !shouldSkipEffect ) {
+                if (!shouldSkipEffect) {
                     setMyScreens([]);
                 } else {
-                    setShouldSkipEffect( false )
+                    setShouldSkipEffect(false);
                 }
                 setPantallas(lista);
             }
@@ -442,11 +481,11 @@ export default ({
     }, []);
 
     useEffect(() => {
-        onGetCiudades(data.deptos_id);
+        // onGetCiudades(data.deptos_id);
     }, [data.deptos_id]);
 
     useEffect(() => {
-        onGetAreas(data.ciudades_id);
+        // onGetAreas(data.ciudades_id);
     }, [data.ciudades_id]);
 
     useEffect(() => {
@@ -565,7 +604,7 @@ export default ({
                                         className="mt-1 block w-full"
                                         value={data.deptos_id}
                                         onChange={(e) =>
-                                            setData("deptos_id", e.target.value)
+                                            onClearCiudades(e.target.value)
                                         }
                                     >
                                         <option value="ALL"> TODOS </option>
@@ -601,10 +640,7 @@ export default ({
                                         className="mt-1 block w-full"
                                         value={data.ciudades_id}
                                         onChange={(e) =>
-                                            setData(
-                                                "ciudades_id",
-                                                e.target.value
-                                            )
+                                            onClearAreas(e.target.value)
                                         }
                                     >
                                         <option value="ALL"> TODAS </option>
@@ -1256,15 +1292,15 @@ export default ({
                             <div className="flex items-center justify-end mt-4">
                                 <PrimaryButton
                                     className="ms-4 mx-4"
-                                    disabled={processing}
+                                    disabled={isLoading}
                                 >
-                                    {" "}
-                                    Guardar{" "}
+                                    {isLoading ? "Guardando..." : "Guardar"}
                                 </PrimaryButton>
 
                                 <SecondaryButton
                                     type="button"
                                     onClick={() => setIsOpen(false)}
+                                    disabled={isLoading}
                                 >
                                     {" "}
                                     Cancelar{" "}

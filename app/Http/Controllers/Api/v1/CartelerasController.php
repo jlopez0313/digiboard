@@ -42,6 +42,7 @@ class CartelerasController extends Controller
             'areas_id',
             'multimedias',
             'pantallas_id',
+            'pantallas',
             'deptos_id',
             'ciudades_id',
         );
@@ -55,6 +56,10 @@ class CartelerasController extends Controller
             // $cartelera->addMedia('media/' . $filename)->toMediaCollection();
 
             $path = 'files/'.$cartelera->id;
+            if ( !file_exists( $path ) ) {
+                \File::makeDirectory(storage_path("app/$path"), $mode = 0777, true, true);
+            }
+
             $filename = $file->hashName();
 
             $resizedImage = Image::make($file)
@@ -62,7 +67,7 @@ class CartelerasController extends Controller
                                       $constraint->aspectRatio();
                                       $constraint->upsize();
                                   });
-
+            
             $fullPath = storage_path("app/$path/$filename");
             $resizedImage->save($fullPath, 100, 'png');
                                           
@@ -127,6 +132,7 @@ class CartelerasController extends Controller
             'areas_id',
             'multimedias',
             'pantallas_id',
+            'pantallas',
             'deptos_id',
             'ciudades_id',
             '_method'
@@ -143,6 +149,10 @@ class CartelerasController extends Controller
             // $cartelera->addMedia('media/' . $filename)->toMediaCollection();
             
             $path = 'files/'.$cartelera->id;
+            if ( !file_exists( $path ) ) {
+                \File::makeDirectory(storage_path("app/$path"), $mode = 0777, true, true);
+            }
+
             $filename = $file->hashName();
 
             $resizedImage = Image::make($file)
@@ -160,6 +170,21 @@ class CartelerasController extends Controller
                 'type' => 'png',
                 'mimetype' => $file->getClientMimeType(),
             ]);
+        }
+
+        if ($request->pantallas_id) {
+
+            $asiganaciones = PantallasCarteleras::where('carteleras_id', $cartelera->id)
+            ->whereNotIn('pantallas_id', $request->pantallas_id)
+            ->get();
+
+            foreach( $asiganaciones as $asignacion ) {
+                $this->desasignar( $request, $asignacion );
+            }
+
+
+            $request->merge(['carteleras_id' => $cartelera->id]);
+            $this->asignar($request);
         }
 
         $this->makeLink();
@@ -269,8 +294,11 @@ class CartelerasController extends Controller
 
     public function desasignar(Request $request, PantallasCarteleras $pantalla_cartelera)
     {
-        $pantalla_cartelera->delete();
+        $pantalla = Pantallas::find($pantalla_cartelera->pantallas_id);
+        $pantalla->carteleras_id = null;
+        $pantalla->save();
 
+        $pantalla_cartelera->delete();
         return new PantallasCartelerasResource($pantalla_cartelera);
     }
 

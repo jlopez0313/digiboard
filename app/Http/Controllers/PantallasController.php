@@ -6,8 +6,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Request as Peticion;
 use App\Http\Resources\PantallasCollection;
-use App\Http\Resources\AreasCollection;
-use App\Models\Areas;
+use App\Http\Resources\DepartamentosCollection;
+use App\Models\Departamentos;
 use App\Models\Pantallas;
 use Inertia\Inertia;
 
@@ -26,8 +26,8 @@ class PantallasController extends Controller
                     'cartelera'
                 )->paginate()
             ),
-            'areas' => new AreasCollection(
-                Areas::orderBy('area')
+            'departamentos' => new DepartamentosCollection(
+                Departamentos::orderBy('departamento')
                 ->get()
             ),
             'orientaciones' => config('constants.orientaciones')

@@ -16,9 +16,10 @@ class Verify2FA
      */
     public function handle($request, Closure $next)
     {
+
         $user = Auth::user();
 
-        if ($user && $user->google2fa_secret) {
+        if ($user && $user->google2fa_secret != null ) {
             if (!session('2fa_verified')) {
                 return redirect()->to('twofactor');
             }

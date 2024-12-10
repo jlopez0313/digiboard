@@ -62,6 +62,10 @@ class CampanasController extends Controller
             'multimedias',
             'evaluador',
             'pantallas',
+            'orientaciones_id',
+            'deptos_id',
+            'ciudades_id',
+            'pantallas_id'
         );
 
         $campana->update($data);

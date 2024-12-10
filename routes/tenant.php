@@ -17,6 +17,7 @@ use App\Http\Controllers\DepartamentosController;
 use App\Http\Controllers\EmpresasController;
 use App\Http\Controllers\EvaluacionController;
 use App\Http\Controllers\PantallasController;
+use App\Http\Controllers\ParametrosController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UsuariosController;
 
@@ -72,11 +73,6 @@ Route::middleware([
     ])
     ->group( function () {
 
-        
-
-
-        
-
         Route::prefix('dashboard')->group(function () {
             Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
         });
@@ -92,6 +88,14 @@ Route::middleware([
 
             Route::prefix('ciudades')->group(function () {
                 Route::get('/', [CiudadesController::class, 'index'])->name('parametros.ciudades');
+            });
+
+            Route::prefix('colores')->group(function () {
+                Route::get('/', [ParametrosController::class, 'colores'])->name('parametros.colores');
+            });
+
+            Route::prefix('logo')->group(function () {
+                Route::get('/', [ParametrosController::class, 'logo'])->name('parametros.logo');
             });
         });
 

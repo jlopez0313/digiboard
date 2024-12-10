@@ -18,6 +18,7 @@ use App\Http\Controllers\Api\v1\PantallasController;
 use App\Http\Controllers\Api\v1\CampanasController;
 use App\Http\Controllers\Api\v1\CartelerasController;
 use App\Http\Controllers\Api\v1\MultimediasController;
+use App\Http\Controllers\Api\v1\ParametrosController;
 use App\Http\Controllers\Api\v1\UsuariosController;
 use App\Http\Controllers\Api\v1\UserController;
 
@@ -97,6 +98,12 @@ Route::middleware([
         Route::post('/{id}', [AsignacionController::class, 'show']);
         Route::post('/codigo/{pantalla}', [PantallasController::class, 'codigo']);
         Route::post('/activar/{pantalla}', [AsignacionController::class, 'activar'])->name('asignacion.activar');
+    })->middleware(['auth', 'verified']);
+
+
+    Route::prefix('parametros')->group( function() {
+        Route::post('/color', [ParametrosController::class, 'color']);
+        Route::post('/logo', [ParametrosController::class, 'logo']);
     })->middleware(['auth', 'verified']);
 
 

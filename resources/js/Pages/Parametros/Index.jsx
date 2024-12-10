@@ -23,6 +23,18 @@ export default function Dashboard({ auth }) {
             descripcion: 'Gestionar Ciudades',
             ruta: 'parametros/ciudades'
         },
+        {
+            id: 'COLO',
+            parametro: 'Colores',   
+            descripcion: 'Gestionar Colores',
+            ruta: 'parametros/colores'
+        },
+        {
+            id: 'LOGO',
+            parametro: 'Logo',   
+            descripcion: 'Gestionar Logo',
+            ruta: 'parametros/logo'
+        },
     ]
 
     const onNavigate = (id) => {
