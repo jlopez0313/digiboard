@@ -156,7 +156,12 @@ export default ({ auth, pantalla, parametros, tenant }) => {
                                                 loading="lazy"
                                             >
                                                 <source
-                                                    src={"/" + foto.src}
+                                                    src={
+                                                        "/" +
+                                                        tenant +
+                                                        "/" +
+                                                        foto.src
+                                                    }
                                                 ></source>
                                             </video>
                                         </>

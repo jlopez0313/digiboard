@@ -12,7 +12,6 @@ import Icon from "@/Components/Icons/Index";
 import { notify } from "@/Helpers/Notify";
 
 export const Form = ({ id, tenant, orientaciones, setIsOpen, onReload }) => {
-
     const [isLoading, setIsLoading] = useState(false);
 
     const [previews, setPreviews] = useState([]);
@@ -30,7 +29,6 @@ export const Form = ({ id, tenant, orientaciones, setIsOpen, onReload }) => {
     const submit = async (e) => {
         e.preventDefault();
         setIsLoading(true);
-        
 
         const formData = new FormData();
         Object.keys(data).forEach((key) => {
@@ -100,34 +98,83 @@ export const Form = ({ id, tenant, orientaciones, setIsOpen, onReload }) => {
             files.map((file) => {
                 return new Promise((resolve) => {
                     const preview = URL.createObjectURL(file);
-                    const img = new Image();
-                    img.src = preview;
 
-                    img.onload = () => {
-                        let isSizeOk = false;
+                    if (file.type.includes("image")) {
+                        const img = new Image();
+                        img.src = preview;
 
-                        if (data.orientaciones_id === "V") {
-                            isSizeOk = img.naturalHeight >= img.naturalWidth;
-                        } else {
-                            isSizeOk = img.naturalWidth >= img.naturalHeight;
-                        }
+                        img.onload = () => {
+                            let isSizeOk = false;
 
-                        if (isSizeOk) {
-                            setPreviews((list) => [
-                                ...list,
-                                { src: preview, mimetype: file.type },
-                            ]);
+                            if (data.orientaciones_id === "V") {
+                                isSizeOk =
+                                    img.naturalHeight >= img.naturalWidth;
+                            } else {
+                                isSizeOk =
+                                    img.naturalWidth >= img.naturalHeight;
+                            }
 
-                            setData((prevData) => ({
-                                ...prevData,
-                                multimedias: [...prevData.multimedias, file],
-                            }));
-                        } else {
-                            hasDifferentSize = true;
-                        }
+                            if (isSizeOk) {
+                                setPreviews((list) => [
+                                    ...list,
+                                    { src: preview, mimetype: file.type },
+                                ]);
 
-                        resolve();
-                    };
+                                setData((prevData) => ({
+                                    ...prevData,
+                                    multimedias: [
+                                        ...prevData.multimedias,
+                                        file,
+                                    ],
+                                }));
+                            } else {
+                                hasDifferentSize = true;
+                            }
+
+                            resolve();
+                        };
+                    } else if (file.type.includes("video")) {
+                        const video = document.createElement("video");
+                        video.src = preview;
+                        video.crossOrigin = "anonymous"; // Evita problemas con videos externos
+                        video.muted = true;
+                        video.playsInline = true;
+
+                        video.onloadeddata = () => {
+                            video.currentTime = 1; // Extrae el fotograma en el segundo 1 (puedes cambiarlo)
+
+                            video.onseeked = () => {
+                                const canvas = document.createElement("canvas");
+                                const ctx = canvas.getContext("2d");
+
+                                canvas.width = video.videoWidth;
+                                canvas.height = video.videoHeight;
+                                ctx.drawImage(
+                                    video,
+                                    0,
+                                    0,
+                                    canvas.width,
+                                    canvas.height
+                                );
+
+                                const thumbnail =
+                                    canvas.toDataURL("image/jpeg"); // Miniatura en formato base64
+
+                                setPreviews((list) => [
+                                    ...list,
+                                    { src: thumbnail, mimetype: "image/jpeg" }, // Almacena la miniatura
+                                ]);
+
+                                setData((prevData) => ({
+                                    ...prevData,
+                                    multimedias: [
+                                        ...prevData.multimedias,
+                                        file,
+                                    ],
+                                }));
+                            };
+                        };
+                    }
                 });
             })
         );

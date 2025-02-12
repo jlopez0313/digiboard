@@ -55,28 +55,45 @@ class CartelerasController extends Controller
             // $filename = \Storage::disk('media')->put($cartelera->id, $file);
             // $cartelera->addMedia('media/' . $filename)->toMediaCollection();
 
-            $path = 'files/'.$cartelera->id;
-            if ( !file_exists( $path ) ) {
-                \File::makeDirectory(storage_path("app/$path"), $mode = 0777, true, true);
+            if ( str_contains($file->getClientMimeType(), 'image') ) {
+                $path = 'files/'.$cartelera->id;
+                if ( !file_exists( $path ) ) {
+                    \File::makeDirectory(storage_path("app/$path"), $mode = 0777, true, true);
+                }
+
+                $filename = $file->hashName();
+
+                $resizedImage = Image::make($file)
+                                    ->resize(800, 600, function ($constraint) {
+                                        $constraint->aspectRatio();
+                                        $constraint->upsize();
+                                    });
+                
+                $fullPath = storage_path("app/$path/$filename");
+                $resizedImage->save($fullPath, 100, 'png');
+                                            
+                Multimedias::create([
+                    'carteleras_id' => $cartelera->id,
+                    'src' => "$path/$filename",
+                    'type' => 'png',
+                    'mimetype' => $file->getClientMimeType(),
+                ]);
+            } else if ( str_contains($file->getClientMimeType(), 'video') ) {
+                $path = 'files/'.$cartelera->id;
+
+                if ( !file_exists( $path ) ) {
+                    \File::makeDirectory(storage_path("app/$path"), $mode = 0777, true, true);
+                }
+
+                $filename = $file->store('files/'.$cartelera->id);
+                             
+                Multimedias::create([
+                    'carteleras_id' => $cartelera->id,
+                    'src' => $filename,
+                    'type' => $file->getClientOriginalExtension(),
+                    'mimetype' => $file->getClientMimeType(),
+                ]);
             }
-
-            $filename = $file->hashName();
-
-            $resizedImage = Image::make($file)
-                                  ->resize(800, 600, function ($constraint) {
-                                      $constraint->aspectRatio();
-                                      $constraint->upsize();
-                                  });
-            
-            $fullPath = storage_path("app/$path/$filename");
-            $resizedImage->save($fullPath, 100, 'png');
-                                          
-            Multimedias::create([
-                'carteleras_id' => $cartelera->id,
-                'src' => "$path/$filename",
-                'type' => 'png',
-                'mimetype' => $file->getClientMimeType(),
-            ]);
         }
 
         if ($request->pantallas_id) {
@@ -146,30 +163,48 @@ class CartelerasController extends Controller
 
         foreach ($multimedias as $file) {
             // $filename = \Storage::disk('media')->put($cartelera->id, $file);
-            // $cartelera->addMedia('media/' . $filename)->toMediaCollection();
-            
-            $path = 'files/'.$cartelera->id;
-            if ( !file_exists( $path ) ) {
-                \File::makeDirectory(storage_path("app/$path"), $mode = 0777, true, true);
+            // $cartelera->addMedia('media/' . $filename)->toMediaCollection();}
+
+            if ( str_contains( $file->getClientMimeType(), 'image' ) ) {
+                $path = 'files/'.$cartelera->id;
+                if ( !file_exists( $path ) ) {
+                    \File::makeDirectory(storage_path("app/$path"), $mode = 0777, true, true);
+                }
+    
+                $filename = $file->hashName();
+    
+                $resizedImage = Image::make($file)
+                                      ->resize(800, 600, function ($constraint) {
+                                          $constraint->aspectRatio();
+                                          $constraint->upsize();
+                                      });
+    
+                $fullPath = storage_path("app/$path/$filename");
+                $resizedImage->save($fullPath, 100, 'png');
+                                              
+                Multimedias::create([
+                    'carteleras_id' => $cartelera->id,
+                    'src' => "$path/$filename",
+                    'type' => 'png',
+                    'mimetype' => $file->getClientMimeType(),
+                ]);
+            } else if ( str_contains( $file->getClientMimeType(), 'video' ) ) {
+                $path = 'files/'.$cartelera->id;
+                
+                if ( !file_exists( $path ) ) {
+                    \File::makeDirectory(storage_path("app/$path"), $mode = 0777, true, true);
+                }
+    
+                $filename = $file->store('files/'.$cartelera->id);
+                             
+                Multimedias::create([
+                    'carteleras_id' => $cartelera->id,
+                    'src' => $filename,
+                    'type' => $file->getClientOriginalExtension(),
+                    'mimetype' => $file->getClientMimeType(),
+                ]);
             }
-
-            $filename = $file->hashName();
-
-            $resizedImage = Image::make($file)
-                                  ->resize(800, 600, function ($constraint) {
-                                      $constraint->aspectRatio();
-                                      $constraint->upsize();
-                                  });
-
-            $fullPath = storage_path("app/$path/$filename");
-            $resizedImage->save($fullPath, 100, 'png');
-                                          
-            Multimedias::create([
-                'carteleras_id' => $cartelera->id,
-                'src' => "$path/$filename",
-                'type' => 'png',
-                'mimetype' => $file->getClientMimeType(),
-            ]);
+            
         }
 
         if ($request->pantallas_id) {

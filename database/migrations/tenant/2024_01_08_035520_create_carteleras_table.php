@@ -20,7 +20,7 @@ return new class extends Migration
             $table->unsignedBigInteger('disenos_id');
             $table->foreign('disenos_id')->references('id')->on('disenos');
 
-            $table->string('marquesina');
+            $table->string('marquesina')->nullable();
             $table->date('fecha_inicial')->nullable();
             $table->date('fecha_final')->nullable();
 
