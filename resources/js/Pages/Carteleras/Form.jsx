@@ -136,33 +136,17 @@ export const Form = ({ id, tenant, orientaciones, setIsOpen, onReload }) => {
                     } else if (file.type.includes("video")) {
                         const video = document.createElement("video");
                         video.src = preview;
-                        video.crossOrigin = "anonymous"; // Evita problemas con videos externos
+                        video.crossOrigin = "anonymous";
                         video.muted = true;
                         video.playsInline = true;
 
                         video.onloadeddata = () => {
-                            video.currentTime = 1; // Extrae el fotograma en el segundo 1 (puedes cambiarlo)
+                            video.currentTime = 1;
 
                             video.onseeked = () => {
-                                const canvas = document.createElement("canvas");
-                                const ctx = canvas.getContext("2d");
-
-                                canvas.width = video.videoWidth;
-                                canvas.height = video.videoHeight;
-                                ctx.drawImage(
-                                    video,
-                                    0,
-                                    0,
-                                    canvas.width,
-                                    canvas.height
-                                );
-
-                                const thumbnail =
-                                    canvas.toDataURL("image/jpeg"); // Miniatura en formato base64
-
                                 setPreviews((list) => [
                                     ...list,
-                                    { src: thumbnail, mimetype: "image/jpeg" }, // Almacena la miniatura
+                                    { src: preview, mimetype: file.type },
                                 ]);
 
                                 setData((prevData) => ({
