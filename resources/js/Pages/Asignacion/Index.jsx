@@ -14,12 +14,18 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
+import { useRef } from "react";
 
 export default ({ auth, pantalla, parametros, tenant }) => {
-    const [delay, setDelay] = useState(12500);
+    
+    const initDelay = 12500
+    const [delay, setDelay] = useState(initDelay);
     const [show, setShow] = useState(true);
     const [adminModal, setAdminModal] = useState(false);
     const [screen, setScreen] = useState(pantalla);
+
+    const swiperRef = useRef(null);
+    const videoRef = useRef([]);
 
     const onSetAdminModal = () => {
         setAdminModal(true);
@@ -48,14 +54,56 @@ export default ({ auth, pantalla, parametros, tenant }) => {
         }, 1000 * 60 * 30);
     };
 
-    const onGetDelay = (evt) => {
-        /* const duration = evt.target.duration * 1000;
-        if ( !delay || delay < duration) {
-            console.log( duration );
-            setDelay( duration )
-        }
-        */
+    const onSwiperInit = (swiper) => {
+        console.log('onSwiperInit')
+
+        swiperRef.current = swiper;
+        const firstSlide = swiper.slides[0];
+        const video = firstSlide?.querySelector("video");
+    
+        onVideoStart( video )
     };
+
+    const onSlideChange = (swiper) => {
+        console.log('onSlideChange')
+
+        const currentSlide = swiper.slides[swiper.activeIndex];
+        const video = currentSlide.querySelector("video");
+
+        onVideoStart( video )
+    };
+
+    const onVideoStart = (video) => {
+        if (video) {
+            swiperRef.current.autoplay.stop();
+
+            setTimeout(()=> {
+                video.play().catch((error) => console.error("Error al reproducir:", error));
+                video.mutedm = false;
+            }, 1000)
+        } else {
+            swiperRef.current.autoplay.start();
+        }
+    }
+
+    const onVideoEnd = () => {
+        setDelay(initDelay)
+
+        if (swiperRef.current) {
+            const swiper = swiperRef.current;
+
+            if (swiper.activeIndex === swiper.slides.length - 1) {
+                swiper.slideTo(0);
+            } else {
+                swiper.slideNext();
+            }
+        }
+    };
+
+    const onSetDelay = (evt) => {
+        console.log('onsetdelay')
+        setDelay(evt.target.duration * 1000)
+    }
 
     const onDestroy = async () => {
         const body = {
@@ -124,6 +172,8 @@ export default ({ auth, pantalla, parametros, tenant }) => {
                             disableOnInteraction: false,
                         }}
                         modules={[Autoplay]}
+                        onSwiper={onSwiperInit}  // Asegura que el video se inicie al montar
+                        onSlideChange={onSlideChange}
                     >
                         {screen?.cartelera?.multimedias?.map((foto, key) => {
                             return (
@@ -148,11 +198,12 @@ export default ({ auth, pantalla, parametros, tenant }) => {
                                     ) : (
                                         <>
                                             <video
+                                                ref={(el) => (videoRef.current[key] = el)}
                                                 className="m-auto !w-auto !h-full"
-                                                alt=""
                                                 controls
-                                                autoPlay={false}
-                                                onLoadedData={onGetDelay}
+                                                muted 
+                                                onLoadedData={(evt) => onSetDelay(evt)}
+                                                onEnded={onVideoEnd}
                                                 loading="lazy"
                                             >
                                                 <source
@@ -171,12 +222,14 @@ export default ({ auth, pantalla, parametros, tenant }) => {
                         })}
                     </Swiper>
 
-                    <marquee
-                        className={`text-white marquee text-3xl md:text-4xl lg:text-5xl p-3 my-3 ${styles["marquee"]}`}
-                    >
-                        {" "}
-                        {screen?.cartelera?.marquesina}{" "}
-                    </marquee>
+                    {
+                        screen?.cartelera?.marquesina ? <marquee
+                            className={`text-white marquee text-3xl md:text-4xl lg:text-5xl p-3 my-3 ${styles["marquee"]}`}
+                        >
+                            {" "}
+                            {screen?.cartelera?.marquesina}{" "}
+                        </marquee> : null
+                    }
                 </EmptyLayout>
             ) : null}
 
